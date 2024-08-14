@@ -15,7 +15,7 @@ const TextInput: React.FC<TextInputProps> = ({
   label,
   name,
   type = "text",
-  placeholder,
+  placeholder = `Enter ${name}`,
 }) => {
   return (
     <div className="grid gap-2">
