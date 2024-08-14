@@ -1,0 +1,1 @@
+export const userBaseURL = 'api/user'
