@@ -13,7 +13,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export default function page() {
+export default function Dashboard() {
   return (
     // <MainLayout meta={{ title: 'Dashboard' }}>
     <ScrollArea className="h-full">

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronLeft } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
-import { DashboardNav } from './DashboardNav';
+import { DashboardNav } from '../CommonComponents/DashboardNav';
 import { navItems } from '@/constants/navdata.constants';
 
 type SidebarProps = {
@@ -22,7 +22,7 @@ export default function Sidebar({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative h-screen border-r pt-20`,
+        `relative hidden h-screen flex-none border-r pt-20 md:block`,
         status && 'duration-500',
         !isMinimized ? 'w-72' : 'w-[72px]',
         className

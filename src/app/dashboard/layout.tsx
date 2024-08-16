@@ -1,4 +1,5 @@
 import Sidebar from '@/components/CommonComponents/Sidebar';
+import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 
 import TanstackProvider from '@/providers/tanstack-provider';
 import React, { ReactNode } from 'react';
@@ -11,8 +12,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <TanstackProvider>
       <div className="flex flex-col md:flex-row">
-        <Sidebar />
-        <div className="h-full w-full p-10 md:ml-64">{children}</div>
+        <div className="hidden md:block">
+          <Sidebar />
+        </div>
+        <div className="block px-10 pt-10 md:hidden">
+          <MobileSidebar />
+        </div>
+        <div className="h-full w-full p-10">{children}</div>
       </div>
     </TanstackProvider>
   );
