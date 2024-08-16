@@ -5,21 +5,25 @@ export const menuItems = [
       "path": "/"
     },
     {
-      "title": "Profile",
-      "path": "/profile"
+      "title": "Company",
+      "path": "/dashboard/company"
     },
     {
-      "title": "Settings",
-      "children": [
-        {
-          "title": "Account",
-          "path": "/settings/account"
-        },
-        {
-          "title": "Privacy",
-          "path": "/settings/privacy"
-        }
-      ]
-    }
+      "title": "Profile Setting",
+      "path": "/dashboard/profile-setting"
+    },
+    // {
+    //   "title": "Settings",
+    //   "children": [
+    //     {
+    //       "title": "Account",
+    //       "path": "/settings/account"
+    //     },
+    //     {
+    //       "title": "Privacy",
+    //       "path": "/settings/privacy"
+    //     }
+    //   ]
+    // }
   ]
   

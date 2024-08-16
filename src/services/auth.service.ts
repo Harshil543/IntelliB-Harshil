@@ -9,8 +9,8 @@ const baseURL = 'api/user'
 export const loginUser = async (payload: { email: string; password: string }) => {
     console.log('login payload', payload);
     
-    const response = await apiClient.post(`${baseURL}/login`, payload);
-    return response.data;
+    // const response = await apiClient.post(`${baseURL}/login`, payload);
+    // return response.data;
 };
 
 export const getTodo = async () => {

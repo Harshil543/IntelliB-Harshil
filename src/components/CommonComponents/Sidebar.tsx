@@ -71,7 +71,7 @@ const Sidebar = () => {
                         <li key={child.title}>
                           <Link
                             href={child.path!}
-                            onClick={handleLinkClick} // Close sidebar on link click
+                            onClick={handleLinkClick}
                             className={`block py-2 ${
                               pathname === child.path
                                 ? "text-black font-bold"
