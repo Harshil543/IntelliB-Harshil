@@ -119,7 +119,11 @@ export default function ComapnyPage() {
   return (
     <div>
       <BreadcrumbWithCustomSeparator />
-      <DataTable columns={columns} data={companyData} />
+      <DataTable
+        columns={columns}
+        data={companyData}
+        path="/company/register-company"
+      />
     </div>
   );
 }

@@ -1,7 +1,6 @@
-import Sidebar from '@/components/CommonComponents/Sidebar';
 import { MobileSidebar } from '@/components/layout/mobile-sidebar';
-
-import TanstackProvider from '@/providers/tanstack-provider';
+import Sidebar from '@/components/layout/Sidebar';
+import TanstackProvider from '@/providers/tanstack.provider';
 import React, { ReactNode } from 'react';
 
 interface DashboardLayoutProps {

@@ -1,6 +1,7 @@
 'use client';
+import ThemeProvider from '@/components/layout/ThemeToggle/theme-provider';
 import React from 'react';
-import ThemeProvider from './ThemeToggle/theme-provider';
+
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <>

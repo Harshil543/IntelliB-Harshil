@@ -6,11 +6,11 @@ export const menuItems = [
     },
     {
       "title": "Company",
-      "path": "/dashboard/company"
+      "path": "/company"
     },
     {
       "title": "Profile Setting",
-      "path": "/dashboard/profile-setting"
+      "path": "/profile-setting"
     },
     // {
     //   "title": "Settings",

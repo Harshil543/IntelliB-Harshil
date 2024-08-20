@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { navItems } from '@/constants/navdata.constants';
 import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
-import { DashboardNav } from '../CommonComponents/DashboardNav';
+import { DashboardNav } from './DashboardNav';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 

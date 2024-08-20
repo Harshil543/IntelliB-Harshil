@@ -30,13 +30,16 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
+import { useRouter } from 'next/navigation';
 
 type DataTableProps<T> = {
   columns: ColumnDef<T>[];
   data: T[];
+  path: string;
 };
 
-export function DataTable<T>({ columns, data }: DataTableProps<T>) {
+export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -70,16 +73,16 @@ export function DataTable<T>({ columns, data }: DataTableProps<T>) {
     }
   });
 
+  const handleNavigate = (path: string) => {
+    router.push(path);
+  };
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input placeholder="Search..." className="max-w-sm" />
+        <Input placeholder="Search..." className="mr-2 w-full rounded-2xl" />
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
+          <Button children="Add " onClick={() => handleNavigate(path)} />
+
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()

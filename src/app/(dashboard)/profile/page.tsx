@@ -2,13 +2,9 @@ import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/Bre
 import React from 'react';
 
 const ProfileSetting = () => {
-  const breadcrumbItems = [
-    { label: 'Dashboard', href: '/' },
-    { label: 'Company' }
-  ];
   return (
     <div>
-      <BreadcrumbWithCustomSeparator items={breadcrumbItems} />
+      <BreadcrumbWithCustomSeparator />
       Profile Setting
     </div>
   );

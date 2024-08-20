@@ -3,14 +3,20 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronLeft } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
-import { DashboardNav } from '../CommonComponents/DashboardNav';
+import { DashboardNav } from './DashboardNav';
 import { navItems } from '@/constants/navdata.constants';
+import { Button } from '../ui/button';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import logo from '@/assets/images/logo.jpeg';
+import { color } from '@/utils/theme';
 
 type SidebarProps = {
   className?: string;
 };
 
 export default function Sidebar({ className }: SidebarProps) {
+  const router = useRouter();
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
 
@@ -19,10 +25,14 @@ export default function Sidebar({ className }: SidebarProps) {
     toggle();
     setTimeout(() => setStatus(false), 500);
   };
+  const handleLogout = () => {
+    console.log('logout');
+    router.push('/login');
+  };
   return (
     <nav
       className={cn(
-        `relative hidden h-screen flex-none border-r pt-20 md:block`,
+        `relative flex h-screen flex-col justify-between border-r bg-white pb-10`,
         status && 'duration-500',
         !isMinimized ? 'w-72' : 'w-[72px]',
         className
@@ -35,13 +45,21 @@ export default function Sidebar({ className }: SidebarProps) {
         )}
         onClick={handleToggle}
       />
+
       <div className="space-y-4 py-4">
-        <div className="px-3 py-2">
+        <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
+            <Image src={logo} height={90} alt="Logo" />
             <DashboardNav items={navItems} />
           </div>
         </div>
       </div>
+      <Button
+        children="Logout"
+        className="mx-10 rounded-3xl"
+        style={{ backgroundColor: color.primaryColor }}
+        onClick={handleLogout}
+      />
     </nav>
   );
 }
