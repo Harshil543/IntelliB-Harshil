@@ -1,11 +1,12 @@
 import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
+import Heading from '@/components/CommonComponents/Heading';
 import React from 'react';
 
 const ProfileSetting = () => {
   return (
     <div>
       <BreadcrumbWithCustomSeparator />
-      Profile Setting
+      <Heading children="Profile" />
     </div>
   );
 };

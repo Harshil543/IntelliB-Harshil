@@ -17,6 +17,7 @@ import { companyData } from '@/constants/data.constants';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import React from 'react';
 import { ColumnDef } from '@tanstack/react-table'; // or the relevant import from your data table library
+import Heading from '@/components/CommonComponents/Heading';
 
 // Define the type for your row data
 interface CompanyData {
@@ -93,21 +94,21 @@ const columns: ColumnDef<CompanyData>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button className="h-8 w-8 p-0" variant="none">
               <span className="sr-only">Open menu</span>
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(payment.id)}
             >
-              Copy payment ID
-            </DropdownMenuItem>
+              Update
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>Update</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -119,6 +120,7 @@ export default function ComapnyPage() {
   return (
     <div>
       <BreadcrumbWithCustomSeparator />
+      <Heading children="Company" />
       <DataTable
         columns={columns}
         data={companyData}

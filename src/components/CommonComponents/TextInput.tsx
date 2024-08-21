@@ -1,8 +1,8 @@
 // components/TextInput.tsx
-import React from "react";
-import { Field, ErrorMessage } from "formik";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import React from 'react';
+import { Field, ErrorMessage } from 'formik';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface TextInputProps {
   label: string;
@@ -14,8 +14,8 @@ interface TextInputProps {
 const TextInput: React.FC<TextInputProps> = ({
   label,
   name,
-  type = "text",
-  placeholder = `Enter ${name}`,
+  type = 'text',
+  placeholder = `Enter ${label}`
 }) => {
   return (
     <div className="grid gap-2">
@@ -28,13 +28,18 @@ const TextInput: React.FC<TextInputProps> = ({
             type={type}
             placeholder={placeholder}
             required
+            style={{
+              borderColor: 'var(--border)',
+              borderRadius: '4px'
+            }}
+            className="h-10"
           />
         )}
       </Field>
       <ErrorMessage
         name={name}
         component="div"
-        className="text-red-600 text-sm"
+        className="text-sm text-red-600"
       />
     </div>
   );

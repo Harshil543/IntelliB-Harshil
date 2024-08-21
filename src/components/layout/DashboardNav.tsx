@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { color } from '@/utils/theme';
+
 import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { NavItem } from '@/types';
@@ -28,7 +28,6 @@ export function DashboardNav({
 }: DashboardNavProps) {
   const path = usePathname();
   const { isMinimized } = useSidebar();
-  console.log('path', path);
 
   if (!items?.length) {
     return null;
@@ -38,8 +37,6 @@ export function DashboardNav({
       <TooltipProvider>
         {items.map((item, index) => {
           const Icon = Icons[item.icon || 'arrowRight'];
-          console.log('path', path, 'item', item.href);
-          console.log(path === item.href);
 
           return (
             item.href && (
@@ -50,11 +47,11 @@ export function DashboardNav({
                     style={{
                       color:
                         path === item.href
-                          ? color.dark
-                          : color.textSecondaryColor
+                          ? 'text-dark'
+                          : 'text.muted-foreground'
                     }}
                     className={cn(
-                      'flex items-center gap-2 overflow-hidden py-2 text-sm font-medium hover:border-r-2 hover:border-black',
+                      'flex items-center gap-2 overflow-hidden py-2 text-sm font-medium hover:border-r-2 hover:border-black hover:text-black',
                       path === item.href
                         ? 'border-r-2 border-black text-black'
                         : 'transparent',
@@ -67,7 +64,7 @@ export function DashboardNav({
                     <Icon className={`ml-3 size-5`} />
 
                     {isMobileNav || (!isMinimized && !isMobileNav) ? (
-                      <span className="mr-2 truncate">{item.title}</span>
+                      <span className="mr-5 truncate">{item.title}</span>
                     ) : (
                       ''
                     )}

@@ -1,15 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, LogOut } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
 import { DashboardNav } from './DashboardNav';
 import { navItems } from '@/constants/navdata.constants';
-import { Button } from '../ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@/assets/images/logo.jpeg';
-import { color } from '@/utils/theme';
 
 type SidebarProps = {
   className?: string;
@@ -32,7 +30,7 @@ export default function Sidebar({ className }: SidebarProps) {
   return (
     <nav
       className={cn(
-        `relative flex h-screen flex-col justify-between border-r bg-white pb-10`,
+        `relative flex h-screen flex-col justify-between bg-background pb-10`,
         status && 'duration-500',
         !isMinimized ? 'w-72' : 'w-[72px]',
         className
@@ -54,12 +52,17 @@ export default function Sidebar({ className }: SidebarProps) {
           </div>
         </div>
       </div>
-      <Button
-        children="Logout"
-        className="mx-10 rounded-3xl"
-        style={{ backgroundColor: color.primaryColor }}
+
+      <button
+        className={cn(
+          'flex items-center justify-center rounded-3xl py-2 text-background',
+          !isMinimized ? 'mx-10 px-4' : 'mx-3 rounded-full'
+        )}
+        // style={{ backgroundColor: color.primaryColor }}
         onClick={handleLogout}
-      />
+      >
+        {!isMinimized ? 'Logout' : <LogOut className="h-5 w-5" />}
+      </button>
     </nav>
   );
 }

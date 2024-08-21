@@ -2,6 +2,12 @@
 // import MainLayout from '@/components/layout/main-layout';
 // import { Overview } from '@/components/overview';
 // import { RecentSales } from '@/components/recent-sales';
+'use client';
+import CardWrapper from '@/components/CommonComponents/CardWrapper';
+import Heading from '@/components/CommonComponents/Heading';
+import SelectInput from '@/components/CommonComponents/SelectInput';
+import TextInput from '@/components/CommonComponents/TextInput';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -76,7 +82,7 @@ export default function Dashboard() {
     //                 strokeWidth="2"
     //                 className="h-4 w-4 text-muted-foreground"
     //               >
-    //                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    //                 < d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
     //                 <circle cx="9" cy="7" r="4" />
     //                 <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
     //               </svg>
@@ -160,6 +166,6 @@ export default function Dashboard() {
     //   </div>
     // </ScrollArea>
     // </MainLayout>
-    <h1>Dashboard</h1>
+    <Heading children="Main Dashboard" />
   );
 }

@@ -14,7 +14,6 @@ import { usePathname } from 'next/navigation';
 
 function generateBreadcrumbs(pathname: string) {
   const segments = pathname.split('/').filter(Boolean);
-  console.log('segments', segments);
 
   const breadcrumbs = segments.map((segment, index) => {
     const href = `/${segments.slice(0, index + 1).join('/')}`;
@@ -39,7 +38,12 @@ export function BreadcrumbWithCustomSeparator() {
           <React.Fragment key={index}>
             <BreadcrumbItem>
               {item.href ? (
-                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+                <BreadcrumbLink
+                  href={item.href}
+                  className="font-bold text-foreground"
+                >
+                  {item.label}
+                </BreadcrumbLink>
               ) : (
                 <BreadcrumbPage>{item.label}</BreadcrumbPage>
               )}

@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { color } from '@/utils/theme';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -34,7 +33,7 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/site.webmanifest"></link>
       </head>
-      <body style={{ backgroundColor: color.secondaryColor }}>{children}</body>
+      <body className="bg-secondary">{children}</body>
     </html>
   );
 }
