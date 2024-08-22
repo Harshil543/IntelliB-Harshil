@@ -1,1 +1,5 @@
-export const userBaseURL = 'api/user'
+export const BASE_URLS = {
+    user: 'api/user',
+    company: 'api/company'
+  };
+  

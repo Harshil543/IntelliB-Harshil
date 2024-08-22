@@ -79,7 +79,10 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input placeholder="Search..." className="mr-2 w-full rounded-2xl" />
+        <Input
+          placeholder="Search..."
+          className="mr-2 w-full rounded-2xl border-border"
+        />
         <DropdownMenu>
           <Button children="Add " onClick={() => handleNavigate(path)} />
 

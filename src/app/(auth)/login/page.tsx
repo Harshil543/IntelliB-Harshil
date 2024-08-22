@@ -4,8 +4,10 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useForm } from '@tanstack/react-form';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       email: '',
@@ -13,6 +15,7 @@ const Login = () => {
     },
     onSubmit: async ({ value }) => {
       console.log('Form Submitted', value);
+      router.push('/');
     }
   });
 
