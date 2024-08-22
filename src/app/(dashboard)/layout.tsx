@@ -1,5 +1,5 @@
 import { MobileSidebar } from '@/components/layout/mobile-sidebar';
-import Sidebar from '@/components/layout/Sidebar';
+import Sidebar from '@/components/layout/sidebar';
 import TanstackProvider from '@/providers/tanstack.provider';
 import React, { ReactNode } from 'react';
 
