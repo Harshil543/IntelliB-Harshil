@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +10,13 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
+import { useRouter } from 'next/navigation';
+import { deleteCompany } from '@/services/company.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 interface CompanyData {
-  id: string;
+  id: number;
   companyName: string;
   addressLine1: string;
   addressLine2: string;
@@ -70,7 +73,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     }
   },
   {
-    accessorKey: 'contact',
+    accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
       const countryCode = row.getValue('countryCode') ?? '';
@@ -88,7 +91,34 @@ const companyColumns: ColumnDef<CompanyData>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const companyId = row.getValue('id') as number;
+      const queryClient = useQueryClient();
+      const router = useRouter();
+
+      const delteMutation = useMutation({
+        mutationFn: deleteCompany
+      });
+
+      const handleUpdate = (id: number) => {
+        router.push(`/company/${id}`);
+      };
+
+      const handleDelete = async (id: number) => {
+        try {
+          delteMutation.mutate(id, {
+            onSuccess: () => {
+              queryClient.invalidateQueries({ queryKey: ['company'] });
+              toast.success(
+                `${row.getValue('companyName')} deleted successfully`
+              );
+            }
+          });
+        } catch (error) {
+          console.error('Error deleting company:', error);
+        }
+      };
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -101,8 +131,16 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Update</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
+              Update
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleDelete(companyId)}>
+              Delete
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              {row.getValue('status') === 'active' ? 'De-Activate' : 'Activate'}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

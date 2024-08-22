@@ -2,6 +2,7 @@ import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 import Sidebar from '@/components/layout/sidebar';
 import TanstackProvider from '@/providers/tanstack.provider';
 import React, { ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -19,6 +20,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         </div>
         <div className="h-full w-full p-10">{children}</div>
       </div>
+      <Toaster position="top-right" />
     </TanstackProvider>
   );
 };

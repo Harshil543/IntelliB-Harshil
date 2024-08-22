@@ -4,25 +4,58 @@ import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
-import { useMutation } from '@tanstack/react-query';
-import { createCompany } from '@/services/company.service';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createCompany, updateCompany } from '@/services/company.service';
+import toast from 'react-hot-toast';
 
-export default function CompanyForm() {
+interface CompanyFormProps {
+  initialValues?: {
+    id?: number;
+    companyName: string;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    country: string;
+    pincode: string;
+    email: string;
+    countryCode: string;
+    mobileNumber: string;
+    websiteUrl: string;
+    gstNumber: string;
+    cinNumber: string;
+  };
+}
+
+export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const mutation = useMutation({
-    mutationFn: createCompany
+    mutationFn: async (data: any) => {
+      if (initialValues?.id) {
+        return await updateCompany({
+          payload: data?.value,
+          id: initialValues.id
+        });
+      } else {
+        return await createCompany({ payload: data.value });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company'] });
+      router.push('/company/');
+      toast.success(
+        `Company ${initialValues?.id ? 'updated' : 'added'} successfully`
+      );
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
   });
 
-  const handleCreateCompany = (values: any) => {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push('/company/');
-      }
-    });
-  };
-
   const form = useForm({
-    defaultValues: {
+    defaultValues: initialValues || {
       companyName: '',
       addressLine1: '',
       addressLine2: '',
@@ -37,8 +70,8 @@ export default function CompanyForm() {
       gstNumber: '',
       cinNumber: ''
     },
-    onSubmit: async ({ value }) => {
-      handleCreateCompany(value);
+    onSubmit: async (values) => {
+      await mutation.mutateAsync(values);
     }
   });
 
@@ -47,7 +80,6 @@ export default function CompanyForm() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          e.stopPropagation();
           form.handleSubmit();
         }}
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
@@ -77,7 +109,7 @@ export default function CompanyForm() {
               !value ? 'Mobile Number is required' : undefined
           }}
           children={(field) => (
-            <TextInput type="number" label="Mobile Number" field={field} />
+            <TextInput type="text" label="Mobile Number" field={field} />
           )}
         />
         <form.Field
@@ -132,7 +164,7 @@ export default function CompanyForm() {
               !value ? 'Country Code is required' : undefined
           }}
           children={(field) => (
-            <TextInput type="number" label="Country Code" field={field} />
+            <TextInput type="text" label="Country Code" field={field} />
           )}
         />
 
@@ -143,7 +175,7 @@ export default function CompanyForm() {
               !value ? 'Pincode is required' : undefined
           }}
           children={(field) => (
-            <TextInput type="number" label="Pincode" field={field} />
+            <TextInput type="text" label="Pincode" field={field} />
           )}
         />
 
@@ -171,14 +203,14 @@ export default function CompanyForm() {
               !value ? 'CIN Number is required' : undefined
           }}
           children={(field) => (
-            <TextInput type="number" label="CIN Number" field={field} />
+            <TextInput type="text" label="CIN Number" field={field} />
           )}
         />
 
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
-            className={`text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background`}
+            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
             onClick={() => router.back()}
           >
             Cancel

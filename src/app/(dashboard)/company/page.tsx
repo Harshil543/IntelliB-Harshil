@@ -7,6 +7,7 @@ import Heading from '@/components/CommonComponents/Heading';
 import companyColumns from '@/utils/tableColumn/company.column';
 import { useQuery } from '@tanstack/react-query';
 import { getCompany } from '@/services/company.service';
+import { useRouter } from 'next/navigation';
 
 export default function ComapnyPage() {
   const { status, data, error } = useQuery({
