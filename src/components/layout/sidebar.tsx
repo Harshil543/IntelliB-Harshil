@@ -48,6 +48,7 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
+
             <DashboardNav items={navItems} />
           </div>
         </div>
@@ -55,10 +56,9 @@ export default function Sidebar({ className }: SidebarProps) {
 
       <button
         className={cn(
-          'flex items-center justify-center rounded-3xl py-2 text-background',
+          'flex items-center justify-center rounded-3xl bg-primary py-2 text-background',
           !isMinimized ? 'mx-10 px-4' : 'mx-3 rounded-full'
         )}
-        // style={{ backgroundColor: color.primaryColor }}
         onClick={handleLogout}
       >
         {!isMinimized ? 'Logout' : <LogOut className="h-5 w-5" />}
