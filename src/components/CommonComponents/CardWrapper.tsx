@@ -6,7 +6,7 @@ interface CardWrapperProps {
 
 const CardWrapper: React.FC<CardWrapperProps> = ({ children }) => {
   return (
-    <div className="my-5 h-fit w-full rounded-xl bg-background p-10">
+    <div className="sm: my-5 h-fit w-full rounded-xl bg-background p-5 lg:p-10">
       {children}
     </div>
   );

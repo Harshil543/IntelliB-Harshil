@@ -2,28 +2,19 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Formik, Form } from 'formik';
 import TextInput from '@/components/CommonComponents/TextInput';
-import { loginUser } from '@/services/auth.service';
-import { loginValidationSchema } from '@/validation-schemas/auth.validation';
-import { useRouter } from 'next/navigation';
+import { useForm } from '@tanstack/react-form';
 
 const Login = () => {
-  const router = useRouter();
-  const initialValues = {
-    email: '',
-    password: ''
-  };
-
-  const handleSubmit = async (values: typeof initialValues) => {
-    try {
-      const response = await loginUser(values);
-      console.log('Login successful:', response);
-      router.push('/');
-    } catch (error) {
-      console.error('Login error:', error);
+  const form = useForm({
+    defaultValues: {
+      email: '',
+      password: ''
+    },
+    onSubmit: async ({ value }) => {
+      console.log('Form Submitted', value);
     }
-  };
+  });
 
   return (
     <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
@@ -61,31 +52,45 @@ const Login = () => {
             <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
             <p className="text-sm">Enter your email below to login</p>
           </div>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={loginValidationSchema}
-            onSubmit={handleSubmit}
+
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+            className="grid grid-cols-1 gap-4"
           >
-            {() => (
-              <Form className="grid gap-4">
-                <TextInput
-                  label="Email"
-                  name="email"
-                  type="email"
-                  placeholder="info@example.com"
-                />
-                <TextInput
-                  label="Password"
-                  name="password"
-                  type="password"
-                  placeholder="example@123"
-                />
-                <Button type="submit" className="w-full">
-                  Login
+            <form.Field
+              name="email"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'Email is required' : undefined
+              }}
+              children={(field) => (
+                <TextInput type="email" label="Email" field={field} />
+              )}
+            />
+            <form.Field
+              name="password"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'Password is required' : undefined
+              }}
+              children={(field) => (
+                <TextInput type="password" label="Password" field={field} />
+              )}
+            />
+
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button type="submit" disabled={!canSubmit}>
+                  {isSubmitting ? 'Submitting...' : 'Submit'}
                 </Button>
-              </Form>
-            )}
-          </Formik>
+              )}
+            />
+          </form>
         </div>
       </div>
     </div>

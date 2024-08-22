@@ -17,19 +17,19 @@ body {
 @layer base {
   :root {
     --background: #fff; /* bgColor */
-    --foreground: #2b3674; /* textPrimaryColor */
+    --foreground: #000000; /* textPrimaryColor */
     --card: #fff; /* bgColor */
-    --card-foreground: #2b3674; /* textPrimaryColor */
+    --card-foreground: #000000; /* textPrimaryColor */
     --popover: #fff; /* bgColor */
-    --popover-foreground: #2b3674; /* textPrimaryColor */
+    --popover-foreground: #000000; /* textPrimaryColor */
     --primary: #fe9900; /* primaryColor */
     --primary-foreground: #fff; /* light */
     --secondary: #f4f7fe; /* secondaryColor */
-    --secondary-foreground: #2b3674; /* textPrimaryColor */
+    --secondary-foreground: #000000; /* textPrimaryColor */
     --muted: #f4f7fe; /* secondaryColor */
     --muted-foreground: #a3aed0; /* textSecondaryColor */
     --accent: #f4f7fe; /* secondaryColor */
-    --accent-foreground: #2b3674; /* textPrimaryColor */
+    --accent-foreground: #000000; /* textPrimaryColor */
     --destructive: rgba(217, 21, 21, 1); /* danger */
     --destructive-foreground: #fff; /* light */
     --border: #d1d1d1; /* borderColor */
@@ -52,16 +52,16 @@ body {
     --popover-foreground: #fff; /* light */
     --primary: #fe9900; /* primaryColor */
     --primary-foreground: #000000; /* dark */
-    --secondary: #2b3674; /* textPrimaryColor */
+    --secondary: #000000; /* textPrimaryColor */
     --secondary-foreground: #fff; /* light */
-    --muted: #2b3674; /* textPrimaryColor */
+    --muted: #000000; /* textPrimaryColor */
     --muted-foreground: #a3aed0; /* textSecondaryColor */
-    --accent: #2b3674; /* textPrimaryColor */
+    --accent: #000000; /* textPrimaryColor */
     --accent-foreground: #fff; /* light */
     --destructive: rgba(217, 21, 21, 1); /* danger */
     --destructive-foreground: #fff; /* light */
     --border: #d1d1d1; /* borderColor */
-    --input: #2b3674; /* textPrimaryColor */
+    --input: #000000; /* textPrimaryColor */
     --ring: #fe9900; /* primaryColor */
     --chart-1: #e59819; /* star */
     --chart-2: rgba(0, 61, 50, 1); /* success */
