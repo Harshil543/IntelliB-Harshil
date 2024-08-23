@@ -81,7 +81,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Search..."
-          className="mr-2 w-full rounded-2xl border-border"
+          className="mr-2 w-full rounded-2xl border-border bg-background"
         />
         <DropdownMenu>
           <Button children="Add " onClick={() => handleNavigate(path)} />
@@ -103,7 +103,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-lg border bg-background">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -162,6 +162,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="rounded-lg p-0 px-4"
           >
             Previous
           </Button>
@@ -170,6 +171,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="rounded-lg p-0 px-4"
           >
             Next
           </Button>

@@ -25,9 +25,10 @@ export const getCompanyById = async (companyId: number) => {
 
 export const createCompany = async ({ payload }: { payload: any }) => {
     try {
+      
         // const response = await apiClient.post(`${BASE_URLS?.company}/company`, payload);
         const response = await apiClient.post(`/company/`, payload);
-        console.log('create response', response);
+
         return response.data;
     } catch (error) {
         console.error('Error creating company:', error);
@@ -39,7 +40,7 @@ export const updateCompany = async ({ id, payload }: { payload: any, id: number 
     try {
         // const response = await apiClient.put(`${BASE_URLS?.company}/company/${id}`, payload);
         const response = await apiClient.put(`/company/${id}`, payload);
-        console.log('create response', response);
+   
         return response.data;
         
     } catch (error) {

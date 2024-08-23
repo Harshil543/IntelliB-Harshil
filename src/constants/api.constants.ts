@@ -1,5 +1,6 @@
 export const BASE_URLS = {
     user: 'api/user',
-    company: 'api/company'
+    company: 'api/company',
+    propertyUser: 'api/property-user'
   };
   

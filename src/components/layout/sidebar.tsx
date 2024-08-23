@@ -24,7 +24,6 @@ export default function Sidebar({ className }: SidebarProps) {
     setTimeout(() => setStatus(false), 500);
   };
   const handleLogout = () => {
-    console.log('logout');
     router.push('/login');
   };
   return (

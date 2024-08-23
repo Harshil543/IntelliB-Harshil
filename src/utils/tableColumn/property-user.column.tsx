@@ -11,29 +11,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { deleteCompany } from '@/services/company.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { deletePropertyUser } from '@/services/property-user.service';
 
-interface CompanyData {
+interface PropertyUserColumns {
   id: number;
-  companyName: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode: string;
+  firstName: string;
+  lastName: string;
   email: string;
   countryCode: string;
   mobileNumber: string;
-  websiteUrl: string;
-  gstNumber: string;
-  cinNumber: string;
+  role: string;
+  designation: string;
   status: string;
 }
 
-const companyColumns: ColumnDef<CompanyData>[] = [
+const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
   {
     accessorKey: 'id',
     header: 'Id',
@@ -42,10 +36,17 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     )
   },
   {
-    accessorKey: 'companyName',
-    header: 'Company Name',
+    accessorKey: 'firstName',
+    header: 'Name',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('companyName') ?? 'N/A'}</div>
+      <div className="capitalize">{row.getValue('firstName') ?? 'N/A'}</div>
+    )
+  },
+  {
+    accessorKey: 'lastName',
+    header: 'Name',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue('lastName') ?? 'N/A'}</div>
     )
   },
   {
@@ -55,23 +56,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       <div className="lowercase">{row.getValue('email') ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'addressLine1',
-    header: 'Address',
-    cell: ({ row }) => {
-      const addressLine1 = row.getValue('addressLine1') ?? '';
-      const addressLine2 = row.getValue('addressLine2') ?? '';
-      const city = row.getValue('city') ?? '';
-      const state = row.getValue('state') ?? '';
-      const country = row.getValue('country') ?? '';
-      const pincode = row.getValue('pincode') ?? '';
-      return (
-        <div className="lowercase">
-          {`${addressLine1}${addressLine2 ? ', ' + addressLine2 : ''}, ${city}, ${state}, ${country}, ${pincode}`}
-        </div>
-      );
-    }
-  },
+
   {
     accessorKey: 'mobileNumber',
     header: 'Contact',
@@ -84,6 +69,20 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     }
   },
   {
+    accessorKey: 'role',
+    header: 'Role',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue('role') ?? 'N/A'}</div>
+    )
+  },
+  {
+    accessorKey: 'designation',
+    header: 'Designation',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue('designation') ?? 'N/A'}</div>
+    )
+  },
+  {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => <Badge>{row.getValue('status') ?? 'N/A'}</Badge>
@@ -92,28 +91,28 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const companyId = row.getValue('id') as number;
+      const propertyUserId = row.getValue('id') as number;
       const queryClient = useQueryClient();
       const router = useRouter();
 
       const delteMutation = useMutation({
-        mutationFn: deleteCompany
+        mutationFn: deletePropertyUser
       });
 
       const handleUpdate = (id: number) => {
-        router.push(`/company/${id}`);
+        router.push(`/property-user/${id}`);
       };
 
       const handleDelete = async (id: number) => {
         try {
           delteMutation.mutate(id, {
             onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['company'] });
+              queryClient.invalidateQueries({ queryKey: ['property-user'] });
               toast.success(`Deleted successfully`);
             }
           });
         } catch (error) {
-          console.error('Error deleting company:', error);
+          console.error('Error deleting property user:', error);
         }
       };
 
@@ -129,10 +128,10 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
+            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(companyId)}>
+            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
               Delete
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -146,4 +145,4 @@ const companyColumns: ColumnDef<CompanyData>[] = [
   }
 ];
 
-export default companyColumns;
+export default propertyUserColumns;

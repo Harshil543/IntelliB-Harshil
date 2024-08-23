@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CardWrapper from '@/components/CommonComponents/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
@@ -7,6 +7,9 @@ import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
+import PhoneInputField from '../CommonComponents/PhoneInput';
+import { CountrySelect, StateSelect } from 'react-country-state-city';
+import 'react-country-state-city/dist/react-country-state-city.css';
 
 interface CompanyFormProps {
   initialValues?: {
@@ -31,6 +34,9 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const [countryId, setCountryId] = useState<number | null>(null);
+  const [stateId, setStateId] = useState<number | null>(null);
+
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
@@ -38,16 +44,16 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           payload: data?.value,
           id: initialValues.id
         });
+        return;
       } else {
         return await createCompany({ payload: data.value });
+        return;
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['company'] });
       router.push('/company/');
-      toast.success(
-        `Company ${initialValues?.id ? 'updated' : 'added'} successfully`
-      );
+      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -102,6 +108,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             <TextInput type="email" label="Email" field={field} />
           )}
         />
+
         <form.Field
           name="mobileNumber"
           validators={{
@@ -109,9 +116,21 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               !value ? 'Mobile Number is required' : undefined
           }}
           children={(field) => (
-            <TextInput type="text" label="Mobile Number" field={field} />
+            <PhoneInputField label="Mobile Number" field={field} />
           )}
         />
+
+        {/* <form.Field
+          name="countryCode"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Country Code is required' : undefined
+          }}
+          children={(field) => (
+            <PhoneInputField label="Country Code" field={field} />
+          )}
+        /> */}
+
         <form.Field
           name="addressLine1"
           validators={{
@@ -133,39 +152,62 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             <TextInput label="Address Line 2" field={field} />
           )}
         />
-        <form.Field
-          name="city"
-          validators={{
-            onChange: ({ value }) => (!value ? 'City is required' : undefined)
-          }}
-          children={(field) => <TextInput label="City" field={field} />}
-        />
-        <form.Field
-          name="state"
-          validators={{
-            onChange: ({ value }) => (!value ? 'State is required' : undefined)
-          }}
-          children={(field) => <TextInput label="State" field={field} />}
-        />
 
-        <form.Field
+        {/* <form.Field
           name="country"
           validators={{
             onChange: ({ value }) =>
               !value ? 'Country is required' : undefined
           }}
           children={(field) => <TextInput label="Country" field={field} />}
+        /> */}
+        <form.Field
+          name="country"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Country is required' : undefined
+          }}
+          children={(field) => (
+            <CountrySelect
+              onChange={(e: any) => {
+                form.setFieldValue('countryCode', e.phone_code);
+                form.setFieldValue('country', e.name);
+                setCountryId(e.id);
+              }}
+              placeHolder="Select Country"
+            />
+          )}
+        />
+        {/* <form.Field
+          name="state"
+          validators={{
+            onChange: ({ value }) => (!value ? 'State is required' : undefined)
+          }}
+          children={(field) => <TextInput label="State" field={field} />}
+        /> */}
+        <form.Field
+          name="state"
+          validators={{
+            onChange: ({ value }) => (!value ? 'State is required' : undefined)
+          }}
+          children={(field) => (
+            <StateSelect
+              countryid={countryId || 0}
+              onChange={(e: any) => {
+                setStateId(e.id);
+                form.setFieldValue('state', e.name);
+              }}
+              placeHolder="Select State"
+            />
+          )}
         />
 
         <form.Field
-          name="countryCode"
+          name="city"
           validators={{
-            onChange: ({ value }) =>
-              !value ? 'Country Code is required' : undefined
+            onChange: ({ value }) => (!value ? 'City is required' : undefined)
           }}
-          children={(field) => (
-            <TextInput type="text" label="Country Code" field={field} />
-          )}
+          children={(field) => <TextInput label="City" field={field} />}
         />
 
         <form.Field
@@ -196,6 +238,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           }}
           children={(field) => <TextInput label="GST Number" field={field} />}
         />
+
         <form.Field
           name="cinNumber"
           validators={{

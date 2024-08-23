@@ -122,11 +122,17 @@ export const navItems: NavItem[] = [
     href: '/company/',
     icon: 'user',
     label: 'user'
+  }, {
+    title: 'Property User',
+    href: '/property-user/',
+    icon: 'profile',
+    label: 'profile'
   },
   {
     title: 'Profile',
     href: '/profile/',
     icon: 'profile',
     label: 'profile'
-  }
+  },
+ 
 ];
