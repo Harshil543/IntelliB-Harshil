@@ -5,7 +5,6 @@ import TextInput from '@/components/CommonComponents/TextInput';
 import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import {
   createPropertyUser,
@@ -13,7 +12,7 @@ import {
 } from '@/services/property-user.service';
 import PhoneInputField from '../CommonComponents/PhoneInput';
 
-interface CompanyFormProps {
+interface PropertyUserFormProps {
   initialValues?: {
     id?: number;
     firstName: string;
@@ -21,13 +20,14 @@ interface CompanyFormProps {
     email: string;
     countryCode: string;
     mobileNumber: string;
-    role: string;
     designation: string;
     status: string;
   };
 }
 
-export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
+export default function PropertyUserForm({
+  initialValues
+}: PropertyUserFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -60,9 +60,8 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
       email: '',
       countryCode: '',
       mobileNumber: '',
-      role: '',
       designation: '',
-      status: ''
+      status: 'Active'
     },
     onSubmit: async (values) => {
       await mutation.mutateAsync(values);
@@ -81,24 +80,40 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
         <form.Field
           name="firstName"
           validators={{
-            onChange: ({ value }) =>
-              !value ? 'First name is required' : undefined
+            onChange: ({ value }) => {
+              if (!value) return 'First name is required';
+              if (value.length < 3)
+                return 'First name must be at least 3 characters';
+              if (value.length > 15)
+                return 'First name must be at most 15 characters';
+              return undefined;
+            }
           }}
           children={(field) => <TextInput label="First Name" field={field} />}
         />
         <form.Field
           name="lastName"
           validators={{
-            onChange: ({ value }) =>
-              !value ? 'Last name is required' : undefined
+            onChange: ({ value }) => {
+              if (!value) return 'Last name is required';
+              if (value.length < 3)
+                return 'Last name must be at least 3 characters';
+              if (value.length > 15)
+                return 'Last name must be at most 15 characters';
+              return undefined;
+            }
           }}
           children={(field) => <TextInput label="Last Name" field={field} />}
         />
-
         <form.Field
           name="email"
           validators={{
-            onChange: ({ value }) => (!value ? 'Email is required' : undefined)
+            onChange: ({ value }) => {
+              if (!value) return 'Email is required';
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(value)) return 'Invalid email address';
+              return undefined;
+            }
           }}
           children={(field) => (
             <TextInput type="email" label="Email" field={field} />
@@ -107,20 +122,30 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
         <form.Field
           name="mobileNumber"
           validators={{
-            onChange: ({ value }) =>
-              !value ? 'Mobile Number is required' : undefined
+            onChange: ({ value }) => {
+              if (!value) return 'Mobile Number is required';
+
+              return undefined;
+            }
           }}
           children={(field) => (
-            <PhoneInputField label="Mobile Number" field={field} />
+            <PhoneInputField
+              label="Mobile Number"
+              field={{
+                value: field.value,
+                countryCode: form.getFieldValue('countryCode'),
+                setValue: (value: string) => {
+                  form.setFieldValue('mobileNumber', value);
+                },
+                setCountryCode: (code: string) => {
+                  form.setFieldValue('countryCode', code);
+                },
+                errorMessage: field.state.meta.errors.length
+                  ? field.state.meta.errors.join(', ')
+                  : undefined
+              }}
+            />
           )}
-        />
-
-        <form.Field
-          name="role"
-          validators={{
-            onChange: ({ value }) => (!value ? 'Role is required' : undefined)
-          }}
-          children={(field) => <TextInput label="Role" field={field} />}
         />
         <form.Field
           name="designation"
@@ -130,7 +155,6 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
           }}
           children={(field) => <TextInput label="Designation" field={field} />}
         />
-
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
@@ -139,7 +163,6 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
           >
             Cancel
           </Button>
-
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
@@ -149,7 +172,6 @@ export default function PropertyUserForm({ initialValues }: CompanyFormProps) {
             )}
           />
         </div>
-
         {mutation.isError && (
           <div className="col-span-full text-red-500">
             {mutation.error instanceof Error

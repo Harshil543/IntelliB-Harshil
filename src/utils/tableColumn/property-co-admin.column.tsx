@@ -13,9 +13,9 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { deletePropertyUser } from '@/services/property-user.service';
+import { deletePropertyCoAdmin } from '@/services/property-co-admin.service';
 
-interface PropertyUserColumns {
+interface PropertyCoAdminColumns {
   id: number;
   firstName: string;
   lastName: string;
@@ -27,7 +27,7 @@ interface PropertyUserColumns {
   status: string;
 }
 
-const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
+const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
   {
     accessorKey: 'id',
     header: 'Id',
@@ -91,28 +91,30 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyUserId = row.getValue('id') as number;
+      const propertyCoAdminId = row.getValue('id') as number;
       const queryClient = useQueryClient();
       const router = useRouter();
 
       const delteMutation = useMutation({
-        mutationFn: deletePropertyUser
+        mutationFn: deletePropertyCoAdmin
       });
 
       const handleUpdate = (id: number) => {
-        router.push(`/property-user/update-property-user/${id}`);
+        router.push(`/property-co-admin/update-property-co-admin/${id}`);
       };
 
       const handleDelete = async (id: number) => {
         try {
           delteMutation.mutate(id, {
             onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['property-user'] });
+              queryClient.invalidateQueries({
+                queryKey: ['property-co-admin']
+              });
               toast.success(`Deleted successfully`);
             }
           });
         } catch (error) {
-          console.error('Error deleting property user:', error);
+          console.error('Error deleting property co-admin:', error);
         }
       };
 
@@ -128,10 +130,10 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
+            <DropdownMenuItem onClick={() => handleUpdate(propertyCoAdminId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
+            <DropdownMenuItem onClick={() => handleDelete(propertyCoAdminId)}>
               Delete
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -145,4 +147,4 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
   }
 ];
 
-export default propertyUserColumns;
+export default propertyCoAdminColumns;

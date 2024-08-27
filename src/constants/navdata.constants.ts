@@ -122,11 +122,18 @@ export const navItems: NavItem[] = [
     href: '/company/',
     icon: 'user',
     label: 'user'
-  }, {
+  }, 
+  {
     title: 'Property User',
     href: '/property-user/',
     icon: 'profile',
-    label: 'profile'
+    label: 'property-user'
+  },
+  {
+    title: 'Property Co-Admin',
+    href: '/property-co-admin/',
+    icon: 'profile',
+    label: 'property-co-admin'
   },
   {
     title: 'Profile',

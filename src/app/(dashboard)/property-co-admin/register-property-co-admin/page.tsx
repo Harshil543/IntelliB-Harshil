@@ -3,14 +3,14 @@
 import * as React from 'react';
 import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
 import Heading from '@/components/CommonComponents/Heading';
-import PropertyUserForm from '@/components/forms/property-user.form';
+import PropertyCoAdminForm from '@/components/forms/property-co-admin.form';
 
-export default function PropertyUserRegister() {
+export default function PropertyCoAdminRegister() {
   return (
     <div>
       <BreadcrumbWithCustomSeparator />
-      <Heading children="Property User" />
-      <PropertyUserForm />
+      <Heading children="Property Co-Admin" />
+      <PropertyCoAdminForm />
     </div>
   );
 }

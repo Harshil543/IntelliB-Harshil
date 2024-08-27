@@ -137,7 +137,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              {row.getValue('status') === 'active' ? 'De-Activate' : 'Activate'}
+              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

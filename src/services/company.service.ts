@@ -27,9 +27,11 @@ export const createCompany = async ({ payload }: { payload: any }) => {
     try {
       
         // const response = await apiClient.post(`${BASE_URLS?.company}/company`, payload);
-        const response = await apiClient.post(`/company/`, payload);
+        // const response = await apiClient.post(`/company/`, payload);
 
-        return response.data;
+        console.log('payload create', payload);
+        
+        // return response.data;
     } catch (error) {
         console.error('Error creating company:', error);
         throw error; 

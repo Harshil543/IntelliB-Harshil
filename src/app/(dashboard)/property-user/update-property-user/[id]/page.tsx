@@ -3,13 +3,10 @@
 import * as React from 'react';
 import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
 import Heading from '@/components/CommonComponents/Heading';
-
-import CompanyForm from '@/components/forms/company.form';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getCompanyById } from '@/services/company.service';
 import { getpropertyUserById } from '@/services/property-user.service';
-import PropertyUserForm from '@/components/forms/propertyUserForm';
+import PropertyUserForm from '@/components/forms/property-user.form';
 
 export default function PropertyUserUpdate() {
   const { id } = useParams();
@@ -21,7 +18,7 @@ export default function PropertyUserUpdate() {
   return (
     <div>
       <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
+      <Heading children="Property User" />
       <PropertyUserForm initialValues={data} />
     </div>
   );

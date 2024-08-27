@@ -4,32 +4,35 @@ import 'react-phone-input-2/lib/style.css';
 
 interface PhoneInputFieldProps {
   label: string;
-  field: any;
+  value: string;
+  countryCode: string;
+  onChange: (value: string, country: { dialCode: string }) => void;
+  errorMessage?: string;
 }
 
-const PhoneInputField: React.FC<PhoneInputFieldProps> = ({ label, field }) => {
-  const { value, setValue, errorMessage } = field;
-
+const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
+  label,
+  value,
+  countryCode,
+  onChange,
+  errorMessage
+}) => {
   const handlePhoneChange = (phone: string, country: { dialCode: string }) => {
     const trimmedPhoneNumber = phone.slice(country.dialCode.length);
-
-    setValue(trimmedPhoneNumber);
-    // setPhoneNumber(trimmedPhoneNumber);
-    // setCountryCode(country.dialCode);
+    onChange(trimmedPhoneNumber, country);
   };
+
   return (
     <div className="form-group w-full">
       <label className="form-label">{label}</label>
       <PhoneInput
         country={'in'}
-        value={value}
-        // onChange={(phone: string) => setValue(phone)}
+        value={countryCode + value}
         onChange={handlePhoneChange}
         inputStyle={{
           width: '100%',
           borderRadius: '4px',
           borderColor: '#ccc',
-
           height: '2.5rem'
         }}
       />

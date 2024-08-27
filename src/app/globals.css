@@ -88,3 +88,12 @@ input::-webkit-inner-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+.stsearch-box input {
+  padding: 1.5px !important;
+  border: 0px solid #fff !important;
+}
+
+input:focus {
+  border: 1px solid red;
+}
