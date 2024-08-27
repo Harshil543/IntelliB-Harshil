@@ -59,15 +59,15 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'addressLine1',
     header: 'Address',
     cell: ({ row }) => {
-      const addressLine1 = row.getValue('addressLine1') ?? '';
-      const addressLine2 = row.getValue('addressLine2') ?? '';
-      const city = row.getValue('city') ?? '';
-      const state = row.getValue('state') ?? '';
-      const country = row.getValue('country') ?? '';
-      const pincode = row.getValue('pincode') ?? '';
+      const addressLine1 = row.original.addressLine1;
+      const city = row.original.city;
+      const state = row.original.state;
+      const country = row.original.country;
+      const pincode = row.original.pincode;
+
       return (
         <div className="lowercase">
-          {`${addressLine1}${addressLine2 ? ', ' + addressLine2 : ''}, ${city}, ${state}, ${country}, ${pincode}`}
+          {`${addressLine1}, ${city} ${state} ${country} ${pincode}`}
         </div>
       );
     }
@@ -76,10 +76,10 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
-      const countryCode = row.getValue('countryCode') ?? '';
-      const mobileNumber = row.getValue('mobileNumber') ?? '';
+      const countryCode = row.original.countryCode;
+      const mobileNumber = row.original.mobileNumber;
       return (
-        <div className="lowercase">{`${countryCode} ${mobileNumber}`}</div>
+        <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },
@@ -101,7 +101,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       });
 
       const handleUpdate = (id: number) => {
-        router.push(`/company/${id}`);
+        router.push(`/company/update-company/${id}`);
       };
 
       const handleDelete = async (id: number) => {

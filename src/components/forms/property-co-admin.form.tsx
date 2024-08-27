@@ -130,20 +130,20 @@ export default function PropertyCoAdminForm({
           children={(field) => (
             <PhoneInputField
               label="Mobile Number"
-              value={field.value}
-              countryCode={form.getFieldValue('countryCode') || ''}
-              onChange={(
-                phoneNumber: string,
-                country: { dialCode: string }
-              ) => {
-                form.setFieldValue('mobileNumber', phoneNumber);
-                form.setFieldValue('countryCode', country.dialCode);
-              }}
-              errorMessage={
-                field.state.meta.errors.length
+              field={{
+                value: form.getFieldValue('mobileNumber'),
+                countryCode: form.getFieldValue('countryCode'),
+
+                setValue: (value: string) => {
+                  form.setFieldValue('mobileNumber', value);
+                },
+                setCountryCode: (code: string) => {
+                  form.setFieldValue('countryCode', code);
+                },
+                errorMessage: field.state.meta.errors.length
                   ? field.state.meta.errors.join(', ')
                   : undefined
-              }
+              }}
             />
           )}
         />

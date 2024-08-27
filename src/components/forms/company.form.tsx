@@ -36,19 +36,16 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const queryClient = useQueryClient();
 
   const [countryId, setCountryId] = useState<number | null>(null);
-  const [stateId, setStateId] = useState<number | null>(null);
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        // return await updateCompany({
-        //   payload: data?.value,
-        //   id: initialValues.id
-        // });
+        return await updateCompany({
+          payload: data?.value,
+          id: initialValues.id
+        });
       } else {
-        console.log('company creation pay;od', data.value);
-
-        // return await createCompany({ payload: data.value });
+        return await createCompany({ payload: data.value });
         return;
       }
     },
@@ -76,7 +73,8 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       mobileNumber: '',
       websiteUrl: '',
       gstNumber: '',
-      cinNumber: ''
+      cinNumber: '',
+      status: 'Active'
     },
     onSubmit: async (values) => {
       await mutation.mutateAsync(values);
@@ -131,24 +129,26 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
-              <PhoneInputField
-                label="Mobile Number"
-                field={{
-                  value: field.value,
-                  countryCode: form.getFieldValue('countryCode'),
-                  setValue: (value: string) => {
-                    form.setFieldValue('mobileNumber', value);
-                  },
-                  setCountryCode: (code: string) => {
-                    form.setFieldValue('countryCode', code);
-                  },
-                  errorMessage: field.state.meta.errors.length
-                    ? field.state.meta.errors.join(', ')
-                    : undefined
-                }}
-              />
-            )}
+            children={(field) => {
+              return (
+                <PhoneInputField
+                  label="Mobile Number"
+                  field={{
+                    value: form.getFieldValue('mobileNumber'),
+                    countryCode: form.getFieldValue('countryCode'),
+                    setValue: (value: string) => {
+                      form.setFieldValue('mobileNumber', value);
+                    },
+                    setCountryCode: (code: string) => {
+                      form.setFieldValue('countryCode', code);
+                    },
+                    errorMessage: field.state.meta.errors.length
+                      ? field.state.meta.errors.join(', ')
+                      : undefined
+                  }}
+                />
+              );
+            }}
           />
         </div>
       </CardWrapper>
@@ -213,7 +213,6 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 <StateSelect
                   countryid={countryId || 0}
                   onChange={(e: any) => {
-                    setStateId(e.id);
                     form.setFieldValue('state', e.name);
                   }}
                   placeHolder="Select State"

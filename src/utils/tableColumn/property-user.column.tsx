@@ -30,7 +30,7 @@ interface PropertyUserColumns {
 const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
   {
     accessorKey: 'id',
-    header: 'Id',
+    header: 'id',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
@@ -38,17 +38,13 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
   {
     accessorKey: 'firstName',
     header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('firstName') ?? 'N/A'}</div>
-    )
+    cell: ({ row }) => {
+      const firstName = row.original.firstName;
+      const lastName = row.original.lastName;
+      return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
+    }
   },
-  {
-    accessorKey: 'lastName',
-    header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('lastName') ?? 'N/A'}</div>
-    )
-  },
+
   {
     accessorKey: 'email',
     header: 'Email',
@@ -61,10 +57,10 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
-      const countryCode = row.getValue('countryCode') ?? '';
-      const mobileNumber = row.getValue('mobileNumber') ?? '';
+      const countryCode = row.original.countryCode;
+      const mobileNumber = row.original.mobileNumber;
       return (
-        <div className="lowercase">{`${countryCode} ${mobileNumber}`}</div>
+        <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },

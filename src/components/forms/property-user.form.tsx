@@ -132,7 +132,7 @@ export default function PropertyUserForm({
             <PhoneInputField
               label="Mobile Number"
               field={{
-                value: field.value,
+                value: form.getFieldValue('mobileNumber'),
                 countryCode: form.getFieldValue('countryCode'),
                 setValue: (value: string) => {
                   form.setFieldValue('mobileNumber', value);

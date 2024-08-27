@@ -30,7 +30,7 @@ interface PropertyCoAdminColumns {
 const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
   {
     accessorKey: 'id',
-    header: 'Id',
+    header: 'id',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
@@ -38,17 +38,13 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
   {
     accessorKey: 'firstName',
     header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('firstName') ?? 'N/A'}</div>
-    )
+    cell: ({ row }) => {
+      const firstName = row.original.firstName;
+      const lastName = row.original.lastName;
+      return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
+    }
   },
-  {
-    accessorKey: 'lastName',
-    header: 'Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('lastName') ?? 'N/A'}</div>
-    )
-  },
+
   {
     accessorKey: 'email',
     header: 'Email',
@@ -61,10 +57,10 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
-      const countryCode = row.getValue('countryCode') ?? '';
-      const mobileNumber = row.getValue('mobileNumber') ?? '';
+      const countryCode = row.original.countryCode;
+      const mobileNumber = row.original.mobileNumber;
       return (
-        <div className="lowercase">{`${countryCode} ${mobileNumber}`}</div>
+        <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },
@@ -91,7 +87,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyCoAdminId = row.getValue('id') as number;
+      const propertyUserId = row.getValue('id') as number;
       const queryClient = useQueryClient();
       const router = useRouter();
 
@@ -114,7 +110,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
             }
           });
         } catch (error) {
-          console.error('Error deleting property co-admin:', error);
+          console.error('Error deleting property user:', error);
         }
       };
 
@@ -130,10 +126,10 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(propertyCoAdminId)}>
+            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(propertyCoAdminId)}>
+            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
               Delete
             </DropdownMenuItem>
             <DropdownMenuSeparator />
