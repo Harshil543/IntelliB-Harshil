@@ -77,7 +77,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-500'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>

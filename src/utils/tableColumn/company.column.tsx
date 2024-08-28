@@ -86,7 +86,13 @@ const companyColumns: ColumnDef<CompanyData>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => <Badge>{row.getValue('status') ?? 'N/A'}</Badge>
+    cell: ({ row }) => (
+      <Badge
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+      >
+        {row.getValue('status') ?? 'N/A'}
+      </Badge>
+    )
   },
   {
     id: 'actions',
