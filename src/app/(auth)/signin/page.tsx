@@ -8,8 +8,10 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
+import Link from 'next/link';
+import { Checkbox } from '@/components/ui/checkbox';
 
-const Login = () => {
+const SignIn = () => {
   const router = useRouter();
   const form = useForm({
     defaultValues: {
@@ -73,6 +75,29 @@ const Login = () => {
               )}
             />
 
+            <Link href={'#'}>
+              <p className="text-sm text-slate-500 underline">
+                Forgot password?
+              </p>
+            </Link>
+            <div className="my-3 flex justify-between align-middle text-xs">
+              <div className="flex justify-center align-middle">
+                <Checkbox />
+                &nbsp;&nbsp;Remember Me
+              </div>
+              <div className="flex justify-center align-middle">
+                <Checkbox />
+                &nbsp;&nbsp;I agree to all the&nbsp;
+                <Link href={'#'} className="text-slate-500">
+                  Terms
+                </Link>
+                &nbsp;and&nbsp;
+                <Link href={'#'} className="text-slate-500">
+                  Privacy Policy
+                </Link>
+              </div>
+            </div>
+
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
               children={([canSubmit, isSubmitting]) => (
@@ -88,4 +113,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

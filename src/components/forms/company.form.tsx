@@ -8,8 +8,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import PhoneInputField from '../CommonComponents/PhoneInput';
-import { CountrySelect, StateSelect } from 'react-country-state-city';
-import 'react-country-state-city/dist/react-country-state-city.css';
+// import { CountrySelect, StateSelect } from 'react-country-state-city';
+// import 'react-country-state-city/dist/react-country-state-city.css';
 import { Label } from '@/components/ui/label';
 
 interface CompanyFormProps {
@@ -184,7 +184,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             children={(field) => (
               <div>
                 <Label>Country</Label>
-                <CountrySelect
+                {/* <CountrySelect
                   onChange={(e: any) => {
                     form.setFieldValue('country', e.name);
                     setCountryId(e.id);
@@ -196,7 +196,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                   <span className="text-sm text-red-600">
                     {field.state.meta.errors.join(', ')}
                   </span>
-                ) : null}
+                ) : null} */}
               </div>
             )}
           />
@@ -210,7 +210,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             children={(field) => (
               <div>
                 <Label>State</Label>
-                <StateSelect
+                {/* <StateSelect
                   countryid={countryId || 0}
                   onChange={(e: any) => {
                     form.setFieldValue('state', e.name);
@@ -222,7 +222,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                   <span className="text-sm text-red-600">
                     {field.state.meta.errors.join(', ')}
                   </span>
-                ) : null}
+                ) : null} */}
               </div>
             )}
           />

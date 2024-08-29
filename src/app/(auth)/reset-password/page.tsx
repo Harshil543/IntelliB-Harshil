@@ -4,32 +4,29 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useForm } from '@tanstack/react-form';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 
-const Login = () => {
-  const router = useRouter();
+const ResetPassword = () => {
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: ''
+      new_password: '',
+      confirm_password: ''
     },
     onSubmit: async ({ value }) => {
-      console.log('Form Submitted', value);
-      router.push('/');
+      console.log('Reset Password Form Submitted ', value);
     }
   });
 
   return (
     <AuthWrapper>
       <div className="flex h-full w-full justify-center p-4 align-middle lg:p-8">
-        <div className="mt-[10%] flex flex-col justify-start space-y-2 align-middle sm:w-[350px] lg:w-[50%]">
+        <div className="xs:w-[90%] mt-[10%] flex flex-col justify-start space-y-2 align-middle sm:w-[90%] lg:w-[50%]">
           <div className="mb-10 flex flex-col items-center space-y-2">
             <Image src={logo} className="w-40" alt="IntelliB logo" />
             <h1 className="text-2xl font-semibold tracking-tight">
-              Welcome Back
+              Reset Your Password
             </h1>
             <p className="text-sm">For business, band or celebrity.</p>
           </div>
@@ -43,30 +40,30 @@ const Login = () => {
             className="grid w-full grid-cols-1 gap-4"
           >
             <form.Field
-              name="email"
+              name="new_password"
               validators={{
                 onChange: ({ value }) =>
-                  !value ? 'Email is required' : undefined
+                  !value ? 'New Password is required' : undefined
               }}
               children={(field) => (
                 <TextInput
-                  type="email"
-                  label="Email"
+                  type="new_password"
+                  label="New Password"
                   field={field}
-                  placeholder="example@gamil.com"
+                  placeholder="*********************"
                 />
               )}
             />
             <form.Field
-              name="password"
+              name="confirm_password"
               validators={{
                 onChange: ({ value }) =>
-                  !value ? 'Password is required' : undefined
+                  !value ? 'Confirm Password is required' : undefined
               }}
               children={(field) => (
                 <TextInput
-                  type="password"
-                  label="Password"
+                  type="confirm_password"
+                  label="Confirm Password"
                   field={field}
                   placeholder="*********************"
                 />
@@ -77,7 +74,7 @@ const Login = () => {
               selector={(state) => [state.canSubmit, state.isSubmitting]}
               children={([canSubmit, isSubmitting]) => (
                 <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting ? 'Submitting...' : 'Sign In'}
+                  {isSubmitting ? 'Submitting...' : 'Update'}
                 </Button>
               )}
             />
@@ -88,4 +85,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

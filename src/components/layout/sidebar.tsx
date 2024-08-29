@@ -7,7 +7,7 @@ import { DashboardNav } from './DashboardNav';
 import { navItems } from '@/constants/navdata.constants';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import logo from '@/assets/images/logo.jpeg';
+import logo from '@/assets/images/logo.png';
 
 type SidebarProps = {
   className?: string;

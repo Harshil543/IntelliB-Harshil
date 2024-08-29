@@ -16,7 +16,7 @@ const TextInput: React.FC<TextInputProps> = ({
   label,
   field,
   type = 'text',
-  placeholder = `Enter ${label}`
+  placeholder = `${label}`
 }) => {
   return (
     <div className="grid gap-2">
@@ -34,7 +34,6 @@ const TextInput: React.FC<TextInputProps> = ({
           borderColor: 'var(--border)',
           borderRadius: '4px'
         }}
-        className="h-10"
       />
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <span className="text-sm text-red-600">
