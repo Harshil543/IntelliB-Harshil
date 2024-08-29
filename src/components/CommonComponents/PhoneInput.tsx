@@ -36,7 +36,8 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({ label, field }) => {
           width: '100%',
           borderRadius: '4px',
           borderColor: '#ccc',
-          height: '2.5rem'
+          height: '2.5rem',
+          backgroundColor: 'transparent'
         }}
       />
       {errorMessage && <span className="text-red-500">{errorMessage}</span>}

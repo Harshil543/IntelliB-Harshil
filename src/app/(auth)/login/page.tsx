@@ -1,30 +1,15 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
-import { useForm } from '@tanstack/react-form';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
+import { LoginForm } from '@/components/forms/login.form';
 
 const Login = () => {
-  const router = useRouter();
-  const form = useForm({
-    defaultValues: {
-      email: '',
-      password: ''
-    },
-    onSubmit: async ({ value }) => {
-      console.log('Form Submitted', value);
-      router.push('/');
-    }
-  });
-
   return (
     <AuthWrapper>
-      <div className="flex h-full w-full justify-center p-4 align-middle lg:p-8">
+      <div className="flex h-full w-full justify-center bg-background p-4 align-middle lg:p-8">
         <div className="mt-[10%] flex flex-col justify-start space-y-2 align-middle sm:w-[350px] lg:w-[50%]">
           <div className="mb-10 flex flex-col items-center space-y-2">
             <Image src={logo} className="w-40" alt="IntelliB logo" />
@@ -33,55 +18,7 @@ const Login = () => {
             </h1>
             <p className="text-sm">For business, band or celebrity.</p>
           </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-            className="grid w-full grid-cols-1 gap-4"
-          >
-            <form.Field
-              name="email"
-              validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Email is required' : undefined
-              }}
-              children={(field) => (
-                <TextInput
-                  type="email"
-                  label="Email"
-                  field={field}
-                  placeholder="example@gamil.com"
-                />
-              )}
-            />
-            <form.Field
-              name="password"
-              validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Password is required' : undefined
-              }}
-              children={(field) => (
-                <TextInput
-                  type="password"
-                  label="Password"
-                  field={field}
-                  placeholder="*********************"
-                />
-              )}
-            />
-
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting ? 'Submitting...' : 'Sign In'}
-                </Button>
-              )}
-            />
-          </form>
+          <LoginForm />
         </div>
       </div>
     </AuthWrapper>

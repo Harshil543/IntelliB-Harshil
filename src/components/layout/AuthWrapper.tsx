@@ -8,7 +8,7 @@ interface AuthWrapperProps {
 
 const AuthWrapper: React.FC<AuthWrapperProps> = ({ children }) => {
   return (
-    <div className="relative flex h-screen items-center justify-center">
+    <div className="fixed flex h-screen w-full items-center justify-center">
       <div className="relative hidden h-full flex-col justify-between p-10 text-center align-middle text-background dark:border-r lg:flex">
         <div className="absolute inset-0 bg-primary" />
         <div className="relative z-20 flex items-center text-lg font-medium">

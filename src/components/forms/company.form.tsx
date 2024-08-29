@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import CardWrapper from '@/components/CommonComponents/CardWrapper';
+import React from 'react';
+import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useRouter } from 'next/navigation';
@@ -34,8 +34,6 @@ interface CompanyFormProps {
 export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-
-  const [countryId, setCountryId] = useState<number | null>(null);
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
