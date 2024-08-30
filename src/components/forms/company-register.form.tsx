@@ -1,13 +1,46 @@
-import React from 'react';
+// components/CompanyRegisterForm.tsx
 
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useForm } from '@tanstack/react-form';
 import PhoneInputField from '../CommonComponents/PhoneInput';
-import { Label } from '../ui/label';
+import { Country, State, City } from 'country-state-city';
+import SelectInput from '../CommonComponents/SelectInput';
 
-const CompanyRegisterForm = () => {
-  const form = useForm({
+interface FormValues {
+  companyName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  websiteUrl: string;
+  gstNumber: string;
+  cinNumber: string;
+  status: string;
+}
+
+const CompanyRegisterForm: React.FC = () => {
+  const [countries, setCountries] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [states, setStates] = useState<{ value: string; label: string }[]>([]);
+  const [cities, setCities] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    const countryList = Country.getAllCountries().map(({ isoCode, name }) => ({
+      value: isoCode,
+      label: name
+    }));
+    setCountries(countryList);
+  }, []);
+
+  const form = useForm<FormValues>({
     defaultValues: {
       companyName: '',
       addressLine1: '',
@@ -24,17 +57,57 @@ const CompanyRegisterForm = () => {
       cinNumber: '',
       status: 'Active'
     },
-    onSubmit: async ({ value }) => {
-      console.log('Reset Password Form Submitted ', value);
+    onSubmit: async (values) => {
+      console.log('Form Submitted ');
     }
   });
+
+  const handleCountryChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const countryCode = selectedOption ? selectedOption.value : '';
+
+    const stateList = State.getStatesOfCountry(countryCode).map(
+      ({ isoCode, name }) => ({
+        value: isoCode,
+        label: name
+      })
+    );
+
+    setStates(stateList);
+    form.setFieldValue('state', '');
+    form.setFieldValue('city', '');
+  };
+
+  const handleStateChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const stateCode = selectedOption ? selectedOption.value : '';
+    console.log('Selected State Code:', stateCode);
+
+    const cityList = City.getCitiesOfState(
+      form.getFieldValue('country'),
+      stateCode
+    ).map(({ name }) => ({
+      value: name,
+      label: name
+    }));
+
+    setCities(cityList);
+  };
+
+  const handleCityChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const cityName = selectedOption ? selectedOption.value : '';
+
+    // Set the selected city value to the form field
+    form.setFieldValue('city', cityName);
+  };
+
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        form.handleSubmit();
-      }}
+      onSubmit={form.handleSubmit}
       className="grid w-full grid-cols-1 gap-4"
     >
       <form.Field
@@ -44,12 +117,12 @@ const CompanyRegisterForm = () => {
             if (!value) return 'Company name is required';
             if (value.length < 3)
               return 'Company name must be at least 3 characters';
-
             return undefined;
           }
         }}
-        children={(field) => <TextInput label="Company Name" field={field} />}
-      />
+      >
+        {(field) => <TextInput label="Company Name" field={field} />}
+      </form.Field>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
         <form.Field
           name="email"
@@ -61,10 +134,9 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => (
-            <TextInput type="email" label="Email" field={field} />
-          )}
-        />
+        >
+          {(field) => <TextInput type="email" label="Email" field={field} />}
+        </form.Field>
 
         <form.Field
           name="mobileNumber"
@@ -74,27 +146,24 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => {
-            return (
-              <PhoneInputField
-                label="Mobile Number"
-                field={{
-                  value: form.getFieldValue('mobileNumber'),
-                  countryCode: form.getFieldValue('countryCode'),
-                  setValue: (value: string) => {
-                    form.setFieldValue('mobileNumber', value);
-                  },
-                  setCountryCode: (code: string) => {
-                    form.setFieldValue('countryCode', code);
-                  },
-                  errorMessage: field.state.meta.errors.length
-                    ? field.state.meta.errors.join(', ')
-                    : undefined
-                }}
-              />
-            );
-          }}
-        />
+        >
+          {(field) => (
+            <PhoneInputField
+              label="Mobile Number"
+              field={{
+                value: form.getFieldValue('mobileNumber'),
+                countryCode: form.getFieldValue('countryCode'),
+                setValue: (value: string) =>
+                  form.setFieldValue('mobileNumber', value),
+                setCountryCode: (code: string) =>
+                  form.setFieldValue('countryCode', code),
+                errorMessage: field.state.meta.errors.length
+                  ? field.state.meta.errors.join(', ')
+                  : undefined
+              }}
+            />
+          )}
+        </form.Field>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
         <form.Field
@@ -103,10 +172,9 @@ const CompanyRegisterForm = () => {
             onChange: ({ value }) =>
               !value ? 'Address Line 1 is required' : undefined
           }}
-          children={(field) => (
-            <TextInput label="Address Line 1" field={field} />
-          )}
-        />
+        >
+          {(field) => <TextInput label="Address Line 1" field={field} />}
+        </form.Field>
 
         <form.Field
           name="addressLine2"
@@ -114,96 +182,60 @@ const CompanyRegisterForm = () => {
             onChange: ({ value }) =>
               !value ? 'Address Line 2 is required' : undefined
           }}
-          children={(field) => (
-            <TextInput label="Address Line 2" field={field} />
-          )}
-        />
+        >
+          {(field) => <TextInput label="Address Line 2" field={field} />}
+        </form.Field>
+
         <form.Field
           name="country"
           validators={{
             onChange: ({ value }) =>
               !value ? 'Country is required' : undefined
           }}
-          children={(field) => (
-            <div>
-              {/* <Label>Country</Label> */}
-              <form.Field
-                name="companyName"
-                validators={{
-                  onChange: ({ value }) => {
-                    if (!value) return 'Company name is required';
-                    if (value.length < 3)
-                      return 'Company name must be at least 3 characters';
-
-                    return undefined;
-                  }
-                }}
-                children={(field) => (
-                  <TextInput label="Country" field={field} />
-                )}
-              />
-              {/* <CountrySelect
-                  onChange={(e: any) => {
-                    form.setFieldValue('country', e.name);
-                    setCountryId(e.id);
-                  }}
-                  placeHolder="Select Country"
-                />
-                {field.state.meta.isTouched &&
-                field.state.meta.errors.length ? (
-                  <span className="text-sm text-red-600">
-                    {field.state.meta.errors.join(', ')}
-                  </span>
-                ) : null} */}
-            </div>
+        >
+          {(field) => (
+            <SelectInput
+              label="Country"
+              field={field}
+              options={countries}
+              placeholder="Select Country"
+              onChange={handleCountryChange}
+            />
           )}
-        />
+        </form.Field>
 
         <form.Field
           name="state"
           validators={{
             onChange: ({ value }) => (!value ? 'State is required' : undefined)
           }}
-          children={(field) => (
-            <div>
-              {/* <Label>State</Label> */}
-              <form.Field
-                name="companyName"
-                validators={{
-                  onChange: ({ value }) => {
-                    if (!value) return 'Company name is required';
-                    if (value.length < 3)
-                      return 'Company name must be at least 3 characters';
-
-                    return undefined;
-                  }
-                }}
-                children={(field) => <TextInput label="State" field={field} />}
-              />
-              {/* <StateSelect
-                  countryid={countryId || 0}
-                  onChange={(e: any) => {
-                    form.setFieldValue('state', e.name);
-                  }}
-                  placeHolder="Select State"
-                />
-                {field.state.meta.isTouched &&
-                field.state.meta.errors.length ? (
-                  <span className="text-sm text-red-600">
-                    {field.state.meta.errors.join(', ')}
-                  </span>
-                ) : null} */}
-            </div>
+        >
+          {(field) => (
+            <SelectInput
+              label="State"
+              field={field}
+              options={states}
+              placeholder="Select State"
+              onChange={handleStateChange}
+            />
           )}
-        />
-
+        </form.Field>
         <form.Field
           name="city"
           validators={{
             onChange: ({ value }) => (!value ? 'City is required' : undefined)
           }}
-          children={(field) => <TextInput label="City" field={field} />}
-        />
+        >
+          {(field) => (
+            <SelectInput
+              label="City"
+              field={field}
+              options={cities}
+              placeholder="Select City"
+              onChange={handleCityChange}
+            />
+          )}
+        </form.Field>
 
         <form.Field
           name="pincode"
@@ -215,10 +247,9 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => (
-            <TextInput type="text" label="Pincode" field={field} />
-          )}
-        />
+        >
+          {(field) => <TextInput type="text" label="Pincode" field={field} />}
+        </form.Field>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
         <form.Field
@@ -232,8 +263,9 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="Website URL" field={field} />}
-        />
+        >
+          {(field) => <TextInput label="Website URL" field={field} />}
+        </form.Field>
 
         <form.Field
           name="gstNumber"
@@ -247,8 +279,9 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="GST Number" field={field} />}
-        />
+        >
+          {(field) => <TextInput label="GST Number" field={field} />}
+        </form.Field>
 
         <form.Field
           name="cinNumber"
@@ -261,19 +294,21 @@ const CompanyRegisterForm = () => {
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput type="text" label="CIN Number" field={field} />
           )}
-        />
+        </form.Field>
       </div>
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
+      >
+        {([canSubmit, isSubmitting]) => (
           <Button type="submit" disabled={!canSubmit} className="w-[40%]">
             {isSubmitting ? 'Submitting...' : 'Update'}
           </Button>
         )}
-      />
+      </form.Subscribe>
     </form>
   );
 };

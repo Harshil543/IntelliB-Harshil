@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import TanstackProvider from '@/providers/tanstack.provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -33,7 +34,9 @@ export default function RootLayout({
         />
         <link rel="manifest" href="/site.webmanifest"></link>
       </head>
-      <body className="bg-secondary">{children}</body>
+      <body className="bg-secondary">
+        <TanstackProvider>{children}</TanstackProvider>
+      </body>
     </html>
   );
 }

@@ -1,40 +1,45 @@
-// // components/CommonComponents/DatePickerInput.tsx
-// import React from 'react';
-// import DatePicker from 'react-datepicker';
-// import 'react-datepicker/dist/react-datepicker.css';
-// import { useField, useFormikContext } from 'formik';
+// components/DatePickerInput.tsx
+import React from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import type { FieldApi } from '@tanstack/react-form';
+import { Label } from '@/components/ui/label'; // Adjust the path to your Label component
 
-// interface DatePickerInputProps {
-//   label: string;
-//   name: string;
-//   placeholder?: string;
-// }
+interface DatePickerInputProps {
+  label: string;
+  field: FieldApi<any, any, any, any>;
+  placeholder?: string;
+  disabled: boolean;
+}
 
-// const DatePickerInput: React.FC<DatePickerInputProps> = ({
-//   label,
-//   name,
-//   placeholder
-// }) => {
-//   const { setFieldValue } = useFormikContext();
-//   const [field, meta] = useField(name);
+const DatePickerInput: React.FC<DatePickerInputProps> = ({
+  label,
+  field,
+  placeholder,
+  disabled
+}) => {
+  const handleChange = (date: Date | null) => {
+    field.setValue(date); // Update field value
+  };
 
-//   return (
-//     <div className="form-group w-full">
-//       <label htmlFor={name} className="block text-sm font-medium">
-//         {label}
-//       </label>
-//       <DatePicker
-//         id={name}
-//         selected={(field.value && new Date(field.value)) || null}
-//         onChange={(date) => setFieldValue(name, date)}
-//         placeholderText={placeholder}
-//         className={`rounded-md mt-1 h-10 w-full border px-5 text-sm shadow-sm ${meta.touched && meta.error ? 'border-red-500' : 'border-black'}`}
-//       />
-//       {meta.touched && meta.error ? (
-//         <div className="mt-1 w-full text-sm text-red-500">{meta.error}</div>
-//       ) : null}
-//     </div>
-//   );
-// };
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor={field.name}>{label}</Label>
+      <DatePicker
+        disabled={disabled}
+        id={field.name}
+        selected={(field.state.value && new Date(field.state.value)) || null}
+        onChange={handleChange}
+        placeholderText={placeholder}
+        className={`mt-1 h-10 w-full rounded-lg border border-border px-3 text-sm shadow-sm`}
+      />
+      {field.state.meta.isTouched && field.state.meta.errors.length ? (
+        <span className="text-sm text-red-600">
+          {field.state.meta.errors.join(', ')}
+        </span>
+      ) : null}
+    </div>
+  );
+};
 
-// export default DatePickerInput;
+export default DatePickerInput;

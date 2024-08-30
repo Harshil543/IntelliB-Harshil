@@ -1,105 +1,98 @@
-// // components/SelectInput.tsx
-// import React from 'react';
-// import { Field, ErrorMessage, useField } from 'formik';
-// import dynamic from 'next/dynamic';
-// import { Label } from '@/components/ui/label';
+// components/SelectInput.tsx
 
-// const Select = dynamic(() => import('react-select'), { ssr: false });
+import React from 'react';
+import type { FieldApi } from '@tanstack/react-form';
+import Select from 'react-select';
+import { Label } from '@/components/ui/label';
 
-// interface Option {
-//   name: number;
-//   label: string;
-//   id: number;
-// }
+interface Option {
+  value: string; // Ensure value is a string
+  label: string;
+}
 
-// interface SelectInputProps {
-//   label: string;
-//   name: string;
-//   options: Option[];
-//   placeholder?: string;
-// }
+interface SelectInputProps {
+  label: string;
+  field: FieldApi<any, any, any, any>;
+  options: Option[];
+  placeholder?: string;
+  disabled: boolean;
+  onChange?: (selectedOption: Option | null) => void; // Add onChange prop
+}
 
-// const SelectInput: React.FC<SelectInputProps> = ({
-//   label,
-//   name,
-//   options,
-//   placeholder = `Select ${label}`
-// }) => {
-//   const [field, meta, helpers] = useField(name);
+const SelectInput: React.FC<SelectInputProps> = ({
+  label,
+  field,
+  options,
+  placeholder = `Select ${label}`,
+  disabled,
+  onChange // Destructure onChange
+}) => {
+  // Find the selected option based on the current field value
+  const selectedOption = options.find(
+    (option) => option.value === field.state.value
+  );
 
-//   const selectedOption = options.find((option) => option.value === field.value);
+  const handleChange = (option: Option | null) => {
+    field.handleChange(option ? option.value : '');
+    if (onChange) onChange(option); // Call onChange if it exists
+  };
 
-//   const formattedOptions = options.map((option) => ({
-//     ...option,
-//     value: option.value
-//   }));
+  return (
+    <div className="grid gap-2">
+      <Label htmlFor={field.name}>{label}</Label>
+      <Select
+        id={field.name}
+        name={field.name}
+        options={options}
+        placeholder={placeholder}
+        value={selectedOption || null}
+        onChange={handleChange}
+        onBlur={() => field.handleBlur()}
+        isSearchable
+        isDisabled={disabled}
+        getOptionLabel={(option: Option) => option.label}
+        getOptionValue={(option: Option) => option.value}
+        aria-live="off"
+        styles={{
+          container: (provided: any) => ({
+            ...provided,
+            border: '1px solid var(--border)',
+            borderRadius: '6px',
+            backgroundColor: 'transparent'
+          }),
+          control: (provided: any) => ({
+            ...provided,
+            border: '0px',
+            boxShadow: 'none',
+            backgroundColor: 'transparent',
+            fontSize: '14px'
+          }),
+          singleValue: (provided: any) => ({
+            ...provided,
+            color: '#000'
+          }),
+          menu: (provided: any) => ({
+            ...provided,
+            borderRadius: '4px',
+            border: '1px solid var(--border)',
+            backgroundColor: 'white',
+            zIndex: 1000,
+            position: 'absolute',
+            marginTop: '4px'
+          }),
+          menuList: (provided: any) => ({
+            ...provided,
+            backgroundColor: 'white'
+          })
+        }}
+      />
+      {field.state.meta.isTouched && field.state.meta.errors.length ? (
+        <span className="text-sm text-red-600">
+          {field.state.meta.errors.join(', ')}
+        </span>
+      ) : null}
+    </div>
+  );
+};
 
-//   const customStyles = {
-//     container: (provided: any) => ({
-//       ...provided,
-//       border: `1px solid ${color?.textSecondaryColor}`,
-//       borderRadius: '4px',
-//       backgroundColor: 'transparent',
-//       position: 'relative'
-//     }),
-//     control: (provided: any) => ({
-//       ...provided,
-//       border: `0px solid ${color?.textSecondaryColor}`,
-//       boxShadow: 'none',
-//       backgroundColor: 'transparent'
-//     }),
-//     singleValue: (provided: any) => ({
-//       ...provided,
-//       color: '#000'
-//     }),
-//     menu: (provided: any) => ({
-//       ...provided,
-//       borderRadius: '4px',
-//       border: `1px solid ${color?.textSecondaryColor}`,
-//       backgroundColor: 'white',
-//       zIndex: 1000,
-//       position: 'absolute',
-//       marginTop: '4px'
-//     }),
-//     menuList: (provided: any) => ({
-//       ...provided,
-//       backgroundColor: 'white'
-//     })
-//   };
-
-//   const handleChange = (option: Option | null) => {
-//     helpers.setValue(option ? (option as Option).id : '');
-//   };
-
-//   return (
-//     <div className="grid gap-2">
-//       <Label htmlFor={name}>{label}</Label>
-//       <Field name={name}>
-//         {({ field }: any) => (
-//           <Select
-//             {...field}
-//             id={name}
-//             options={formattedOptions}
-//             placeholder={placeholder}
-//             value={selectedOption}
-//             onChange={handleChange}
-//             onBlur={() => helpers.setTouched(true)}
-//             isSearchable
-//             getOptionLabel={(option: Option) => option.label}
-//             getOptionValue={(option: Option) => option.name.toString()}
-//             aria-live="off"
-//             styles={customStyles}
-//             className="text-sm"
-//           />
-//         )}
-//       </Field>
-//       <ErrorMessage
-//         name={name}
-//         component="div"
-//         className="text-sm text-red-600"
-//       />
-//     </div>
-//   );
-// };
-
-// export default SelectInput;
+export default SelectInput;

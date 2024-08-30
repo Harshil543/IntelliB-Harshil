@@ -3,17 +3,32 @@ import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser } from '@/services/auth.service';
 
 export const LoginForm = () => {
-  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await loginUser({
+        email: data?.value?.email,
+        password: data?.value?.password
+      });
+    },
+    onSuccess: () => {
+      toast.success('Login successful');
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
   const form = useForm({
     defaultValues: {
       email: '',
       password: ''
     },
-    onSubmit: async ({ value }) => {
-      console.log('Form Submitted', value);
-      router.push('/');
+    onSubmit: async (value) => {
+      await mutation.mutateAsync(value);
     }
   });
 
@@ -29,7 +44,13 @@ export const LoginForm = () => {
       <form.Field
         name="email"
         validators={{
-          onChange: ({ value }) => (!value ? 'Email is required' : undefined)
+          onChange: ({ value }) => {
+            if (!value) return 'Email is required';
+            // Email pattern validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'Invalid email format';
+            return undefined;
+          }
         }}
         children={(field) => (
           <TextInput
@@ -43,7 +64,21 @@ export const LoginForm = () => {
       <form.Field
         name="password"
         validators={{
-          onChange: ({ value }) => (!value ? 'Password is required' : undefined)
+          onChange: ({ value }) => {
+            if (!value) return 'Password is required';
+            // Password validation: minimum length and complexity
+            if (value.length < 8)
+              return 'Password must be at least 8 characters long';
+            if (!/[A-Z]/.test(value))
+              return 'Password must contain at least one uppercase letter';
+            if (!/[a-z]/.test(value))
+              return 'Password must contain at least one lowercase letter';
+            if (!/[0-9]/.test(value))
+              return 'Password must contain at least one number';
+            if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+              return 'Password must contain at least one special character';
+            return undefined;
+          }
         }}
         children={(field) => (
           <TextInput

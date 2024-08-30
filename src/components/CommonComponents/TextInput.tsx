@@ -10,13 +10,15 @@ interface TextInputProps {
   field: FieldApi<any, any, any, any>;
   type?: string;
   placeholder?: string;
+  disabled: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
   label,
   field,
   type = 'text',
-  placeholder = `${label}`
+  placeholder = `${label}`,
+  disabled
 }) => {
   return (
     <div className="grid gap-2">
@@ -30,10 +32,8 @@ const TextInput: React.FC<TextInputProps> = ({
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
         required
-        style={{
-          borderColor: 'var(--border)',
-          borderRadius: '4px'
-        }}
+        className="h-10 rounded-lg border-border"
+        disabled={disabled}
       />
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <span className="text-sm text-red-600">

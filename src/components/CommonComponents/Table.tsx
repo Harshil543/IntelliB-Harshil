@@ -18,8 +18,7 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger
+  DropdownMenuContent
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import {
@@ -81,7 +80,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Search..."
-          className="mr-2 w-full rounded-2xl border-border bg-background"
+          className="mr-2 w-full rounded-full border-border bg-background"
         />
         <DropdownMenu>
           <Button children="Add " onClick={() => handleNavigate(path)} />
@@ -109,7 +108,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="text-center">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -129,7 +128,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
                   data-state={row.getIsSelected() ? 'selected' : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="text-center">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

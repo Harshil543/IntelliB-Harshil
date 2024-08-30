@@ -98,16 +98,16 @@ export type Employee = {
   email: string;
   phone: string;
   gender: string;
-  date_of_birth: string; 
+  date_of_birth: string;
   street: string;
   city: string;
   state: string;
   country: string;
   zipcode: string;
-  longitude?: number; 
-  latitude?: number; 
+  longitude?: number;
+  latitude?: number;
   job: string;
-  profile_picture?: string | null; 
+  profile_picture?: string | null;
 };
 
 export const navItems: NavItem[] = [
@@ -122,7 +122,7 @@ export const navItems: NavItem[] = [
     href: '/company/',
     icon: 'user',
     label: 'user'
-  }, 
+  },
   {
     title: 'Property User',
     href: '/property-user/',
@@ -136,10 +136,15 @@ export const navItems: NavItem[] = [
     label: 'property-co-admin'
   },
   {
+    title: 'Tenants',
+    href: '/tenants/',
+    icon: 'profile',
+    label: 'tenant'
+  },
+  {
     title: 'Profile',
     href: '/profile/',
     icon: 'profile',
     label: 'profile'
-  },
- 
+  }
 ];

@@ -2,15 +2,33 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/CommonComponents/TextInput';
 import { useForm } from '@tanstack/react-form';
+import toast from 'react-hot-toast';
+import { resetPassword } from '@/services/auth.service';
+import { useMutation } from '@tanstack/react-query';
 
 const ResetPasswordFrom = () => {
+  const mutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await resetPassword({
+        newPassword: data?.value?.newPassword,
+        confirmPassword: data?.value?.confirmPassword
+      });
+    },
+    onSuccess: () => {
+      toast.success('Password reset successful');
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
+
   const form = useForm({
     defaultValues: {
-      new_password: '',
-      confirm_password: ''
+      newPassword: '',
+      confirmPassword: ''
     },
-    onSubmit: async ({ value }) => {
-      console.log('Reset Password Form Submitted ', value);
+    onSubmit: async (value) => {
+      await mutation.mutateAsync(value);
     }
   });
   return (
@@ -23,14 +41,26 @@ const ResetPasswordFrom = () => {
       className="grid w-full grid-cols-1 gap-4"
     >
       <form.Field
-        name="new_password"
+        name="newPassword"
         validators={{
-          onChange: ({ value }) =>
-            !value ? 'New Password is required' : undefined
+          onChange: ({ value }) => {
+            if (!value) return 'New Password is required';
+            if (value.length < 8)
+              return 'Password must be at least 8 characters long';
+            if (!/[A-Z]/.test(value))
+              return 'Password must contain at least one uppercase letter';
+            if (!/[a-z]/.test(value))
+              return 'Password must contain at least one lowercase letter';
+            if (!/[0-9]/.test(value))
+              return 'Password must contain at least one number';
+            if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+              return 'Password must contain at least one special character';
+            return undefined;
+          }
         }}
         children={(field) => (
           <TextInput
-            type="new_password"
+            type="password"
             label="New Password"
             field={field}
             placeholder="*********************"
@@ -38,14 +68,18 @@ const ResetPasswordFrom = () => {
         )}
       />
       <form.Field
-        name="confirm_password"
+        name="confirmPassword"
         validators={{
-          onChange: ({ value }) =>
-            !value ? 'Confirm Password is required' : undefined
+          onChange: ({ value }) => {
+            if (!value) return 'Confirm Password is required';
+            if (value !== form.getFieldValue('newPassword'))
+              return 'Passwords must match';
+            return undefined;
+          }
         }}
         children={(field) => (
           <TextInput
-            type="confirm_password"
+            type="password"
             label="Confirm Password"
             field={field}
             placeholder="*********************"

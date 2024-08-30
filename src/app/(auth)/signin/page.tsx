@@ -10,24 +10,38 @@ import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
+import { useMutation } from '@tanstack/react-query';
+import { loginUser } from '@/services/auth.service';
+import toast from 'react-hot-toast';
 
 const SignIn = () => {
-  const router = useRouter();
+  const mutation = useMutation({
+    mutationFn: async (data: any) => {
+      return await loginUser({
+        email: data?.value?.email,
+        password: data?.value?.password
+      });
+    },
+    onSuccess: () => {
+      toast.success('Login successful');
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
   const form = useForm({
     defaultValues: {
       email: '',
       password: ''
     },
-    onSubmit: async ({ value }) => {
-      console.log('Form Submitted', value);
-      router.push('/');
+    onSubmit: async (value) => {
+      await mutation.mutateAsync(value);
     }
   });
-
   return (
     <AuthWrapper>
       <div className="flex h-full w-full justify-center bg-background p-4 align-middle lg:p-8">
-        <div className="mt-[10%] flex flex-col justify-start space-y-2 align-middle sm:w-[350px] lg:w-[50%]">
+        <div className="sm:w[100%] mt-[10%] flex flex-col justify-start space-y-2 align-middle sm:w-[100%] lg:w-[50%]">
           <div className="mb-10 flex flex-col items-center space-y-2">
             <Image src={logo} className="w-40" alt="IntelliB logo" />
             <h1 className="text-2xl font-semibold tracking-tight">
@@ -47,8 +61,13 @@ const SignIn = () => {
             <form.Field
               name="email"
               validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Email is required' : undefined
+                onChange: ({ value }) => {
+                  if (!value) return 'Email is required';
+                  // Email pattern validation
+                  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                  if (!emailRegex.test(value)) return 'Invalid email format';
+                  return undefined;
+                }
               }}
               children={(field) => (
                 <TextInput
@@ -62,8 +81,21 @@ const SignIn = () => {
             <form.Field
               name="password"
               validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Password is required' : undefined
+                onChange: ({ value }) => {
+                  if (!value) return 'Password is required';
+                  // Password validation: minimum length and complexity
+                  if (value.length < 8)
+                    return 'Password must be at least 8 characters long';
+                  if (!/[A-Z]/.test(value))
+                    return 'Password must contain at least one uppercase letter';
+                  if (!/[a-z]/.test(value))
+                    return 'Password must contain at least one lowercase letter';
+                  if (!/[0-9]/.test(value))
+                    return 'Password must contain at least one number';
+                  if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                    return 'Password must contain at least one special character';
+                  return undefined;
+                }
               }}
               children={(field) => (
                 <TextInput
