@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';

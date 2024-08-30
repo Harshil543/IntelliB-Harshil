@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
-import PhoneInputField from '../CommonComponents/PhoneInput';
+import PhoneInputField from '@components/fields/PhoneInput';
 import { Country, State, City } from 'country-state-city';
-import SelectInput from '../CommonComponents/SelectInput';
+import SelectInput from '@components/fields/SelectInput';
 
 interface FormValues {
   companyName: string;

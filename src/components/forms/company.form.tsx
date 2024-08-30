@@ -1,13 +1,13 @@
 import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
-import PhoneInputField from '../CommonComponents/PhoneInput';
+import PhoneInputField from '../fields/PhoneInput';
 // import { CountrySelect, StateSelect } from 'react-country-state-city';
 // import 'react-country-state-city/dist/react-country-state-city.css';
 import { Label } from '@/components/ui/label';

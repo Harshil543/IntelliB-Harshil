@@ -2,13 +2,13 @@
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { useForm } from '@tanstack/react-form';
-import TextInput from '../CommonComponents/TextInput';
-import { Button } from '../ui/button';
+import TextInput from '@components/fields/TextInput';
+import { Button } from '@components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { updateUser } from '@/services/user.service';
-import SelectInput from '../CommonComponents/SelectInput';
+import SelectInput from '@components/fields/SelectInput';
 
 interface ProfileFormProps {
   initialValues?: {
@@ -73,6 +73,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             }}
             children={(field) => (
               <SelectInput
+                disabled={false}
                 label="Salutation"
                 field={field}
                 options={[
@@ -94,7 +95,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => <TextInput label="First Name" field={field} />}
+            children={(field) => (
+              <TextInput disabled={false} label="First Name" field={field} />
+            )}
           />
           <form.Field
             name="lastName"
@@ -106,7 +109,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => <TextInput label="Last Name" field={field} />}
+            children={(field) => (
+              <TextInput disabled={false} label="Last Name" field={field} />
+            )}
           />
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -120,7 +125,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => <TextInput label="Email" field={field} />}
+            children={(field) => (
+              <TextInput disabled={false} label="Email" field={field} />
+            )}
           />
           <form.Field
             name="mobileNumber"
@@ -134,7 +141,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
               }
             }}
             children={(field) => (
-              <TextInput label="Mobile Number" field={field} />
+              <TextInput disabled={false} label="Mobile Number" field={field} />
             )}
           />
         </div>

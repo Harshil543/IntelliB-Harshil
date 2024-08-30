@@ -2,8 +2,8 @@
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { useForm } from '@tanstack/react-form';
-import TextInput from '../CommonComponents/TextInput';
-import { Button } from '../ui/button';
+import TextInput from '@components/fields/TextInput';
+import { Button } from '@components/ui/button';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -66,6 +66,7 @@ export default function ChangePasswordForm({
                 label="Old Password"
                 field={field}
                 placeholder="**********************"
+                disabled={false}
               />
             )}
           />
@@ -76,6 +77,7 @@ export default function ChangePasswordForm({
                 label="New Password"
                 field={field}
                 placeholder="**********************"
+                disabled={false}
               />
             )}
           />
@@ -86,6 +88,7 @@ export default function ChangePasswordForm({
                 label="Confirm Password"
                 field={field}
                 placeholder="**********************"
+                disabled={false}
               />
             )}
           />

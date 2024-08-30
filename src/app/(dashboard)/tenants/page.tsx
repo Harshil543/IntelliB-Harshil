@@ -1,12 +1,10 @@
 'use client';
 
-import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
-import { DataTable } from '@/components/CommonComponents/Table';
+import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
+import { DataTable } from '@/components/fields/Table';
 import React from 'react';
-import Heading from '@/components/CommonComponents/Heading';
-import companyColumns from '@/utils/tableColumn/company.column';
+import Heading from '@/components/fields/Heading';
 import { useQuery } from '@tanstack/react-query';
-import { getCompany } from '@/services/company.service';
 import { getTenant } from '@/services/tenant.service';
 import tenantColumn from '@/utils/tableColumn/tenant.column';
 

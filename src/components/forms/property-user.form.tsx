@@ -1,7 +1,7 @@
 import React from 'react';
 import CardWrapper from '@/components/CommonComponents/CardWrapper';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,7 +10,7 @@ import {
   createPropertyUser,
   updatePropertyUser
 } from '@/services/property-user.service';
-import PhoneInputField from '../CommonComponents/PhoneInput';
+import PhoneInputField from '../fields/PhoneInput';
 
 interface PropertyUserFormProps {
   initialValues?: {

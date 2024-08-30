@@ -2,14 +2,14 @@
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import Heading from '../CommonComponents/Heading';
-import SelectInput from '../CommonComponents/SelectInput';
-import DatePickerInput from '../CommonComponents/DatePickerInput';
+import Heading from '../fields/Heading';
+import SelectInput from '../fields/SelectInput';
+import DatePickerInput from '../fields/DatePickerInput';
 import { createTenant, updateTenant } from '@/services/tenant.service';
 
 interface TenantFormProps {

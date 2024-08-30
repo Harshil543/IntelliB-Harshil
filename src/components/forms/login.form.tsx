@@ -1,8 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
+import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
-import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '@/services/auth.service';
@@ -58,6 +57,7 @@ export const LoginForm = () => {
             label="Email"
             field={field}
             placeholder="example@gamil.com"
+            disabled={false}
           />
         )}
       />
@@ -82,6 +82,7 @@ export const LoginForm = () => {
         }}
         children={(field) => (
           <TextInput
+            disabled={false}
             type="password"
             label="Password"
             field={field}
