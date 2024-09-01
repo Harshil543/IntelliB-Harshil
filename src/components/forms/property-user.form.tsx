@@ -1,8 +1,8 @@
 import React from 'react';
-import CardWrapper from '@/components/CommonComponents/CardWrapper';
+import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -29,6 +29,7 @@ export default function PropertyUserForm({
   initialValues
 }: PropertyUserFormProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -51,7 +52,7 @@ export default function PropertyUserForm({
       toast.error(`Error: ${error.message}`);
     }
   });
-
+  const isViewPropertyUser = pathname.includes('view-property-user');
   const form = useForm({
     defaultValues: initialValues || {
       id: '',
@@ -89,7 +90,13 @@ export default function PropertyUserForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="First Name" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="First Name"
+              field={field}
+            />
+          )}
         />
         <form.Field
           name="lastName"
@@ -103,7 +110,13 @@ export default function PropertyUserForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="Last Name" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="Last Name"
+              field={field}
+            />
+          )}
         />
         <form.Field
           name="email"
@@ -116,7 +129,12 @@ export default function PropertyUserForm({
             }
           }}
           children={(field) => (
-            <TextInput type="email" label="Email" field={field} />
+            <TextInput
+              disabled={isViewPropertyUser}
+              type="email"
+              label="Email"
+              field={field}
+            />
           )}
         />
         <form.Field
@@ -131,6 +149,7 @@ export default function PropertyUserForm({
           children={(field) => (
             <PhoneInputField
               label="Mobile Number"
+              disabled={isViewPropertyUser}
               field={{
                 value: form.getFieldValue('mobileNumber'),
                 countryCode: form.getFieldValue('countryCode'),
@@ -153,24 +172,36 @@ export default function PropertyUserForm({
             onChange: ({ value }) =>
               !value ? 'Designation is required' : undefined
           }}
-          children={(field) => <TextInput label="Designation" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="Designation"
+              field={field}
+            />
+          )}
         />
+
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-black"
             onClick={() => router.back()}
           >
             Cancel
           </Button>
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
-            )}
-          />
+          {!isViewPropertyUser && (
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
+                </Button>
+              )}
+            />
+          )}
         </div>
         {mutation.isError && (
           <div className="col-span-full text-red-500">

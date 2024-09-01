@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
@@ -8,9 +8,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import PhoneInputField from '../fields/PhoneInput';
-// import { CountrySelect, StateSelect } from 'react-country-state-city';
-// import 'react-country-state-city/dist/react-country-state-city.css';
-import { Label } from '@/components/ui/label';
+import { Country, State, City } from 'country-state-city';
+import SelectInput from '@components/fields/SelectInput';
 
 interface CompanyFormProps {
   initialValues?: {
@@ -35,22 +34,37 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const [countries, setCountries] = useState<
+    { value: string; label: string }[]
+  >([]);
+  const [states, setStates] = useState<{ value: string; label: string }[]>([]);
+  const [cities, setCities] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    const countryList = Country.getAllCountries().map(({ isoCode, name }) => ({
+      value: isoCode,
+      label: name
+    }));
+    setCountries(countryList);
+  }, []);
+
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        return await updateCompany({
-          payload: data?.value,
-          id: initialValues.id
-        });
+        // return await updateCompany({
+        //   payload: data?.value,
+        //   id: initialValues.id
+        // });
       } else {
-        return await createCompany({ payload: data.value });
-        return;
+        console.log('data', data);
+
+        // return await createCompany({ payload: data.value });
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company'] });
-      router.push('/company/');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+      // queryClient.invalidateQueries({ queryKey: ['company'] });
+      // router.push('/company/');
+      // toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -79,6 +93,46 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     }
   });
 
+  const handleCountryChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const countryCode = selectedOption ? selectedOption.value : '';
+
+    const stateList = State.getStatesOfCountry(countryCode).map(
+      ({ isoCode, name }) => ({
+        value: isoCode,
+        label: name
+      })
+    );
+    setStates(stateList);
+    form.setFieldValue('state', '');
+    form.setFieldValue('city', '');
+    setCities([]); // Clear cities when country changes
+  };
+
+  const handleStateChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const stateCode = selectedOption ? selectedOption.value : '';
+
+    const cityList = City.getCitiesOfState(
+      form.getFieldValue('country'),
+      stateCode
+    ).map(({ name }) => ({
+      value: name,
+      label: name
+    }));
+    setCities(cityList);
+    form.setFieldValue('city', '');
+  };
+
+  const handleCityChange = (
+    selectedOption: { value: string; label: string } | null
+  ) => {
+    const cityName = selectedOption ? selectedOption.value : '';
+    form.setFieldValue('city', cityName);
+  };
+
   return (
     <form
       onSubmit={(e) => {
@@ -95,14 +149,14 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 if (!value) return 'Company name is required';
                 if (value.length < 3)
                   return 'Company name must be at least 3 characters';
-
                 return undefined;
               }
             }}
-            children={(field) => (
-              <TextInput label="Company Name" field={field} />
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Company Name" field={field} />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="email"
@@ -114,10 +168,16 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
-              <TextInput type="email" label="Email" field={field} />
+          >
+            {(field) => (
+              <TextInput
+                disabled={false}
+                type="email"
+                label="Email"
+                field={field}
+              />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="mobileNumber"
@@ -127,29 +187,27 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => {
-              return (
-                <PhoneInputField
-                  label="Mobile Number"
-                  field={{
-                    value: form.getFieldValue('mobileNumber'),
-                    countryCode: form.getFieldValue('countryCode'),
-                    setValue: (value: string) => {
-                      form.setFieldValue('mobileNumber', value);
-                    },
-                    setCountryCode: (code: string) => {
-                      form.setFieldValue('countryCode', code);
-                    },
-                    errorMessage: field.state.meta.errors.length
-                      ? field.state.meta.errors.join(', ')
-                      : undefined
-                  }}
-                />
-              );
-            }}
-          />
+          >
+            {(field) => (
+              <PhoneInputField
+                label="Mobile Number"
+                field={{
+                  value: form.getFieldValue('mobileNumber'),
+                  countryCode: form.getFieldValue('countryCode'),
+                  setValue: (value: string) =>
+                    form.setFieldValue('mobileNumber', value),
+                  setCountryCode: (code: string) =>
+                    form.setFieldValue('countryCode', code),
+                  errorMessage: field.state.meta.errors.length
+                    ? field.state.meta.errors.join(', ')
+                    : undefined
+                }}
+              />
+            )}
+          </form.Field>
         </div>
       </CardWrapper>
+
       <CardWrapper>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
@@ -158,10 +216,15 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               onChange: ({ value }) =>
                 !value ? 'Address Line 1 is required' : undefined
             }}
-            children={(field) => (
-              <TextInput label="Address Line 1" field={field} />
+          >
+            {(field) => (
+              <TextInput
+                disabled={false}
+                label="Address Line 1"
+                field={field}
+              />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="addressLine2"
@@ -169,35 +232,34 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               onChange: ({ value }) =>
                 !value ? 'Address Line 2 is required' : undefined
             }}
-            children={(field) => (
-              <TextInput label="Address Line 2" field={field} />
+          >
+            {(field) => (
+              <TextInput
+                disabled={false}
+                label="Address Line 2"
+                field={field}
+              />
             )}
-          />
+          </form.Field>
+
           <form.Field
             name="country"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Country is required' : undefined
             }}
-            children={(field) => (
-              <div>
-                <Label>Country</Label>
-                {/* <CountrySelect
-                  onChange={(e: any) => {
-                    form.setFieldValue('country', e.name);
-                    setCountryId(e.id);
-                  }}
-                  placeHolder="Select Country"
-                />
-                {field.state.meta.isTouched &&
-                field.state.meta.errors.length ? (
-                  <span className="text-sm text-red-600">
-                    {field.state.meta.errors.join(', ')}
-                  </span>
-                ) : null} */}
-              </div>
+          >
+            {(field) => (
+              <SelectInput
+                disabled={false}
+                label="Country"
+                field={field}
+                options={countries}
+                placeholder="Select Country"
+                onChange={handleCountryChange}
+              />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="state"
@@ -205,33 +267,36 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               onChange: ({ value }) =>
                 !value ? 'State is required' : undefined
             }}
-            children={(field) => (
-              <div>
-                <Label>State</Label>
-                {/* <StateSelect
-                  countryid={countryId || 0}
-                  onChange={(e: any) => {
-                    form.setFieldValue('state', e.name);
-                  }}
-                  placeHolder="Select State"
-                />
-                {field.state.meta.isTouched &&
-                field.state.meta.errors.length ? (
-                  <span className="text-sm text-red-600">
-                    {field.state.meta.errors.join(', ')}
-                  </span>
-                ) : null} */}
-              </div>
+          >
+            {(field) => (
+              <SelectInput
+                disabled={false}
+                label="State"
+                field={field}
+                options={states}
+                placeholder="Select State"
+                onChange={handleStateChange}
+              />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="city"
             validators={{
               onChange: ({ value }) => (!value ? 'City is required' : undefined)
             }}
-            children={(field) => <TextInput label="City" field={field} />}
-          />
+          >
+            {(field) => (
+              <SelectInput
+                disabled={false}
+                label="City"
+                field={field}
+                options={cities}
+                placeholder="Select City"
+                onChange={handleCityChange}
+              />
+            )}
+          </form.Field>
 
           <form.Field
             name="pincode"
@@ -243,12 +308,19 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
-              <TextInput type="text" label="Pincode" field={field} />
+          >
+            {(field) => (
+              <TextInput
+                disabled={false}
+                type="text"
+                label="Pincode"
+                field={field}
+              />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
+
       <CardWrapper>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
@@ -256,77 +328,49 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'Website URL is required';
-                const urlRegex =
-                  /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}([/?].*)?$/;
-                if (!urlRegex.test(value)) return 'Invalid Website URL';
+                try {
+                  new URL(value);
+                } catch {
+                  return 'Invalid URL';
+                }
                 return undefined;
               }
             }}
-            children={(field) => (
-              <TextInput label="Website URL" field={field} />
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Website URL" field={field} />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="gstNumber"
             validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'GST Number is required';
-                const gstRegex =
-                  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-                if (!gstRegex.test(value))
-                  return 'Invalid GST Number (should be 15 characters long)';
-                return undefined;
-              }
+              onChange: ({ value }) =>
+                !value ? 'GST Number is required' : undefined
             }}
-            children={(field) => <TextInput label="GST Number" field={field} />}
-          />
+          >
+            {(field) => (
+              <TextInput disabled={false} label="GST Number" field={field} />
+            )}
+          </form.Field>
 
           <form.Field
             name="cinNumber"
             validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'CIN Number is required';
-                const cinRegex =
-                  /^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/;
-                if (!cinRegex.test(value))
-                  return 'Invalid CIN Number (should be 21 characters long and in the correct format)';
-                return undefined;
-              }
+              onChange: ({ value }) =>
+                !value ? 'CIN Number is required' : undefined
             }}
-            children={(field) => (
-              <TextInput type="text" label="CIN Number" field={field} />
+          >
+            {(field) => (
+              <TextInput disabled={false} label="CIN Number" field={field} />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
 
-      <div className="col-span-full mt-10 flex justify-end space-x-4">
-        <Button
-          type="button"
-          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
-          onClick={() => router.back()}
-        >
-          Cancel
-        </Button>
-
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-              {mutation.isPending ? 'Submitting...' : 'Submit'}
-            </Button>
-          )}
-        />
-      </div>
-
-      {mutation.isError && (
-        <div className="col-span-full text-red-500">
-          {mutation.error instanceof Error
-            ? mutation.error.message
-            : 'An error occurred during submission.'}
-        </div>
-      )}
+      <Button type="submit" className="mt-4">
+        Save
+      </Button>
     </form>
   );
 }

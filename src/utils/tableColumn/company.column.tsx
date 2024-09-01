@@ -110,12 +110,14 @@ const companyColumns: ColumnDef<CompanyData>[] = [
         router.push(`/company/update-company/${id}`);
       };
 
-      const handleDelete = async (id: number) => {
+      const handleStatus = async (id: number) => {
         try {
           delteMutation.mutate(id, {
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: ['company'] });
-              toast.success(`Deleted successfully`);
+              toast.success(
+                `${row.getValue('status') === 'Active' ? 'De-activate successfully' : 'Activate Successfully'} `
+              );
             }
           });
         } catch (error) {
@@ -135,14 +137,13 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
+            <DropdownMenuItem>View</DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(companyId)}>
-              Delete
-            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleStatus(companyId)}>
               {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
             </DropdownMenuItem>
           </DropdownMenuContent>

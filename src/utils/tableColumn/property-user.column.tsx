@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { deletePropertyUser } from '@/services/property-user.service';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface PropertyUserColumns {
   id: number;
@@ -28,6 +29,33 @@ interface PropertyUserColumns {
 }
 
 const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
+  },
   {
     accessorKey: 'id',
     header: 'id',
@@ -94,22 +122,24 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
       const delteMutation = useMutation({
         mutationFn: deletePropertyUser
       });
-
+      const handleView = (id: number) => {
+        router.push(`/property-user/view-property-user/${id}`);
+      };
       const handleUpdate = (id: number) => {
         router.push(`/property-user/update-property-user/${id}`);
       };
 
-      const handleDelete = async (id: number) => {
-        try {
-          delteMutation.mutate(id, {
-            onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['property-user'] });
-              toast.success(`Deleted successfully`);
-            }
-          });
-        } catch (error) {
-          console.error('Error deleting property user:', error);
-        }
+      const handleStatus = async (id: number) => {
+        // try {
+        //   delteMutation.mutate(id, {
+        //     onSuccess: () => {
+        //       queryClient.invalidateQueries({ queryKey: ['property-user'] });
+        //       toast.success(`Deleted successfully`);
+        //     }
+        //   });
+        // } catch (error) {
+        //   console.error('Error deleting property user:', error);
+        // }
       };
 
       return (
@@ -124,12 +154,13 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => handleView(propertyUserId)}>
+              View
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
-              Delete
-            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}

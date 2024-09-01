@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
@@ -13,8 +13,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '@/services/auth.service';
 import toast from 'react-hot-toast';
+import { Icon } from '@iconify/react';
+import eyeIcon from '@iconify/icons-mdi/eye';
+import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 
 const SignIn = () => {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       return await loginUser({
@@ -24,11 +30,13 @@ const SignIn = () => {
     },
     onSuccess: () => {
       toast.success('Login successful');
+      router.push('/');
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
     }
   });
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -38,6 +46,7 @@ const SignIn = () => {
       await mutation.mutateAsync(value);
     }
   });
+
   return (
     <AuthWrapper>
       <div className="flex h-full w-full justify-center bg-background p-4 align-middle lg:p-8">
@@ -75,6 +84,7 @@ const SignIn = () => {
                   label="Email"
                   field={field}
                   placeholder="example@gamil.com"
+                  disabled={false}
                 />
               )}
             />
@@ -98,12 +108,25 @@ const SignIn = () => {
                 }
               }}
               children={(field) => (
-                <TextInput
-                  type="password"
-                  label="Password"
-                  field={field}
-                  placeholder="*********************"
-                />
+                <div className="relative">
+                  <TextInput
+                    type={showPassword ? 'text' : 'password'}
+                    label="Password"
+                    field={field}
+                    placeholder="*********************"
+                    disabled={false}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-8 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <Icon
+                      icon={showPassword ? eyeIcon : eyeOffIcon}
+                      className="text-gray-500"
+                    />
+                  </button>
+                </div>
               )}
             />
 

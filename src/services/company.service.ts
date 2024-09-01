@@ -54,9 +54,11 @@ export const updateCompany = async ({
 
 export const deleteCompany = async (companyId: number) => {
   try {
+    console.log('activate deactivate company', companyId);
+
     // const response = await apiClient.delete(`${BASE_URLS?.company}/company/${companyId}`);
-    const response = await apiClient.delete(`/company/${companyId}`);
-    return response.data;
+    // const response = await apiClient.delete(`/company/${companyId}`);
+    // return response.data;
   } catch (error) {
     console.error('Error deleting company:', error);
     throw error;

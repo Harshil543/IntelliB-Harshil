@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
 import toast from 'react-hot-toast';
 import { resetPassword } from '@/services/auth.service';
 import { useMutation } from '@tanstack/react-query';
+import { Icon } from '@iconify/react';
+import eyeIcon from '@iconify/icons-mdi/eye';
+import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 
-const ResetPasswordFrom = () => {
+const ResetPasswordForm = () => {
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       return await resetPassword({
@@ -31,6 +37,7 @@ const ResetPasswordFrom = () => {
       await mutation.mutateAsync(value);
     }
   });
+
   return (
     <form
       onSubmit={(e) => {
@@ -59,12 +66,25 @@ const ResetPasswordFrom = () => {
           }
         }}
         children={(field) => (
-          <TextInput
-            type="password"
-            label="New Password"
-            field={field}
-            placeholder="*********************"
-          />
+          <div className="relative">
+            <TextInput
+              type={showNewPassword ? 'text' : 'password'}
+              label="New Password"
+              field={field}
+              placeholder="*********************"
+              disabled={false}
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-8 flex items-center"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              <Icon
+                icon={showNewPassword ? eyeIcon : eyeOffIcon}
+                className="text-gray-500"
+              />
+            </button>
+          </div>
         )}
       />
       <form.Field
@@ -78,12 +98,25 @@ const ResetPasswordFrom = () => {
           }
         }}
         children={(field) => (
-          <TextInput
-            type="password"
-            label="Confirm Password"
-            field={field}
-            placeholder="*********************"
-          />
+          <div className="relative">
+            <TextInput
+              type={showConfirmPassword ? 'text' : 'password'}
+              label="Confirm Password"
+              field={field}
+              placeholder="*********************"
+              disabled={false}
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-8 flex items-center"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              <Icon
+                icon={showConfirmPassword ? eyeIcon : eyeOffIcon}
+                className="text-gray-500"
+              />
+            </button>
+          </div>
         )}
       />
 
@@ -99,4 +132,4 @@ const ResetPasswordFrom = () => {
   );
 };
 
-export default ResetPasswordFrom;
+export default ResetPasswordForm;

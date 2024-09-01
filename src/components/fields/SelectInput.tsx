@@ -33,7 +33,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   );
 
   const handleChange = (option: Option | null) => {
-    field.handleChange(option ? option.value : '');
+    field.handleChange(option ? option?.value : '');
     if (onChange) onChange(option); // Call onChange if it exists
   };
 
