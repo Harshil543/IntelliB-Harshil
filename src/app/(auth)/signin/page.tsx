@@ -118,7 +118,7 @@ const SignIn = () => {
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-8 flex items-center"
+                    className="absolute right-3 top-9 flex items-center"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     <Icon

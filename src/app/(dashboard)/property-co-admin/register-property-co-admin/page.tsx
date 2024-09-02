@@ -8,8 +8,6 @@ import PropertyCoAdminForm from '@/components/forms/property-co-admin.form';
 export default function PropertyCoAdminRegister() {
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property Co-Admin" />
       <PropertyCoAdminForm />
     </div>
   );

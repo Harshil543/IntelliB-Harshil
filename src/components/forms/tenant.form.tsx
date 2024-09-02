@@ -395,26 +395,26 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
         </div>
       </CardWrapper>
 
-      {!isViewTenant && (
-        <div className="col-span-full mt-10 flex justify-end space-x-4">
-          <Button
-            type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
-            onClick={() => router.back()}
-          >
-            Cancel
-          </Button>
+      <div className="col-span-full mt-10 flex justify-end space-x-4">
+        <Button
+          type="button"
+          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+          onClick={() => router.back()}
+        >
+          Cancel
+        </Button>
 
+        {!isViewTenant && (
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
+            children={([canSubmit]) => (
               <Button type="submit" disabled={!canSubmit || mutation.isPending}>
                 {mutation.isPending ? 'Submitting...' : 'Submit'}
               </Button>
             )}
           />
-        </div>
-      )}
+        )}
+      </div>
 
       {mutation.isError && (
         <div className="col-span-full text-red-500">

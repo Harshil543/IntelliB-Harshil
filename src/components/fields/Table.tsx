@@ -19,6 +19,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent
 } from '@/components/ui/dropdown-menu';
+import autoTable from 'jspdf-autotable';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -29,6 +30,9 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { useRouter } from 'next/navigation';
+import { Parser } from 'json2csv';
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
 
 type DataTableProps<T> = {
   columns: ColumnDef<T>[];
@@ -74,13 +78,71 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
   const handleNavigate = (path: string) => {
     router.push(path);
   };
+
+  const exportCSV = () => {
+    const rows = table.getRowModel().rows.map((row) => row.original);
+    const parser = new Parser();
+    const csv = parser.parse(rows);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'data.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportXLSX = () => {
+    const rows = table.getRowModel().rows.map((row) => row.original);
+    const worksheet = XLSX.utils.json_to_sheet(rows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    XLSX.writeFile(workbook, 'data.xlsx');
+  };
+
+  const exportPDF = () => {
+    const rows = table.getRowModel().rows.map((row) => row.original);
+
+    const doc = new jsPDF();
+    doc.text('Table Data', 20, 20);
+
+    const tableColumn = columns.map((col) => col.header as string);
+    const tableRows = rows.map((row) =>
+      columns.map((col) => {
+        // Using `col.accessorKey` assuming it's a string key in the row object
+        const accessor = col.accessorKey as keyof T;
+        return row[accessor];
+      })
+    );
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows
+    });
+
+    doc.save('data.pdf');
+  };
+
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center gap-2 py-4">
         <Input
           placeholder="Search..."
           className="mr-2 w-full rounded-full border-border bg-background"
         />
+        <div className="flex items-center space-x-2">
+          <Button onClick={exportCSV} variant="outline" size="sm">
+            Export CSV
+          </Button>
+          <Button onClick={exportXLSX} variant="outline" size="sm">
+            Export XLSX
+          </Button>
+          <Button onClick={exportPDF} variant="outline" size="sm">
+            Export PDF
+          </Button>
+        </div>
         <DropdownMenu>
           <Button children="Add " onClick={() => handleNavigate(path)} />
 
@@ -149,7 +211,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex items-center justify-between py-4">
         <div className="flex-1 text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -160,7 +222,6 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="rounded-lg p-0 px-4"
           >
             Previous
           </Button>
@@ -169,7 +230,6 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="rounded-lg p-0 px-4"
           >
             Next
           </Button>

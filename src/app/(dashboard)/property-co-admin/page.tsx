@@ -24,8 +24,6 @@ export default function PropertyCoAdminPage() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property Co-Admin" />
       <DataTable
         columns={propertyCoAdminColumns}
         data={data}

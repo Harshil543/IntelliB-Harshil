@@ -13,7 +13,8 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { deletePropertyCoAdmin } from '@/services/property-co-admin.service';
+import { statusPropertyCoAdmin } from '@/services/property-co-admin.service';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface PropertyCoAdminColumns {
   id: number;
@@ -28,6 +29,33 @@ interface PropertyCoAdminColumns {
 }
 
 const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
+  },
   {
     accessorKey: 'id',
     header: 'id',
@@ -87,30 +115,43 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyUserId = row.getValue('id') as number;
+      const propertyCoAdminId = row.getValue('id') as number;
+      const currentStatus = row.getValue('status') as string;
       const queryClient = useQueryClient();
       const router = useRouter();
 
-      const delteMutation = useMutation({
-        mutationFn: deletePropertyCoAdmin
+      const statusMutation = useMutation({
+        mutationFn: statusPropertyCoAdmin
       });
+
+      const handleView = (id: number) => {
+        router.push(`/property-co-admin/view-property-co-admin/${id}`);
+      };
 
       const handleUpdate = (id: number) => {
         router.push(`/property-co-admin/update-property-co-admin/${id}`);
       };
 
-      const handleDelete = async (id: number) => {
+      const handleStatus = async (id: number, status: string) => {
+        const payload = {
+          payload: {
+            id,
+            status: status === 'Active' ? 'Inactive' : 'Active'
+          },
+          id
+        };
+
         try {
-          delteMutation.mutate(id, {
+          statusMutation.mutate(payload, {
             onSuccess: () => {
               queryClient.invalidateQueries({
                 queryKey: ['property-co-admin']
               });
-              toast.success(`Deleted successfully`);
+              toast.success(`Status updated successfully`);
             }
           });
         } catch (error) {
-          console.error('Error deleting property user:', error);
+          console.error('Error updating property co-admin status:', error);
         }
       };
 
@@ -126,15 +167,18 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
+            <DropdownMenuItem onClick={() => handleView(propertyCoAdminId)}>
+              View
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleUpdate(propertyCoAdminId)}>
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
-              Delete
-            </DropdownMenuItem>
+
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
+            <DropdownMenuItem
+              onClick={() => handleStatus(propertyCoAdminId, currentStatus)}
+            >
+              {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

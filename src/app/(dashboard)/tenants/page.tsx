@@ -24,8 +24,6 @@ export default function TenantPage() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Tenant" />
       <DataTable
         columns={tenantColumn}
         data={data}

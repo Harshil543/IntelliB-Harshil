@@ -17,8 +17,6 @@ export default function PropertyUserUpdate() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property User" />
       <PropertyUserForm initialValues={data} />
     </div>
   );

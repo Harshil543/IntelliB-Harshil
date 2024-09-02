@@ -8,9 +8,9 @@ import { useQuery } from '@tanstack/react-query';
 import { getpropertyCoAdminById } from '@/services/property-co-admin.service';
 import PropertyCoAdminForm from '@/components/forms/property-co-admin.form';
 
-export default function PropertyCoAdminUpdate() {
+export default function PropertyCoAdminView() {
   const { id } = useParams();
-  const { status, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['property-co-admin', id],
     queryFn: () => getpropertyCoAdminById(Number(id))
   });

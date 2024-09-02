@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { useForm } from '@tanstack/react-form';
 import TextInput from '@components/fields/TextInput';
@@ -8,6 +8,9 @@ import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { changePassword } from '@/services/user.service';
+import eyeIcon from '@iconify/icons-mdi/eye';
+import eyeOffIcon from '@iconify/icons-mdi/eye-off';
+import { Icon } from '@iconify/react';
 
 interface ChangePasswordProps {
   initialValues?: {
@@ -22,6 +25,7 @@ export default function ChangePasswordForm({
 }: ChangePasswordProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -61,35 +65,125 @@ export default function ChangePasswordForm({
         <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="oldPassword"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Old Password is required';
+                // Password validation: minimum length and complexity
+                if (value.length < 8)
+                  return 'Password must be at least 8 characters long';
+                if (!/[A-Z]/.test(value))
+                  return 'Password must contain at least one uppercase letter';
+                if (!/[a-z]/.test(value))
+                  return 'Password must contain at least one lowercase letter';
+                if (!/[0-9]/.test(value))
+                  return 'Password must contain at least one number';
+                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                  return 'Password must contain at least one special character';
+                return undefined;
+              }
+            }}
             children={(field) => (
-              <TextInput
-                label="Old Password"
-                field={field}
-                placeholder="**********************"
-                disabled={false}
-              />
+              <div className="relative">
+                <TextInput
+                  type={showPassword ? 'text' : 'password'}
+                  label="Old Password"
+                  field={field}
+                  placeholder="*********************"
+                  disabled={false}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-9 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Icon
+                    icon={showPassword ? eyeIcon : eyeOffIcon}
+                    className="text-gray-500"
+                  />
+                </button>
+              </div>
             )}
           />
           <form.Field
             name="newPassword"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Old Password is required';
+                // Password validation: minimum length and complexity
+                if (value.length < 8)
+                  return 'Password must be at least 8 characters long';
+                if (!/[A-Z]/.test(value))
+                  return 'Password must contain at least one uppercase letter';
+                if (!/[a-z]/.test(value))
+                  return 'Password must contain at least one lowercase letter';
+                if (!/[0-9]/.test(value))
+                  return 'Password must contain at least one number';
+                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                  return 'Password must contain at least one special character';
+                return undefined;
+              }
+            }}
             children={(field) => (
-              <TextInput
-                label="New Password"
-                field={field}
-                placeholder="**********************"
-                disabled={false}
-              />
+              <div className="relative">
+                <TextInput
+                  type={showPassword ? 'text' : 'password'}
+                  label="New Password"
+                  field={field}
+                  placeholder="*********************"
+                  disabled={false}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-9 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Icon
+                    icon={showPassword ? eyeIcon : eyeOffIcon}
+                    className="text-gray-500"
+                  />
+                </button>
+              </div>
             )}
           />
           <form.Field
             name="confirmPassword"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Old Password is required';
+                // Password validation: minimum length and complexity
+                if (value.length < 8)
+                  return 'Password must be at least 8 characters long';
+                if (!/[A-Z]/.test(value))
+                  return 'Password must contain at least one uppercase letter';
+                if (!/[a-z]/.test(value))
+                  return 'Password must contain at least one lowercase letter';
+                if (!/[0-9]/.test(value))
+                  return 'Password must contain at least one number';
+                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                  return 'Password must contain at least one special character';
+                return undefined;
+              }
+            }}
             children={(field) => (
-              <TextInput
-                label="Confirm Password"
-                field={field}
-                placeholder="**********************"
-                disabled={false}
-              />
+              <div className="relative">
+                <TextInput
+                  type={showPassword ? 'text' : 'password'}
+                  label="Confirm Password"
+                  field={field}
+                  placeholder="*********************"
+                  disabled={false}
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-9 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  <Icon
+                    icon={showPassword ? eyeIcon : eyeOffIcon}
+                    className="text-gray-500"
+                  />
+                </button>
+              </div>
             )}
           />
         </div>

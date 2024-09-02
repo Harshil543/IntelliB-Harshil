@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { deleteCompany } from '@/services/company.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { Checkbox } from '@/components/ui/checkbox';
 
 interface CompanyData {
   id: number;
@@ -34,6 +35,33 @@ interface CompanyData {
 }
 
 const companyColumns: ColumnDef<CompanyData>[] = [
+  {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
+  },
   {
     accessorKey: 'id',
     header: 'Id',
@@ -106,6 +134,9 @@ const companyColumns: ColumnDef<CompanyData>[] = [
         mutationFn: deleteCompany
       });
 
+      const handleView = (id: number) => {
+        router.push(`/company/view-company/${id}`);
+      };
       const handleUpdate = (id: number) => {
         router.push(`/company/update-company/${id}`);
       };
@@ -137,7 +168,9 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleView(companyId)}>
+              View
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
               Update
             </DropdownMenuItem>

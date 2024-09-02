@@ -18,8 +18,6 @@ export default function CompanyUpdate() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
       <CompanyForm initialValues={data} />
     </div>
   );

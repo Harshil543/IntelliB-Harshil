@@ -1,8 +1,8 @@
 import React from 'react';
-import CardWrapper from '@/components/CommonComponents/CardWrapper';
+import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -30,7 +30,8 @@ export default function PropertyCoAdminForm({
 }: PropertyCoAdminForm) {
   const router = useRouter();
   const queryClient = useQueryClient();
-
+  const pathname = usePathname();
+  const isViewPropertyCoAdmin = pathname.includes('view-property-co-admin');
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
@@ -89,7 +90,13 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="First Name" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyCoAdmin}
+              label="First Name"
+              field={field}
+            />
+          )}
         />
         <form.Field
           name="lastName"
@@ -103,7 +110,13 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="Last Name" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyCoAdmin}
+              label="Last Name"
+              field={field}
+            />
+          )}
         />
         <form.Field
           name="email"
@@ -116,7 +129,12 @@ export default function PropertyCoAdminForm({
             }
           }}
           children={(field) => (
-            <TextInput type="email" label="Email" field={field} />
+            <TextInput
+              disabled={isViewPropertyCoAdmin}
+              type="email"
+              label="Email"
+              field={field}
+            />
           )}
         />
         <form.Field
@@ -144,6 +162,7 @@ export default function PropertyCoAdminForm({
                   ? field.state.meta.errors.join(', ')
                   : undefined
               }}
+              disabled={isViewPropertyCoAdmin}
             />
           )}
         />
@@ -154,7 +173,13 @@ export default function PropertyCoAdminForm({
             onChange: ({ value }) =>
               !value ? 'Designation is required' : undefined
           }}
-          children={(field) => <TextInput label="Designation" field={field} />}
+          children={(field) => (
+            <TextInput
+              disabled={isViewPropertyCoAdmin}
+              label="Designation"
+              field={field}
+            />
+          )}
         />
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
@@ -164,14 +189,19 @@ export default function PropertyCoAdminForm({
           >
             Cancel
           </Button>
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
-            )}
-          />
+          {!isViewPropertyCoAdmin && (
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+              children={([canSubmit, isSubmitting]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
+                </Button>
+              )}
+            />
+          )}
         </div>
         {mutation.isError && (
           <div className="col-span-full text-red-500">

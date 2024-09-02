@@ -8,8 +8,6 @@ import TenantForm from '@/components/forms/tenant.form';
 export default function TenantRegister() {
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Tenant" />
       <TenantForm />
     </div>
   );

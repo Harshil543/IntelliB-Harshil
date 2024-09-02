@@ -5,13 +5,12 @@ import PaymentAnalysis from '@/components/CommonComponents/PaymentAnalysis';
 import IncomeExpenseAnalysis from '@/components/CommonComponents/IncomeExpenseAnalysis';
 import RecentTransaction from '@/components/CommonComponents/RecentTransaction';
 import DashboardContent from '@/components/CommonComponents/DashboardContentCard';
+import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 
 export default function Dashbord() {
   return (
     <ScrollArea className="h-full">
       <div className="flex-1">
-        <Heading>Main Dashbaord</Heading>
-
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsContent value="overview" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

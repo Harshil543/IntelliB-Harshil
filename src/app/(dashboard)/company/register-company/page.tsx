@@ -9,8 +9,6 @@ import CompanyForm from '@/components/forms/company.form';
 export default function CompanyRegister() {
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
       <CompanyForm />
     </div>
   );

@@ -25,8 +25,6 @@ export default function ComapnyPage() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
       <DataTable
         columns={companyColumns}
         data={data}

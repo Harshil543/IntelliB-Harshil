@@ -24,8 +24,6 @@ export default function PropertyUserPage() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property User" />
       <DataTable
         columns={propertyUserColumns}
         data={data}

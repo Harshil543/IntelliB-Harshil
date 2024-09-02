@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
@@ -33,6 +33,8 @@ interface CompanyFormProps {
 export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const pathname = usePathname();
+  const isViewCompany = pathname.includes('view-company');
 
   const [countries, setCountries] = useState<
     { value: string; label: string }[]
@@ -51,20 +53,20 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        // return await updateCompany({
-        //   payload: data?.value,
-        //   id: initialValues.id
-        // });
+        return await updateCompany({
+          payload: data?.value,
+          id: initialValues.id
+        });
       } else {
         console.log('data', data);
 
-        // return await createCompany({ payload: data.value });
+        return await createCompany({ payload: data.value });
       }
     },
     onSuccess: () => {
-      // queryClient.invalidateQueries({ queryKey: ['company'] });
-      // router.push('/company/');
-      // toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+      queryClient.invalidateQueries({ queryKey: ['company'] });
+      router.push('/company/');
+      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
       toast.error(`Error: ${error.message}`);
@@ -154,7 +156,11 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="Company Name" field={field} />
+              <TextInput
+                disabled={isViewCompany}
+                label="Company Name"
+                field={field}
+              />
             )}
           </form.Field>
 
@@ -171,7 +177,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <TextInput
-                disabled={false}
+                disabled={isViewCompany}
                 type="email"
                 label="Email"
                 field={field}
@@ -190,6 +196,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <PhoneInputField
+                disabled={isViewCompany}
                 label="Mobile Number"
                 field={{
                   value: form.getFieldValue('mobileNumber'),
@@ -219,7 +226,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <TextInput
-                disabled={false}
+                disabled={isViewCompany}
                 label="Address Line 1"
                 field={field}
               />
@@ -235,7 +242,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <TextInput
-                disabled={false}
+                disabled={isViewCompany}
                 label="Address Line 2"
                 field={field}
               />
@@ -251,7 +258,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <SelectInput
-                disabled={false}
+                disabled={isViewCompany}
                 label="Country"
                 field={field}
                 options={countries}
@@ -270,7 +277,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <SelectInput
-                disabled={false}
+                disabled={isViewCompany}
                 label="State"
                 field={field}
                 options={states}
@@ -288,7 +295,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <SelectInput
-                disabled={false}
+                disabled={isViewCompany}
                 label="City"
                 field={field}
                 options={cities}
@@ -311,7 +318,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <TextInput
-                disabled={false}
+                disabled={isViewCompany}
                 type="text"
                 label="Pincode"
                 field={field}
@@ -338,7 +345,11 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="Website URL" field={field} />
+              <TextInput
+                disabled={isViewCompany}
+                label="Website URL"
+                field={field}
+              />
             )}
           </form.Field>
 
@@ -350,7 +361,11 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="GST Number" field={field} />
+              <TextInput
+                disabled={isViewCompany}
+                label="GST Number"
+                field={field}
+              />
             )}
           </form.Field>
 
@@ -362,15 +377,43 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="CIN Number" field={field} />
+              <TextInput
+                disabled={isViewCompany}
+                label="CIN Number"
+                field={field}
+              />
             )}
           </form.Field>
         </div>
       </CardWrapper>
 
-      <Button type="submit" className="mt-4">
-        Save
-      </Button>
+      <div className="col-span-full mt-10 flex justify-end space-x-4">
+        <Button
+          type="button"
+          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+          onClick={() => router.back()}
+        >
+          Cancel
+        </Button>
+        {!isViewCompany && (
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+            children={([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Submit'}
+              </Button>
+            )}
+          />
+        )}
+      </div>
+
+      {mutation.isError && (
+        <div className="col-span-full text-red-500">
+          {mutation.error instanceof Error
+            ? mutation.error.message
+            : 'An error occurred during submission.'}
+        </div>
+      )}
     </form>
   );
 }

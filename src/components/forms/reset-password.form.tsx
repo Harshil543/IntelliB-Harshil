@@ -76,7 +76,7 @@ const ResetPasswordForm = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-8 flex items-center"
+              className="absolute right-3 top-9 flex items-center"
               onClick={() => setShowNewPassword(!showNewPassword)}
             >
               <Icon
@@ -108,7 +108,7 @@ const ResetPasswordForm = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-8 flex items-center"
+              className="absolute right-3 top-9 flex items-center"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               <Icon
@@ -123,7 +123,7 @@ const ResetPasswordForm = () => {
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
         children={([canSubmit, isSubmitting]) => (
-          <Button type="submit" disabled={!canSubmit}>
+          <Button type="submit" disabled={!canSubmit} className="bg-primary">
             {isSubmitting ? 'Submitting...' : 'Update'}
           </Button>
         )}

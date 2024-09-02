@@ -3,21 +3,22 @@
 import * as React from 'react';
 import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
-import { useParams } from 'next/navigation';
-import { getTenantById } from '@/services/tenant.service';
-import TenantForm from '@/components/forms/tenant.form';
-import { useQuery } from '@tanstack/react-query';
 
-export default function TenantView() {
-  const { id } = useParams();
+import CompanyForm from '@/components/forms/company.form';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { getCompanyById } from '@/services/company.service';
+
+export default function CompanyUpdate() {
+  const { id } = useParams(); // Get the ID from URL
   const { data } = useQuery({
-    queryKey: ['tenant', id],
-    queryFn: () => getTenantById(Number(id))
+    queryKey: ['company', id],
+    queryFn: () => getCompanyById(Number(id))
   });
 
   return (
     <div>
-      <TenantForm initialValues={data} />
+      <CompanyForm initialValues={data} />
     </div>
   );
 }

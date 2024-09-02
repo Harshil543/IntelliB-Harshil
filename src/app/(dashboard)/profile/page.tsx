@@ -7,8 +7,6 @@ import React from 'react';
 const ProfileSetting = () => {
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Profile" />
       <ProfileForm />
       <Heading children="Change Password" />
       <ChangePasswordForm />

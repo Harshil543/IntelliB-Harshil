@@ -13,7 +13,7 @@ import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { deletePropertyUser } from '@/services/property-user.service';
+import { statusPropertyUser } from '@/services/property-user.service';
 import { Checkbox } from '@/components/ui/checkbox';
 
 interface PropertyUserColumns {
@@ -116,30 +116,41 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const propertyUserId = row.getValue('id') as number;
+      const currentStatus = row.getValue('status') as string;
       const queryClient = useQueryClient();
       const router = useRouter();
 
-      const delteMutation = useMutation({
-        mutationFn: deletePropertyUser
+      const statusMutation = useMutation({
+        mutationFn: statusPropertyUser
       });
+
       const handleView = (id: number) => {
         router.push(`/property-user/view-property-user/${id}`);
       };
+
       const handleUpdate = (id: number) => {
         router.push(`/property-user/update-property-user/${id}`);
       };
 
-      const handleStatus = async (id: number) => {
-        // try {
-        //   delteMutation.mutate(id, {
-        //     onSuccess: () => {
-        //       queryClient.invalidateQueries({ queryKey: ['property-user'] });
-        //       toast.success(`Deleted successfully`);
-        //     }
-        //   });
-        // } catch (error) {
-        //   console.error('Error deleting property user:', error);
-        // }
+      const handleStatus = async (id: number, status: string) => {
+        const payload = {
+          payload: {
+            id,
+            status: status === 'Active' ? 'Inactive' : 'Active'
+          },
+          id
+        };
+
+        try {
+          statusMutation.mutate(payload, {
+            onSuccess: () => {
+              queryClient.invalidateQueries({ queryKey: ['property-user'] });
+              toast.success(`Status updated successfully`);
+            }
+          });
+        } catch (error) {
+          console.error('Error updating property user status:', error);
+        }
       };
 
       return (
@@ -162,8 +173,10 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
+            <DropdownMenuItem
+              onClick={() => handleStatus(propertyUserId, currentStatus)}
+            >
+              {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

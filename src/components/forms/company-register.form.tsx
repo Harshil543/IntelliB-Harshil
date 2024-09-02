@@ -121,7 +121,9 @@ const CompanyRegisterForm: React.FC = () => {
           }
         }}
       >
-        {(field) => <TextInput label="Company Name" field={field} />}
+        {(field) => (
+          <TextInput disabled={false} label="Company Name" field={field} />
+        )}
       </form.Field>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
         <form.Field
@@ -135,7 +137,14 @@ const CompanyRegisterForm: React.FC = () => {
             }
           }}
         >
-          {(field) => <TextInput type="email" label="Email" field={field} />}
+          {(field) => (
+            <TextInput
+              disabled={false}
+              type="email"
+              label="Email"
+              field={field}
+            />
+          )}
         </form.Field>
 
         <form.Field
@@ -149,6 +158,7 @@ const CompanyRegisterForm: React.FC = () => {
         >
           {(field) => (
             <PhoneInputField
+              disabled={false}
               label="Mobile Number"
               field={{
                 value: form.getFieldValue('mobileNumber'),
@@ -173,7 +183,9 @@ const CompanyRegisterForm: React.FC = () => {
               !value ? 'Address Line 1 is required' : undefined
           }}
         >
-          {(field) => <TextInput label="Address Line 1" field={field} />}
+          {(field) => (
+            <TextInput disabled={false} label="Address Line 1" field={field} />
+          )}
         </form.Field>
 
         <form.Field
@@ -183,7 +195,9 @@ const CompanyRegisterForm: React.FC = () => {
               !value ? 'Address Line 2 is required' : undefined
           }}
         >
-          {(field) => <TextInput label="Address Line 2" field={field} />}
+          {(field) => (
+            <TextInput disabled={false} label="Address Line 2" field={field} />
+          )}
         </form.Field>
 
         <form.Field
@@ -195,6 +209,7 @@ const CompanyRegisterForm: React.FC = () => {
         >
           {(field) => (
             <SelectInput
+              disabled={false}
               label="Country"
               field={field}
               options={countries}
@@ -212,6 +227,7 @@ const CompanyRegisterForm: React.FC = () => {
         >
           {(field) => (
             <SelectInput
+              disabled={false}
               label="State"
               field={field}
               options={states}
@@ -228,6 +244,7 @@ const CompanyRegisterForm: React.FC = () => {
         >
           {(field) => (
             <SelectInput
+              disabled={false}
               label="City"
               field={field}
               options={cities}
@@ -248,7 +265,14 @@ const CompanyRegisterForm: React.FC = () => {
             }
           }}
         >
-          {(field) => <TextInput type="text" label="Pincode" field={field} />}
+          {(field) => (
+            <TextInput
+              disabled={false}
+              type="text"
+              label="Pincode"
+              field={field}
+            />
+          )}
         </form.Field>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-2">
@@ -264,7 +288,9 @@ const CompanyRegisterForm: React.FC = () => {
             }
           }}
         >
-          {(field) => <TextInput label="Website URL" field={field} />}
+          {(field) => (
+            <TextInput disabled={false} label="Website URL" field={field} />
+          )}
         </form.Field>
 
         <form.Field
@@ -280,7 +306,9 @@ const CompanyRegisterForm: React.FC = () => {
             }
           }}
         >
-          {(field) => <TextInput label="GST Number" field={field} />}
+          {(field) => (
+            <TextInput disabled={false} label="GST Number" field={field} />
+          )}
         </form.Field>
 
         <form.Field
@@ -296,7 +324,12 @@ const CompanyRegisterForm: React.FC = () => {
           }}
         >
           {(field) => (
-            <TextInput type="text" label="CIN Number" field={field} />
+            <TextInput
+              disabled={false}
+              type="text"
+              label="CIN Number"
+              field={field}
+            />
           )}
         </form.Field>
       </div>
@@ -304,7 +337,11 @@ const CompanyRegisterForm: React.FC = () => {
         selector={(state) => [state.canSubmit, state.isSubmitting]}
       >
         {([canSubmit, isSubmitting]) => (
-          <Button type="submit" disabled={!canSubmit} className="w-[40%]">
+          <Button
+            type="submit"
+            disabled={!canSubmit}
+            className="w-[40%] bg-primary"
+          >
             {isSubmitting ? 'Submitting...' : 'Update'}
           </Button>
         )}
