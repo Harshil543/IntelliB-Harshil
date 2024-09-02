@@ -47,7 +47,6 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
-
             <DashboardNav items={navItems} />
           </div>
         </div>

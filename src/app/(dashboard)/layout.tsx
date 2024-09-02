@@ -9,6 +9,7 @@ import React, { ReactNode, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Topbar from '@/components/layout/Topbar';
 import axios from 'axios';
+import { useSidebar } from '@/hooks/useSidebar';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -22,6 +23,7 @@ interface UserData {
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const pathname = usePathname();
+  const { isMinimized } = useSidebar();
 
   const pathSegments = pathname.split('/').filter(Boolean);
 
@@ -60,7 +62,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         <div className="block px-10 pt-10 md:hidden">
           <MobileSidebar />
         </div>
-        <div className={`h-full w-full p-10 md:ml-72`}>
+        <div
+          className={`h-full w-full p-10 ${isMinimized ? 'md:ml-16' : 'md:ml-72'} `}
+        >
           <div className="flex justify-between align-middle">
             <BreadcrumbWithCustomSeparator />
             <Topbar />
