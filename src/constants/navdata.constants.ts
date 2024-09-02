@@ -142,9 +142,9 @@ export const navItems: NavItem[] = [
     label: 'tenant'
   },
   {
-    title: 'Profile',
-    href: '/profile/',
+    title: 'Leasable Unit',
+    href: '/leasable-unit/',
     icon: 'profile',
-    label: 'profile'
+    label: 'leasable-unit'
   }
 ];

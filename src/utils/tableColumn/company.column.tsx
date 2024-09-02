@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { useRouter } from 'next/navigation';
-import { deleteCompany } from '@/services/company.service';
+import { statusCompany } from '@/services/company.service';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -126,33 +126,41 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const companyId = row.getValue('id') as number;
+      const propertyUserId = row.getValue('id') as number;
+      const currentStatus = row.getValue('status') as string;
       const queryClient = useQueryClient();
       const router = useRouter();
 
-      const delteMutation = useMutation({
-        mutationFn: deleteCompany
+      const statusMutation = useMutation({
+        mutationFn: statusCompany
       });
 
       const handleView = (id: number) => {
         router.push(`/company/view-company/${id}`);
       };
+
       const handleUpdate = (id: number) => {
         router.push(`/company/update-company/${id}`);
       };
 
-      const handleStatus = async (id: number) => {
+      const handleStatus = async (id: number, status: string) => {
+        const payload = {
+          payload: {
+            id,
+            status: status === 'Active' ? 'Inactive' : 'Active'
+          },
+          id
+        };
+
         try {
-          delteMutation.mutate(id, {
+          statusMutation.mutate(payload, {
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: ['company'] });
-              toast.success(
-                `${row.getValue('status') === 'Active' ? 'De-activate successfully' : 'Activate Successfully'} `
-              );
+              toast.success(`Status updated successfully`);
             }
           });
         } catch (error) {
-          console.error('Error deleting company:', error);
+          console.error('Error updating company status:', error);
         }
       };
 
@@ -168,16 +176,18 @@ const companyColumns: ColumnDef<CompanyData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleView(companyId)}>
+            <DropdownMenuItem onClick={() => handleView(propertyUserId)}>
               View
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
+            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
               Update
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleStatus(companyId)}>
-              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
+            <DropdownMenuItem
+              onClick={() => handleStatus(propertyUserId, currentStatus)}
+            >
+              {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

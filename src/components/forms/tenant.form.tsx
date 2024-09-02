@@ -95,7 +95,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       }}
     >
       <CardWrapper>
-        <Heading>Tenant Data</Heading>
+        <Heading>Tenant Company Info</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="companyName"
@@ -172,7 +172,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       </CardWrapper>
 
       <CardWrapper>
-        <Heading>Tenant Data</Heading>
+        <Heading>Tenant Personal Info</Heading>
 
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
@@ -268,7 +268,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       </CardWrapper>
 
       <CardWrapper>
-        <Heading>Leased Unit</Heading>
+        <Heading>Leased Unit Info</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="leasedUnit"
@@ -323,7 +323,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       </CardWrapper>
 
       <CardWrapper>
-        <Heading>Billing Data</Heading>
+        <Heading>Billing Info</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="bilingMethod"

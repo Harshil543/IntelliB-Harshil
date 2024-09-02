@@ -14,30 +14,17 @@ import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Checkbox } from '@/components/ui/checkbox';
-import { statusTenant } from '@/services/tenant.service';
+import { statusLeasableUnit } from '@/services/leasable-unit.service';
 
-interface tenantData {
-  id?: number;
-  tenantName: string;
-  gstNumber: string;
-  cinNumber: string;
-  address: string;
-  firstName: string;
-  lastName: string;
-  designation: string;
-  mobileNumber: string;
-  email: string;
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
+interface LeasableUnitData {
+  id: number;
+  name: string;
+  floorAndWing: string;
+  smartMeterId: string[];
   status: string;
 }
 
-const tenantColumn: ColumnDef<tenantData>[] = [
+const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -67,47 +54,39 @@ const tenantColumn: ColumnDef<tenantData>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'Tenant Id',
+    header: 'Code',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'companyName',
-    header: 'Tenant Name',
+    accessorKey: 'name',
+    header: 'Name',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
+      <div className="lowercase">{row.getValue('name') ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'firstName',
-    header: 'Admin Name',
-    cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
-
-      return <div className="capitalize">{`${firstName} ${lastName} `}</div>;
-    }
-  },
-  {
-    accessorKey: 'leasedUnit',
-    header: 'Leasable Unit',
+    accessorKey: 'floorAndWing',
+    header: 'Floor/Wing',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('leasedUnit') ?? 'N/A'}</div>
+      <div className="lowercase">{row.getValue('floorAndWing') ?? 'N/A'}</div>
     )
   },
-
   {
-    accessorKey: 'leasedStartDate',
-    header: 'Leasable Start',
+    accessorKey: 'smartMeterId',
+    header: 'Smart Meter Id',
     cell: ({ row }) => {
-      return (
-        <div className="lowercase">
-          {row.getValue('leasedStartDate') ?? 'N/A'}
-        </div>
-      );
+      const smartMeterIds = row.original.smartMeterId;
+
+      const formattedSmartMeterIds = Array.isArray(smartMeterIds)
+        ? smartMeterIds.join(', ')
+        : smartMeterIds;
+
+      return <div className="lowercase">{formattedSmartMeterIds}</div>;
     }
   },
+
   {
     accessorKey: 'status',
     header: 'Status',
@@ -123,21 +102,21 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyUserId = row.getValue('id') as number;
+      const id = row.getValue('id') as number;
       const currentStatus = row.getValue('status') as string;
       const queryClient = useQueryClient();
       const router = useRouter();
 
       const statusMutation = useMutation({
-        mutationFn: statusTenant
+        mutationFn: statusLeasableUnit
       });
 
       const handleView = (id: number) => {
-        router.push(`/tenants/view-tenant/${id}`);
+        router.push(`/leasable-unit/view-leasable-unit/${id}`);
       };
 
       const handleUpdate = (id: number) => {
-        router.push(`/tenants/update-tenant/${id}`);
+        router.push(`/leasable-unit/update-leasable-unit/${id}`);
       };
 
       const handleStatus = async (id: number, status: string) => {
@@ -152,12 +131,12 @@ const tenantColumn: ColumnDef<tenantData>[] = [
         try {
           statusMutation.mutate(payload, {
             onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['tenant'] });
+              queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
               toast.success(`Status updated successfully`);
             }
           });
         } catch (error) {
-          console.error('Error updating tenant status:', error);
+          console.error('Error updating leasable-unit status:', error);
         }
       };
 
@@ -173,18 +152,16 @@ const tenantColumn: ColumnDef<tenantData>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleView(propertyUserId)}>
+            <DropdownMenuItem onClick={() => handleView(id)}>
               View
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
+            <DropdownMenuItem onClick={() => handleUpdate(id)}>
               Update
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => handleStatus(propertyUserId, currentStatus)}
-            >
-              {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
+            <DropdownMenuItem onClick={() => handleStatus(id, currentStatus)}>
+              {currentStatus === 'Active' ? 'De-list' : 'List'}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -193,4 +170,4 @@ const tenantColumn: ColumnDef<tenantData>[] = [
   }
 ];
 
-export default tenantColumn;
+export default leasableUnitColumn;

@@ -51,13 +51,20 @@ export const updateTenant = async ({
   }
 };
 
-export const deleteTenant = async (tenantId: number) => {
+export const statusTenant = async ({
+  id,
+  payload
+}: {
+  payload: any;
+  id: number;
+}) => {
   try {
-    // const response = await apiClient.delete(`${BASE_URLS?.company}/company/${tenantId}`);
-    const response = await apiClient.delete(`/tenant/${tenantId}`);
-    return response.data;
+    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
+    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
+    // return response.data;
+    console.log('tenant status', payload);
   } catch (error) {
-    console.error('Error deleting tenant:', error);
+    console.error('Error status tenant:', error);
     throw error;
   }
 };
