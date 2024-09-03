@@ -11,25 +11,31 @@ import {
   createEmailSetting,
   updateEmailSetting
 } from '@/services/email-setting.service';
-import Heading from '@/components/fields/Heading';
+import SelectInput from '../fields/SelectInput';
+import Heading from '../fields/Heading';
+import TimePickerInput from '../fields/TimePickerInput';
 
-interface EmailSettingFormProps {
+interface CompanySettingFormProps {
   initialValues?: {
     id?: number;
-    mailDeliver: string;
-    mailHost: string;
-    mailPort: string;
-    mailUsername: string;
-    mailPassword: string;
-    mailEncryption: string;
-    mailFromAddress: string;
-    mailFromName: string;
+    companyName: string;
+    city: string;
+    state: string;
+    zipcode: string;
+    country: string;
+    address: string;
+    telephone: string;
+    registrationNumber: string;
+    startTime: string;
+    endTime: string;
+    timezone: string;
+    taxNumber: string;
   };
 }
 
-export default function EmailSettingForm({
+export default function CompanySettingForm({
   initialValues
-}: EmailSettingFormProps) {
+}: CompanySettingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -56,19 +62,22 @@ export default function EmailSettingForm({
 
   const form = useForm({
     defaultValues: initialValues || {
-      id: '',
-      mailDeliver: '',
-      mailHost: '',
-      mailPort: '',
-      mailUsername: '',
-      mailPassword: '',
-      mailEncryption: '',
-      mailFromAddress: '',
-      mailFromName: ''
+      companyName: '',
+      city: '',
+      state: '',
+      zipcode: '',
+      country: '',
+      address: '',
+      telephone: '',
+      registrationNumber: '',
+      startTime: '',
+      endTime: '',
+      timezone: '',
+      taxNumber: ''
     },
     onSubmit: async (values) => {
       // await mutation.mutateAsync(values);
-      console.log('Email Setting values', values);
+      console.log('Company Setting Values', values);
     }
   });
 
@@ -80,81 +89,53 @@ export default function EmailSettingForm({
       }}
     >
       <CardWrapper>
-        <Heading>Email Setting</Heading>
+        <Heading>Company Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
-            name="mailDeliver"
+            name="companyName"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail Deliver is required';
-                if (value.length < 3)
-                  return 'Mail Deliver must be at least 3 characters';
+                if (!value) return 'Company Name is required';
                 return undefined;
               }
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="Mail Deliver" field={field} />
+              <TextInput disabled={false} label="Company Name" field={field} />
             )}
           </form.Field>
           <form.Field
-            name="mailHost"
+            name="city"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail Host is required';
+                if (!value) return 'City is required';
                 return undefined;
               }
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="Mail Host" field={field} />
+              <TextInput disabled={false} label="City" field={field} />
             )}
           </form.Field>
+
           <form.Field
-            name="mailPort"
+            name="state"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail Port is required';
-                if (!/^\d+$/.test(value)) return 'Mail Port must be a number';
+                if (!value) return 'State is required';
                 return undefined;
               }
             }}
           >
             {(field) => (
-              <TextInput disabled={false} label="Mail Port" field={field} />
+              <TextInput disabled={false} label="State" field={field} />
             )}
           </form.Field>
           <form.Field
-            name="mailUsername"
+            name="zipcode"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail Username is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="Mail Username" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="mailPassword"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Mail Password is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="Mail Password" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="mailEncryption"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Mail Encryption is required';
+                if (!value) return 'Zip / Post Code is required';
                 return undefined;
               }
             }}
@@ -162,18 +143,61 @@ export default function EmailSettingForm({
             {(field) => (
               <TextInput
                 disabled={false}
-                label="Mail Encryption"
+                label="Zip / Post Code"
                 field={field}
               />
             )}
           </form.Field>
           <form.Field
-            name="mailFromAddress"
+            name="country"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail From Address is required';
-                if (!/\S+@\S+\.\S+/.test(value))
-                  return 'Mail From Address must be a valid email';
+                if (!value) return 'Country is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Country" field={field} />
+            )}
+          </form.Field>
+        </div>
+
+        <div className="mt-4">
+          <form.Field
+            name="address"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Address is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Address" field={field} />
+            )}
+          </form.Field>
+        </div>
+
+        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <form.Field
+            name="telephone"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Telephone is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Telephone" field={field} />
+            )}
+          </form.Field>
+          <form.Field
+            name="registrationNumber"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Company Registration Number is required';
                 return undefined;
               }
             }}
@@ -181,26 +205,80 @@ export default function EmailSettingForm({
             {(field) => (
               <TextInput
                 disabled={false}
-                label="Mail From Address"
+                label="Company Registration Number"
                 field={field}
               />
             )}
           </form.Field>
           <form.Field
-            name="mailFromName"
+            name="startTime"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Mail From Name is required';
+                if (!value) return 'Start Time is required';
                 return undefined;
               }
             }}
           >
             {(field) => (
-              <TextInput
-                disabled={false}
-                label="Mail From Name"
+              <TimePickerInput
+                label="Company Start Time"
                 field={field}
+                placeholder="Select time"
+                disabled={false}
               />
+            )}
+          </form.Field>
+          <form.Field
+            name="endTime"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'End Time is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TimePickerInput
+                label="Company End Time"
+                field={field}
+                placeholder="Select time"
+                disabled={false}
+              />
+            )}
+          </form.Field>
+          <form.Field
+            name="timezone"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Time Zone is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <SelectInput
+                label="Time Zone"
+                field={field}
+                options={[
+                  { label: 'abc', value: 'abc' },
+                  { label: 'abc', value: 'abc' }
+                ]}
+                disabled={false}
+                placeholder="Display Shipping Proposal"
+              />
+            )}
+          </form.Field>
+          <form.Field
+            name="taxNumber"
+            validators={{
+              onChange: ({ value }) => {
+                if (!value) return 'Tax Number is required';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput disabled={false} label="Tax Number" field={field} />
             )}
           </form.Field>
         </div>

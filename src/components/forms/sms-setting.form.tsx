@@ -3,17 +3,18 @@ import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import {
   createEmailSetting,
   updateEmailSetting
 } from '@/services/email-setting.service';
-import Heading from '@/components/fields/Heading';
+import Heading from '../fields/Heading';
 
-interface EmailSettingFormProps {
+interface SMSSettingFormProps {
   initialValues?: {
     id?: number;
     mailDeliver: string;
@@ -27,9 +28,9 @@ interface EmailSettingFormProps {
   };
 }
 
-export default function EmailSettingForm({
+export default function SystemSettingForm({
   initialValues
-}: EmailSettingFormProps) {
+}: SMSSettingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -68,7 +69,7 @@ export default function EmailSettingForm({
     },
     onSubmit: async (values) => {
       // await mutation.mutateAsync(values);
-      console.log('Email Setting values', values);
+      console.log('SMS Setting values', values);
     }
   });
 
@@ -80,7 +81,7 @@ export default function EmailSettingForm({
       }}
     >
       <CardWrapper>
-        <Heading>Email Setting</Heading>
+        <Heading>SMS Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="mailDeliver"

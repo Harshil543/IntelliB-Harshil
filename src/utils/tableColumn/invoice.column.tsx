@@ -99,7 +99,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
 
   {
     accessorKey: 'leasedStartDate',
-    header: 'Leasable Start Date',
+    header: 'Leasable Start',
     cell: ({ row }) => {
       return (
         <div className="lowercase">

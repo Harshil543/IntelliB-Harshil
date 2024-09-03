@@ -20,16 +20,16 @@ export const navItems: NavItem[] = [
     label: 'property-user'
   },
   {
-    title: 'Property Co-Admin',
-    href: '/property-co-admin/',
-    icon: 'profile',
-    label: 'property-co-admin'
-  },
-  {
     title: 'Tenants',
     href: '/tenants/',
     icon: 'profile',
     label: 'tenant'
+  },
+  {
+    title: 'Invoice',
+    href: '/invoice/',
+    icon: 'profile',
+    label: 'invoice'
   },
   {
     title: 'Leasable Unit',
@@ -38,9 +38,53 @@ export const navItems: NavItem[] = [
     label: 'leasable-unit'
   },
   {
-    title: 'Email Setting',
-    href: '/settings/email-setting/',
-    icon: 'profile',
-    label: 'email-setting'
+    title: 'Settings',
+    href: '#', // Parent item does not have a link
+    icon: 'settings', // Assuming you have an icon for settings
+    label: 'settings',
+    children: [
+      {
+        title: 'System Setting',
+        href: '/settings/system-setting/',
+        icon: 'profile',
+        label: 'system-setting'
+      },
+      {
+        title: 'Company Setting',
+        href: '/settings/company-setting/',
+        icon: 'profile',
+        label: 'company-setting'
+      },
+      {
+        title: 'Email Setting',
+        href: '/settings/email-setting/',
+        icon: 'profile',
+        label: 'email-setting'
+      },
+      {
+        title: 'SMS Setting',
+        href: '/settings/sms-setting/',
+        icon: 'profile',
+        label: 'sms-setting'
+      },
+      {
+        title: 'Payment Gateway Setting',
+        href: '/settings/payment-gateway-setting/',
+        icon: 'profile',
+        label: 'payment-gateway-setting'
+      },
+      {
+        title: 'Email Notification Setting',
+        href: '/settings/email-notification-setting/',
+        icon: 'profile',
+        label: 'email-notification-setting'
+      },
+      {
+        title: 'SMS Notification Setting',
+        href: '/settings/sms-notification-setting/',
+        icon: 'profile',
+        label: 'sms-notification-setting'
+      }
+    ]
   }
 ];
