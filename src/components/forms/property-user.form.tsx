@@ -38,12 +38,9 @@ export default function PropertyUserForm({
   const mutation = useMutation({
     mutationFn: async (data: PropertyUserValues) => {
       if (initialValues?.id) {
-        return await updatePropertyUser({
-          payload: data,
-          id: initialValues.id
-        });
+        return await updatePropertyUser(initialValues.id, data);
       } else {
-        return await createPropertyUser({ payload: data });
+        return await createPropertyUser(data);
       }
     },
     onSuccess: () => {
@@ -58,7 +55,7 @@ export default function PropertyUserForm({
 
   const isViewPropertyUser = pathname.includes('view-property-user');
 
-  const form = useForm<PropertyUserValues>({
+  const form = useForm({
     defaultValues: initialValues || {
       id: '',
       firstName: '',
@@ -69,7 +66,7 @@ export default function PropertyUserForm({
       designation: '',
       status: 'Active'
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });

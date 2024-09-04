@@ -9,7 +9,6 @@ import { Icon } from '@iconify/react';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 
-// Define a type for the form values
 interface ResetPasswordValues {
   newPassword: string;
   confirmPassword: string;
@@ -39,7 +38,7 @@ const ResetPasswordForm = () => {
       newPassword: '',
       confirmPassword: ''
     },
-    onSubmit: async (value) => {
+    onSubmit: async (value: any) => {
       await mutation.mutateAsync(value);
     }
   });

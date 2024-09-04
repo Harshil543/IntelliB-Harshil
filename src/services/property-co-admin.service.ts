@@ -1,5 +1,14 @@
 import apiClient from '@/config/api.config';
-import { BASE_URLS } from '@/constants/api.constants';
+
+interface PropertyCoAdminPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  designation: string;
+  status: string;
+}
 
 export const getPropertyCoAdmin = async () => {
   try {
@@ -25,7 +34,11 @@ export const getpropertyCoAdminById = async (propertCoAdminId: number) => {
   }
 };
 
-export const createPropertyCoAdmin = async ({ payload }: { payload: any }) => {
+export const createPropertyCoAdmin = async ({
+  payload
+}: {
+  payload: PropertyCoAdminPayload;
+}) => {
   try {
     // const response = await apiClient.post(`${BASE_URLS?.property-co-admin}/property-co-admin`, payload);
     const response = await apiClient.post(`/property-co-admin/`, payload);
@@ -40,7 +53,7 @@ export const updatePropertyCoAdmin = async ({
   id,
   payload
 }: {
-  payload: any;
+  payload: PropertyCoAdminPayload;
   id: number;
 }) => {
   try {
@@ -54,10 +67,9 @@ export const updatePropertyCoAdmin = async ({
 };
 
 export const statusPropertyCoAdmin = async ({
-  id,
   payload
 }: {
-  payload: any;
+  payload: PropertyCoAdminPayload;
   id: number;
 }) => {
   try {

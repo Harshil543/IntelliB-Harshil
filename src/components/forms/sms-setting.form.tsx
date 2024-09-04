@@ -3,14 +3,9 @@ import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import {
-  createEmailSetting,
-  updateEmailSetting
-} from '@/services/email-setting.service';
+import { useMutation } from '@tanstack/react-query';
+
 import Heading from '../fields/Heading';
 
 interface SMSSettingFormProps {
@@ -27,42 +22,39 @@ interface SMSSettingFormProps {
   };
 }
 
-interface SMSSettingValues {
-  mailDeliver: string;
-  mailHost: string;
-  mailPort: string;
-  mailUsername: string;
-  mailPassword: string;
-  mailEncryption: string;
-  mailFromAddress: string;
-  mailFromName: string;
-}
+// interface SMSSettingValues {
+//   mailDeliver: string;
+//   mailHost: string;
+//   mailPort: string;
+//   mailUsername: string;
+//   mailPassword: string;
+//   mailEncryption: string;
+//   mailFromAddress: string;
+//   mailFromName: string;
+// }
 
 export default function SystemSettingForm({
   initialValues
 }: SMSSettingFormProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  // const router = useRouter();
+  // const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: SMSSettingValues) => {
-      if (initialValues?.id) {
-        return await updateEmailSetting({
-          payload: data,
-          id: initialValues.id
-        });
-      } else {
-        return await createEmailSetting({ payload: data });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['email-setting'] });
-      router.push('/settings/email-setting/');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
-    },
-    onError: (error) => {
-      toast.error(`Error: ${error.message}`);
-    }
+    // mutationFn: async (data: SMSSettingValues) => {
+    //   if (initialValues?.id) {
+    //     return await updateEmailSetting(initialValues.id, data);
+    //   } else {
+    //     return await createEmailSetting(data);
+    //   }
+    // },
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries({ queryKey: ['email-setting'] });
+    //   router.push('/settings/email-setting/');
+    //   toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+    // },
+    // onError: (error) => {
+    //   toast.error(`Error: ${error.message}`);
+    // }
   });
 
   const form = useForm({
@@ -218,14 +210,6 @@ export default function SystemSettingForm({
       </CardWrapper>
 
       <div className="col-span-full mt-10 flex justify-start space-x-4">
-        <Button
-          type="button"
-          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
-          onClick={() => router.back()}
-        >
-          Cancel
-        </Button>
-
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
         >

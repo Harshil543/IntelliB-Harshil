@@ -1,5 +1,5 @@
+import SystemSettingForm from '@/components/forms/payment-gateway-setting.form';
 import React from 'react';
-import SystemSettingForm from '@/components/forms/system-setting.form';
 
 const SystemSetting = () => {
   return <SystemSettingForm />;

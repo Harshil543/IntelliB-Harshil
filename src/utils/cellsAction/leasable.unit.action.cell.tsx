@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { statusLeasableUnit } from '@/services/leasable-unit.service';
+// import { statusLeasableUnit } from '@/services/leasable-unit.service';
 
 interface LeasableUnitActionCellProps {
   id: number;
@@ -28,7 +28,7 @@ const LeasableUnitActionCell: React.FC<LeasableUnitActionCellProps> = ({
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: statusLeasableUnit
+    // mutationFn: statusLeasableUnit
   });
 
   const handleView = () => {
@@ -50,7 +50,7 @@ const LeasableUnitActionCell: React.FC<LeasableUnitActionCellProps> = ({
     };
 
     try {
-      await statusMutation.mutateAsync(payload);
+      await statusMutation.mutateAsync(payload as any);
       queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
       toast.success(`Status updated successfully`);
     } catch (error) {

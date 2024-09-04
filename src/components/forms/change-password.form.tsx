@@ -57,7 +57,7 @@ export default function ChangePasswordForm({
       newPassword: '',
       confirmPassword: ''
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });
@@ -201,7 +201,7 @@ export default function ChangePasswordForm({
         <div className="col-span-full mt-10 flex justify-start space-x-4">
           <Button
             type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
             onClick={() => router.back()}
           >
             Cancel

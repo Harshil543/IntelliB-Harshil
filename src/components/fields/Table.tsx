@@ -17,7 +17,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import autoTable from 'jspdf-autotable';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -30,7 +29,6 @@ import {
 import { useRouter } from 'next/navigation';
 import { Parser } from 'json2csv';
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
 
 type DataTableProps<T> = {
   columns: ColumnDef<T>[];
@@ -107,30 +105,26 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
   };
 
   const exportPDF = () => {
-    const selectedRows = table
-      .getRowModel()
-      .rows.filter((row) => row.getIsSelected());
-    const rows = selectedRows.map((row) => row.original);
-
-    const doc = new jsPDF();
-    doc.text('Table Data', 20, 20);
-
-    const filteredColumns = columns.filter((column) => column.id !== 'select');
-    const tableColumn = filteredColumns.map((col) => col.header as string);
-    const tableRows = rows.map((row) =>
-      filteredColumns.map((col) => {
-        // Using `col.accessorKey` assuming it's a string key in the row object
-        const accessor = col.accessorKey as keyof T;
-        return row[accessor];
-      })
-    );
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows
-    });
-
-    doc.save('data.pdf');
+    // const selectedRows = table
+    //   .getRowModel()
+    //   .rows.filter((row) => row.getIsSelected());
+    // const rows = selectedRows.map((row) => row.original);
+    // const doc = new jsPDF();
+    // doc.text('Table Data', 20, 20);
+    // const filteredColumns = columns.filter((column) => column.id !== 'select');
+    // const tableColumn = filteredColumns.map((col) => col.header as string);
+    // const tableRows = rows.map((row) =>
+    //   filteredColumns.map((col) => {
+    //     // Using `col.accessorKey` assuming it's a string key in the row object
+    //     const accessor = col.accessorKey as keyof T;
+    //     return row[accessor];
+    //   })
+    // );
+    // autoTable(doc, {
+    //   head: [tableColumn],
+    //   body: tableRows
+    // });
+    // doc.save('data.pdf');
   };
 
   const handleDownloadTemplate = () => {

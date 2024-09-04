@@ -1,5 +1,4 @@
 import React from 'react';
-import type { FieldApi, FieldState } from '@tanstack/react-form';
 import Select, { StylesConfig } from 'react-select';
 import { Label } from '@/components/ui/label';
 
@@ -10,12 +9,7 @@ interface Option {
 
 interface SelectInputProps {
   label: string;
-  field: FieldApi<
-    string | null, // Adjust according to your value type
-    string | null,
-    string | null,
-    FieldState<string | null>
-  >;
+  field: any;
   options: Option[];
   placeholder?: string;
   disabled: boolean;

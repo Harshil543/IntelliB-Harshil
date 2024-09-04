@@ -5,37 +5,43 @@ export const navItems: NavItem[] = [
     title: 'Dashboard',
     href: '/',
     icon: 'dashboard',
-    label: 'Dashboard'
+    label: 'Dashboard',
+    children: undefined
   },
   {
     title: 'Company',
     href: '/company/',
     icon: 'user',
-    label: 'user'
+    label: 'user',
+    children: undefined
   },
   {
     title: 'Property User',
     href: '/property-user/',
     icon: 'profile',
-    label: 'property-user'
+    label: 'property-user',
+    children: undefined
   },
   {
     title: 'Tenants',
     href: '/tenants/',
     icon: 'profile',
-    label: 'tenant'
+    label: 'tenant',
+    children: undefined
   },
   {
     title: 'Invoice',
     href: '/invoice/',
     icon: 'profile',
-    label: 'invoice'
+    label: 'invoice',
+    children: undefined
   },
   {
     title: 'Leasable Unit',
     href: '/leasable-unit/',
     icon: 'profile',
-    label: 'leasable-unit'
+    label: 'leasable-unit',
+    children: undefined
   },
   {
     title: 'Settings',

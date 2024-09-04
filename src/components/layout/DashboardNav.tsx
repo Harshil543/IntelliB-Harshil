@@ -26,9 +26,7 @@ export function DashboardNav({
   const path = usePathname();
   const router = useRouter();
   const { isMinimized } = useSidebar();
-  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>(
-    {}
-  );
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
 
   const toggleSubmenu = (label: string) => {
     setOpenSubmenus((prev) => ({
@@ -37,7 +35,7 @@ export function DashboardNav({
     }));
   };
 
-  if (!items?.length) {
+  if (!items.length) {
     return null;
   }
 
@@ -45,8 +43,8 @@ export function DashboardNav({
     <nav className="grid items-start gap-2 pt-10">
       <TooltipProvider>
         {items.map((item, index) => {
-          const Icon = Icons[item.icon || 'arrowRight'];
-          const isSubmenuOpen = openSubmenus[item.label];
+          const Icon = item.icon ? Icons[item.icon] : Icons.arrowRight; // Use default icon if none provided
+          const isSubmenuOpen = openSubmenus[item.label as string];
 
           return (
             <div key={index}>
@@ -61,7 +59,7 @@ export function DashboardNav({
                     )}
                     onClick={() => {
                       if (item.children) {
-                        toggleSubmenu(item.label);
+                        toggleSubmenu(item.label as string);
                       } else if (item.href) {
                         router.push(item.href);
                         if (setOpen) setOpen(false);
@@ -89,7 +87,7 @@ export function DashboardNav({
               {/* Render submenu items if they exist and are toggled open */}
               {item.children && isSubmenuOpen && (
                 <div className="ml-6">
-                  {item.children.map((child, childIndex) => (
+                  {item.children.map((child: any, childIndex: any) => (
                     <Link
                       key={childIndex}
                       href={child.disabled ? '/' : child.href}

@@ -1,7 +1,5 @@
 'use client';
-
 import * as React from 'react';
-
 import CompanyForm from '@/components/forms/company.form';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';

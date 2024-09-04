@@ -50,7 +50,7 @@ const PropertyCoAdminActionCell: React.FC<PropertyCoAdminActionCellProps> = ({
     };
 
     try {
-      await statusMutation.mutateAsync(payload);
+      await statusMutation.mutateAsync(payload as any);
       queryClient.invalidateQueries({ queryKey: ['property-co-admin'] });
       toast.success(`Status updated successfully`);
     } catch (error) {

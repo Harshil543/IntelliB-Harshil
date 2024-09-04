@@ -1,18 +1,13 @@
 // components/TextInput.tsx
 
 import React from 'react';
-import type { FieldApi } from '@tanstack/react-form';
+
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface TextInputProps {
   label: string;
-  field: FieldApi<
-    Date | null,
-    Date | null,
-    Date | null,
-    FieldState<Date | null>
-  >;
+  field: any;
   type?: string;
   placeholder?: string;
   disabled: boolean;

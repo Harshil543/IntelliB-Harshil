@@ -1,6 +1,5 @@
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 
 const apiClient = axios.create({

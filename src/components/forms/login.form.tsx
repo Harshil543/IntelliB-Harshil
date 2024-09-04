@@ -40,7 +40,7 @@ export const LoginForm = () => {
       email: '',
       password: ''
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });

@@ -28,7 +28,8 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: statusCompany
+    mutationFn: (payload: { id: number; status: string }) =>
+      statusCompany(payload.id, payload)
   });
 
   const handleView = (id: number) => {
@@ -49,7 +50,7 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
     };
 
     try {
-      statusMutation.mutate(payload, {
+      statusMutation.mutate(payload as any, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['company'] });
           toast.success(`Status updated successfully`);

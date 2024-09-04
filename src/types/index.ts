@@ -10,6 +10,7 @@ export interface IAuthContext {
 }
 
 export interface NavItem {
+  children: any;
   title: string;
   href?: string;
   disabled?: boolean;

@@ -2,12 +2,11 @@
 
 import { DataTable } from '@/components/fields/Table';
 import React from 'react';
-
 import { useQuery } from '@tanstack/react-query';
-import { getPropertyUser } from '@/services/property-user.service';
 import propertyUserColumns from '@/utils/tableColumn/property-user.column';
+import { getPropertyUser } from '@/services/property-user.service';
 
-export default function PropertyUserPage() {
+export default function PropertyCoAdminPage() {
   const { status, data, error } = useQuery({
     queryKey: ['property-user'],
     queryFn: getPropertyUser
@@ -26,7 +25,7 @@ export default function PropertyUserPage() {
       <DataTable
         columns={propertyUserColumns}
         data={data}
-        path="/property-user/register-property-user/"
+        path="/property-co-admin/register-property-co-admin/"
       />
     </div>
   );

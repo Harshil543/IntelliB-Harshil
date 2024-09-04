@@ -4,15 +4,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 import Link from 'next/link';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useMutation } from '@tanstack/react-query';
-import { loginUser } from '@/services/auth.service';
-import toast from 'react-hot-toast';
 import { Icon } from '@iconify/react';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
@@ -23,35 +19,38 @@ interface SignInFormValues {
 }
 
 const SignIn = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const mutation = useMutation({
-    mutationFn: async (data: SignInFormValues) => {
-      return await loginUser({
-        email: data.email,
-        password: data.password
-      });
-    },
-    onSuccess: () => {
-      toast.success('Login successful');
-      router.push('/');
-    },
-    onError: (error) => {
-      toast.error(`Error: ${error.message}`);
-    }
-  });
+  // const mutation = useMutation({
+  //   mutationFn: async (data: SignInFormValues) => {
+  //     return await loginUser({
+  //       email: data.email,
+  //       password: data.password
+  //     });
+  //   },
+  //   onSuccess: () => {
+  //     toast.success('Login successful');
+  //     router.push('/');
+  //   },
+  //   onError: (error) => {
+  //     toast.error(`Error: ${error.message}`);
+  //   }
+  // });
 
   const form = useForm<SignInFormValues>({
     defaultValues: {
       email: '',
       password: ''
-    },
-    onSubmit: async (values) => {
-      await mutation.mutateAsync(values);
     }
   });
 
+  // Ensure handleSubmit has the correct type for values
+  // const handleSubmit = form.handleSubmit(async (values: SignInFormValues) => {
+  //   await mutation.mutateAsync(values);
+  // });
+
+  const handleSubmit = () => {};
   return (
     <AuthWrapper>
       <div className="flex h-full w-full justify-center bg-background p-4 align-middle lg:p-8">
@@ -65,11 +64,7 @@ const SignIn = () => {
           </div>
 
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
+            onSubmit={handleSubmit} // Use handleSubmit directly
             className="grid w-full grid-cols-1 gap-4"
           >
             <form.Field
