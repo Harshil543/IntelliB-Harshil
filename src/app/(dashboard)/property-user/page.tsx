@@ -5,19 +5,26 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import propertyUserColumns from '@/utils/tableColumn/property-user.column';
 import { getPropertyUser } from '@/services/property-user.service';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function PropertyCoAdminPage() {
-  const { status, data, error } = useQuery({
+  const { status, data } = useQuery({
     queryKey: ['property-user'],
     queryFn: getPropertyUser
   });
 
   if (status === 'pending') {
-    return <span>Loading...</span>;
+    return <Loader />;
   }
 
   if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+    return (
+      <DataTable
+        columns={propertyUserColumns}
+        data={[]}
+        path="/property-co-admin/register-property-co-admin/"
+      />
+    );
   }
 
   return (

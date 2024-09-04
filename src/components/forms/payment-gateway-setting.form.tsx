@@ -19,13 +19,13 @@ interface EmailSettingFormValues {
   mailFromName: string;
 }
 
-interface SMSSettingFormProps {
+interface PaymentGatewaySettingFormProps {
   initialValues?: EmailSettingFormValues;
 }
 
-export default function SystemSettingForm({
+export default function PaymentGatewayForm({
   initialValues
-}: SMSSettingFormProps) {
+}: PaymentGatewaySettingFormProps) {
   // const router = useRouter();
   // const queryClient = useQueryClient();
 

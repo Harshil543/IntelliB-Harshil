@@ -33,9 +33,7 @@ interface SMSSettingFormProps {
 //   mailFromName: string;
 // }
 
-export default function SystemSettingForm({
-  initialValues
-}: SMSSettingFormProps) {
+export default function SMSSettingForm({ initialValues }: SMSSettingFormProps) {
   // const router = useRouter();
   // const queryClient = useQueryClient();
 
@@ -69,9 +67,8 @@ export default function SystemSettingForm({
       mailFromAddress: '',
       mailFromName: ''
     },
-    onSubmit: async (values) => {
-      // await mutation.mutateAsync(values);
-      console.log('SMS Setting values', values);
+    onSubmit: async (values: any) => {
+      await mutation.mutateAsync(values);
     }
   });
 

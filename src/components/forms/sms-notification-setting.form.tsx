@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import Heading from '../fields/Heading';
 import { Switch } from '../fields/Switch';
 
-interface SMSSettingFormProps {
+interface SMSNotificationSettingFormProps {
   initialValues?: {
     id?: number;
     mailDeliver: string;
@@ -32,7 +32,9 @@ interface SMSSettingFormProps {
 //   mailFromName: string;
 // }
 
-export default function SMSSettingForm({ initialValues }: SMSSettingFormProps) {
+export default function SMSNotificationSettingForm({
+  initialValues
+}: SMSNotificationSettingFormProps) {
   // const router = useRouter();
   // const queryClient = useQueryClient();
 

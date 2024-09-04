@@ -1,10 +1,10 @@
+'use client';
 import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { useForm } from '@tanstack/react-form';
 import { useMutation } from '@tanstack/react-query';
-
 import SelectInput from '../fields/SelectInput';
 import Heading from '../fields/Heading';
 
@@ -74,7 +74,6 @@ export default function SystemSettingForm({
     },
     onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
-      console.log('System Setting Values', values);
     }
   });
 

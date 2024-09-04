@@ -6,19 +6,26 @@ import React from 'react';
 import companyColumns from '@/utils/tableColumn/company.column';
 import { useQuery } from '@tanstack/react-query';
 import { getCompany } from '@/services/company.service';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function ComapnyPage() {
-  const { status, data, error } = useQuery({
+  const { status, data } = useQuery({
     queryKey: ['company'],
     queryFn: getCompany
   });
 
   if (status === 'pending') {
-    return <span>Loading...</span>;
+    return <Loader />;
   }
 
   if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+    return (
+      <DataTable
+        columns={companyColumns}
+        data={[]}
+        path="/company/register-company"
+      />
+    );
   }
 
   return (

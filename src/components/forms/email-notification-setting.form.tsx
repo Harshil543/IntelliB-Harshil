@@ -7,7 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import Heading from '../fields/Heading';
 import { Switch } from '../fields/Switch';
 
-interface EmailSettingValues {
+interface EmailNotificationSettingValues {
   id?: number;
   mailDeliver: string;
   mailHost: string;
@@ -19,7 +19,7 @@ interface EmailSettingValues {
   mailFromName: string;
 }
 
-interface EmailSettingFormProps {
+interface EmailNotificationSettingFormProps {
   initialValues?: {
     id?: number;
     mailDeliver: string;
@@ -33,7 +33,7 @@ interface EmailSettingFormProps {
   };
 }
 
-interface EmailSettingValues {
+interface EmailNotificationSettingValues {
   mailDeliver: string;
   mailHost: string;
   mailPort: string;
@@ -44,14 +44,14 @@ interface EmailSettingValues {
   mailFromName: string;
 }
 
-export default function EmailSettingForm({
+export default function EmailNotificationSettingForm({
   initialValues
-}: EmailSettingFormProps) {
+}: EmailNotificationSettingFormProps) {
   // const router = useRouter();
   // const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    // mutationFn: async (data: EmailSettingValues) => {
+    // mutationFn: async (data: EmailNotificationSettingValues) => {
     //   if (initialValues?.id) {
     //     return await updateEmailSetting(initialValues.id, data);
     //   } else {
@@ -68,7 +68,7 @@ export default function EmailSettingForm({
     // }
   });
 
-  const form = useForm<EmailSettingValues>({
+  const form = useForm<EmailNotificationSettingValues>({
     defaultValues: initialValues || {
       mailDeliver: '',
       mailHost: '',
