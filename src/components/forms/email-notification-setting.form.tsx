@@ -38,6 +38,17 @@ interface EmailSettingFormProps {
   };
 }
 
+interface EmailSettingValues {
+  mailDeliver: string;
+  mailHost: string;
+  mailPort: string;
+  mailUsername: string;
+  mailPassword: string;
+  mailEncryption: string;
+  mailFromAddress: string;
+  mailFromName: string;
+}
+
 export default function EmailSettingForm({
   initialValues
 }: EmailSettingFormProps) {
@@ -67,7 +78,6 @@ export default function EmailSettingForm({
 
   const form = useForm<EmailSettingValues>({
     defaultValues: initialValues || {
-      id: '',
       mailDeliver: '',
       mailHost: '',
       mailPort: '',
@@ -78,8 +88,10 @@ export default function EmailSettingForm({
       mailFromName: ''
     },
     onSubmit: async (values) => {
-      await mutation.mutateAsync(values);
-      console.log('Email Setting values', values);
+
+      // await mutation.mutateAsync(values);
+      console.log('EMail Setting values', values);
+
     }
   });
 
@@ -93,8 +105,40 @@ export default function EmailSettingForm({
       <CardWrapper>
         <Heading>Email Notification Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-          {/* Form Fields */}
-          {/* Switch components */}
+
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>New User</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>New Client</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>New Support Ticket</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>Deal Assigned</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>New Award</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>Custom Invoice Sent</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>New Payment Reminder</p>
+            <Switch />
+          </div>
+          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
+            <p>Proposal Sent</p>
+            <Switch />
+          </div>
+
         </div>
       </CardWrapper>
 
