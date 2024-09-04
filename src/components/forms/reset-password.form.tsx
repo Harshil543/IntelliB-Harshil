@@ -9,15 +9,21 @@ import { Icon } from '@iconify/react';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 
+// Define a type for the form values
+interface ResetPasswordValues {
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const ResetPasswordForm = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: ResetPasswordValues) => {
       return await resetPassword({
-        newPassword: data?.value?.newPassword,
-        confirmPassword: data?.value?.confirmPassword
+        newPassword: data.newPassword,
+        confirmPassword: data.confirmPassword
       });
     },
     onSuccess: () => {
@@ -60,12 +66,13 @@ const ResetPasswordForm = () => {
               return 'Password must contain at least one lowercase letter';
             if (!/[0-9]/.test(value))
               return 'Password must contain at least one number';
-            if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+            if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
               return 'Password must contain at least one special character';
             return undefined;
           }
         }}
-        children={(field) => (
+      >
+        {(field) => (
           <div className="relative">
             <TextInput
               type={showNewPassword ? 'text' : 'password'}
@@ -86,7 +93,8 @@ const ResetPasswordForm = () => {
             </button>
           </div>
         )}
-      />
+      </form.Field>
+
       <form.Field
         name="confirmPassword"
         validators={{
@@ -97,7 +105,8 @@ const ResetPasswordForm = () => {
             return undefined;
           }
         }}
-        children={(field) => (
+      >
+        {(field) => (
           <div className="relative">
             <TextInput
               type={showConfirmPassword ? 'text' : 'password'}
@@ -118,16 +127,25 @@ const ResetPasswordForm = () => {
             </button>
           </div>
         )}
-      />
+      </form.Field>
 
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
+      >
+        {([canSubmit, isSubmitting]) => (
           <Button type="submit" disabled={!canSubmit} className="bg-primary">
             {isSubmitting ? 'Submitting...' : 'Update'}
           </Button>
         )}
-      />
+      </form.Subscribe>
+
+      {mutation.isError && (
+        <div className="col-span-full text-red-500">
+          {mutation.error instanceof Error
+            ? mutation.error.message
+            : 'An error occurred during submission.'}
+        </div>
+      )}
     </form>
   );
 };

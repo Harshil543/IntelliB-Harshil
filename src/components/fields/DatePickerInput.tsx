@@ -1,13 +1,17 @@
-// components/DatePickerInput.tsx
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import type { FieldApi } from '@tanstack/react-form';
+import type { FieldApi, FieldState } from '@tanstack/react-form';
 import { Label } from '@/components/ui/label'; // Adjust the path to your Label component
 
 interface DatePickerInputProps {
   label: string;
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<
+    Date | null,
+    Date | null,
+    Date | null,
+    FieldState<Date | null>
+  >;
   placeholder?: string;
   disabled: boolean;
 }

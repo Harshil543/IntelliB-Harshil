@@ -14,26 +14,28 @@ import {
 import SelectInput from '../fields/SelectInput';
 import Heading from '../fields/Heading';
 
+interface SystemSettingFormValues {
+  id?: number;
+  currency: string;
+  currencySymbol: string;
+  currencySymbolPosition: string;
+  dateFormate: string;
+  timeFormate: string;
+  customerPrefix: string;
+  venderPrefix: string;
+  proposalPrefix: string;
+  invoicePrefix: string;
+  billPrefix: string;
+  purchasePrefix: string;
+  posPrefix: string;
+  expensePrefix: string;
+  displayShippingProposal: string;
+  title: string;
+  note: string;
+}
+
 interface SystemSettingFormProps {
-  initialValues?: {
-    id?: number;
-    currency: string;
-    currencySymbol: string;
-    currencySymbolPosition: string;
-    dateFormate: string;
-    timeFormate: string;
-    customerPrefix: string;
-    venderPrefix: string;
-    proposalPrefix: string;
-    invoicePrefix: string;
-    billPrefix: string;
-    purchasePrefix: string;
-    posPrefix: string;
-    expensePrefix: string;
-    displayShippingProposal: string;
-    title: string;
-    note: string;
-  };
+  initialValues?: SystemSettingFormValues;
 }
 
 export default function SystemSettingForm({
@@ -43,14 +45,14 @@ export default function SystemSettingForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: SystemSettingFormValues) => {
       if (initialValues?.id) {
         return await updateEmailSetting({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createEmailSetting({ payload: data.value });
+        return await createEmailSetting({ payload: data });
       }
     },
     onSuccess: () => {
@@ -63,7 +65,7 @@ export default function SystemSettingForm({
     }
   });
 
-  const form = useForm({
+  const form = useForm<SystemSettingFormValues>({
     defaultValues: initialValues || {
       currency: '',
       currencySymbol: '',
@@ -83,299 +85,92 @@ export default function SystemSettingForm({
       note: ''
     },
     onSubmit: async (values) => {
-      // await mutation.mutateAsync(values);
+      await mutation.mutateAsync(values);
       console.log('System Setting Values', values);
     }
   });
 
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        form.handleSubmit();
-      }}
-    >
+    <form onSubmit={form.handleSubmit}>
       <CardWrapper>
         <Heading>System Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
-            name="currency"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Currency is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="Currency" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="currencySymbol"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Currency Symbol is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Currency Symbol"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="currencySymbolPosition"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Currency Symbol Position is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Currency Symbol Position"
-                field={field}
-                options={[
-                  { label: 'abc', value: 'abc' },
-                  { label: 'abc', value: 'abc' }
-                ]}
-                disabled={false}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="dateFormate"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Date Formate is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Date Formate"
-                field={field}
-                options={[
-                  { label: 'abc', value: 'abc' },
-                  { label: 'abc', value: 'abc' }
-                ]}
-                disabled={false}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="timeFormate"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Time Formate is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Time Formate"
-                field={field}
-                options={[
-                  { label: 'abc', value: 'abc' },
-                  { label: 'abc', value: 'abc' }
-                ]}
-                disabled={false}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="customerPrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Customer Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Customer Prefix"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="venderPrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Vender Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="Vender Prefix" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="proposalPrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Proposal Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Proposal Prefix"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="invoicePrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Invoice Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Invoice Prefix"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="billPrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Bill Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="Bill Prefix" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="purchasePrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Purchase Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Purchase Prefix"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="posPrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'POS Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput disabled={false} label="POS Prefix" field={field} />
-            )}
-          </form.Field>
-          <form.Field
-            name="expensePrefix"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Expense Prefix is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Expense Prefix"
-                field={field}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="displayShippingProposal"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value)
-                  return 'Display Shipping in Proposal / Invoice/ Bill is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Display Shipping in Proposal / Invoice/ Bill"
-                field={field}
-                options={[
-                  { label: 'abc', value: 'abc' },
-                  { label: 'abc', value: 'abc' }
-                ]}
-                disabled={false}
-                placeholder="Display Shipping Proposal"
-              />
-            )}
-          </form.Field>
-        </div>
-        <div className="mt-4">
-          <form.Field
-            name="title"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Title is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Proposal / Invoice/ Bill / Purchase/ POS Footer  Title"
-                field={field}
-              />
-            )}
-          </form.Field>
-        </div>
-        <div className="mt-4">
-          <form.Field
-            name="note"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Note is required';
-                return undefined;
-              }
-            }}
-          >
-            {(field) => (
-              <TextInput
-                disabled={false}
-                label="Proposal / Invoice/ Bill / Purchase/ POS Footer  Note"
-                field={field}
-              />
-            )}
-          </form.Field>
+          {[
+            { name: 'currency', label: 'Currency', type: 'text' },
+            { name: 'currencySymbol', label: 'Currency Symbol', type: 'text' },
+            {
+              name: 'currencySymbolPosition',
+              label: 'Currency Symbol Position',
+              type: 'select',
+              options: [{ label: 'abc', value: 'abc' }]
+            },
+            {
+              name: 'dateFormate',
+              label: 'Date Formate',
+              type: 'select',
+              options: [{ label: 'abc', value: 'abc' }]
+            },
+            {
+              name: 'timeFormate',
+              label: 'Time Formate',
+              type: 'select',
+              options: [{ label: 'abc', value: 'abc' }]
+            },
+            { name: 'customerPrefix', label: 'Customer Prefix', type: 'text' },
+            { name: 'venderPrefix', label: 'Vender Prefix', type: 'text' },
+            { name: 'proposalPrefix', label: 'Proposal Prefix', type: 'text' },
+            { name: 'invoicePrefix', label: 'Invoice Prefix', type: 'text' },
+            { name: 'billPrefix', label: 'Bill Prefix', type: 'text' },
+            { name: 'purchasePrefix', label: 'Purchase Prefix', type: 'text' },
+            { name: 'posPrefix', label: 'POS Prefix', type: 'text' },
+            { name: 'expensePrefix', label: 'Expense Prefix', type: 'text' },
+            {
+              name: 'displayShippingProposal',
+              label: 'Display Shipping in Proposal / Invoice/ Bill',
+              type: 'select',
+              options: [{ label: 'abc', value: 'abc' }],
+              placeholder: 'Display Shipping Proposal'
+            },
+            {
+              name: 'title',
+              label: 'Proposal / Invoice/ Bill / Purchase/ POS Footer  Title',
+              type: 'text'
+            },
+            {
+              name: 'note',
+              label: 'Proposal / Invoice/ Bill / Purchase/ POS Footer  Note',
+              type: 'text'
+            }
+          ].map(({ name, label, type, options, placeholder }) => (
+            <div key={name} className="mt-4">
+              <form.Field
+                name={name}
+                validators={{
+                  onChange: ({ value }) => {
+                    if (!value) return `${label} is required`;
+                    return undefined;
+                  }
+                }}
+              >
+                {(field) => {
+                  if (type === 'select') {
+                    return (
+                      <SelectInput
+                        label={label}
+                        field={field}
+                        options={options}
+                        disabled={false}
+                        placeholder={placeholder}
+                      />
+                    );
+                  }
+                  return (
+                    <TextInput disabled={false} label={label} field={field} />
+                  );
+                }}
+              </form.Field>
+            </div>
+          ))}
         </div>
       </CardWrapper>
 
@@ -390,12 +185,13 @@ export default function SystemSettingForm({
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+        >
+          {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit || mutation.isPending}>
               {mutation.isPending ? 'Submitting...' : 'Save Changes'}
             </Button>
           )}
-        />
+        </form.Subscribe>
       </div>
 
       {mutation.isError && (

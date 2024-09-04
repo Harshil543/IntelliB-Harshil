@@ -1,8 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
-import Heading from '@/components/fields/Heading';
 
 import CompanyForm from '@/components/forms/company.form';
 import { useParams } from 'next/navigation';
@@ -11,7 +9,7 @@ import { getCompanyById } from '@/services/company.service';
 
 export default function CompanyUpdate() {
   const { id } = useParams(); // Get the ID from URL
-  const { status, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['company', id],
     queryFn: () => getCompanyById(Number(id))
   });

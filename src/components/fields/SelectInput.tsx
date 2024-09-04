@@ -1,8 +1,6 @@
-// components/SelectInput.tsx
-
 import React from 'react';
-import type { FieldApi } from '@tanstack/react-form';
-import Select from 'react-select';
+import type { FieldApi, FieldState } from '@tanstack/react-form';
+import Select, { StylesConfig } from 'react-select';
 import { Label } from '@/components/ui/label';
 
 interface Option {
@@ -12,12 +10,50 @@ interface Option {
 
 interface SelectInputProps {
   label: string;
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<
+    string | null, // Adjust according to your value type
+    string | null,
+    string | null,
+    FieldState<string | null>
+  >;
   options: Option[];
   placeholder?: string;
   disabled: boolean;
   onChange?: (selectedOption: Option | null) => void; // Add onChange prop
 }
+
+const customStyles: StylesConfig<Option, false> = {
+  container: (provided) => ({
+    ...provided,
+    border: '1px solid var(--border)',
+    borderRadius: '6px',
+    backgroundColor: 'transparent'
+  }),
+  control: (provided) => ({
+    ...provided,
+    border: '0px',
+    boxShadow: 'none',
+    backgroundColor: 'transparent',
+    fontSize: '14px'
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#000'
+  }),
+  menu: (provided) => ({
+    ...provided,
+    borderRadius: '4px',
+    border: '1px solid var(--border)',
+    backgroundColor: 'white',
+    zIndex: 1000,
+    position: 'absolute',
+    marginTop: '4px'
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    backgroundColor: 'white'
+  })
+};
 
 const SelectInput: React.FC<SelectInputProps> = ({
   label,
@@ -33,7 +69,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   );
 
   const handleChange = (option: Option | null) => {
-    field.handleChange(option ? option?.value : '');
+    field.handleChange(option ? option.value : '');
     if (onChange) onChange(option); // Call onChange if it exists
   };
 
@@ -53,38 +89,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         getOptionLabel={(option: Option) => option.label}
         getOptionValue={(option: Option) => option.value}
         aria-live="off"
-        styles={{
-          container: (provided: any) => ({
-            ...provided,
-            border: '1px solid var(--border)',
-            borderRadius: '6px',
-            backgroundColor: 'transparent'
-          }),
-          control: (provided: any) => ({
-            ...provided,
-            border: '0px',
-            boxShadow: 'none',
-            backgroundColor: 'transparent',
-            fontSize: '14px'
-          }),
-          singleValue: (provided: any) => ({
-            ...provided,
-            color: '#000'
-          }),
-          menu: (provided: any) => ({
-            ...provided,
-            borderRadius: '4px',
-            border: '1px solid var(--border)',
-            backgroundColor: 'white',
-            zIndex: 1000,
-            position: 'absolute',
-            marginTop: '4px'
-          }),
-          menuList: (provided: any) => ({
-            ...provided,
-            backgroundColor: 'white'
-          })
-        }}
+        styles={customStyles}
       />
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <span className="text-sm text-red-600">

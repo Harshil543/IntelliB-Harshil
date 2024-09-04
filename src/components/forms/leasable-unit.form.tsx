@@ -16,14 +16,16 @@ import {
 import MultiSelectInput from '../fields/MultiSelectInput';
 import SelectInput from '../fields/SelectInput';
 
+interface LeasableUnitFormValues {
+  id?: number;
+  name: string;
+  floorAndWing: string;
+  smartMeterId: string[];
+  status: string;
+}
+
 interface LeasableUnitFormProps {
-  initialValues?: {
-    id: number;
-    name: string;
-    floorAndWing: string;
-    smartMeterId: string[];
-    status: string;
-  };
+  initialValues?: LeasableUnitFormValues;
 }
 
 export default function LeasableUnitForm({
@@ -36,14 +38,14 @@ export default function LeasableUnitForm({
   const isViewLeasableUnit = pathname.includes('view-leasable-unit');
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: LeasableUnitFormValues) => {
       if (initialValues?.id) {
         return await updateLeasableUnit({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createLeasableUnit({ payload: data.value });
+        return await createLeasableUnit({ payload: data });
       }
     },
     onSuccess: () => {
@@ -52,15 +54,15 @@ export default function LeasableUnitForm({
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<LeasableUnitFormValues>({
     defaultValues: initialValues || {
       name: '',
       floorAndWing: '',
-      smartMeterId: '',
+      smartMeterId: [],
       status: 'Active'
     },
     onSubmit: async (values) => {
@@ -88,14 +90,15 @@ export default function LeasableUnitForm({
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="Name"
                 field={field}
                 disabled={isViewLeasableUnit}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="floorAndWing"
             validators={{
@@ -106,14 +109,15 @@ export default function LeasableUnitForm({
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="Floor/Wing"
                 field={field}
                 disabled={isViewLeasableUnit}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="smartMeterId"
             validators={{
@@ -141,7 +145,8 @@ export default function LeasableUnitForm({
               onChange: ({ value }) =>
                 !value ? 'Status is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 label="Status"
                 field={field}
@@ -152,7 +157,7 @@ export default function LeasableUnitForm({
                 disabled={isViewLeasableUnit}
               />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
 
@@ -168,12 +173,13 @@ export default function LeasableUnitForm({
         {!isViewLeasableUnit && (
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit]) => (
+          >
+            {([canSubmit]) => (
               <Button type="submit" disabled={!canSubmit || mutation.isPending}>
                 {mutation.isPending ? 'Submitting...' : 'Submit'}
               </Button>
             )}
-          />
+          </form.Subscribe>
         )}
       </div>
 

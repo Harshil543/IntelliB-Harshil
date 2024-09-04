@@ -11,23 +11,26 @@ import PhoneInputField from '../fields/PhoneInput';
 import { Country, State, City } from 'country-state-city';
 import SelectInput from '@components/fields/SelectInput';
 
+interface CompanyFormValues {
+  id?: number;
+  companyName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  websiteUrl: string;
+  gstNumber: string;
+  cinNumber: string;
+  status?: string; // Adding status if used in the form
+}
+
 interface CompanyFormProps {
-  initialValues?: {
-    id?: number;
-    companyName: string;
-    addressLine1: string;
-    addressLine2: string;
-    city: string;
-    state: string;
-    country: string;
-    pincode: string;
-    email: string;
-    countryCode: string;
-    mobileNumber: string;
-    websiteUrl: string;
-    gstNumber: string;
-    cinNumber: string;
-  };
+  initialValues?: CompanyFormValues;
 }
 
 export default function CompanyForm({ initialValues }: CompanyFormProps) {
@@ -51,16 +54,14 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   }, []);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: CompanyFormValues) => {
       if (initialValues?.id) {
         return await updateCompany({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        console.log('data', data);
-
-        return await createCompany({ payload: data.value });
+        return await createCompany({ payload: data });
       }
     },
     onSuccess: () => {
@@ -69,7 +70,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
@@ -398,12 +399,13 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
         {!isViewCompany && (
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit]) => (
+          >
+            {([canSubmit]) => (
               <Button type="submit" disabled={!canSubmit || mutation.isPending}>
                 {mutation.isPending ? 'Submitting...' : 'Submit'}
               </Button>
             )}
-          />
+          </form.Subscribe>
         )}
       </div>
 

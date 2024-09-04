@@ -206,7 +206,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <Button children="Add " onClick={() => handleNavigate(path)} />
+        <Button onClick={() => handleNavigate(path)}>Add</Button>
       </div>
       <div className="rounded-lg border bg-background">
         <Table>

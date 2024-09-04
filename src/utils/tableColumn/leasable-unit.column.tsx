@@ -1,20 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
 import { Checkbox } from '@/components/ui/checkbox';
-import { statusLeasableUnit } from '@/services/leasable-unit.service';
+import LeasableUnitActionCell from '../cellsAction/leasable.unit.action.cell';
 
 interface LeasableUnitData {
   id: number;
@@ -104,68 +91,7 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     cell: ({ row }) => {
       const id = row.getValue('id') as number;
       const currentStatus = row.getValue('status') as string;
-      const queryClient = useQueryClient();
-      const router = useRouter();
-
-      const statusMutation = useMutation({
-        mutationFn: statusLeasableUnit
-      });
-
-      const handleView = (id: number) => {
-        router.push(`/leasable-unit/view-leasable-unit/${id}`);
-      };
-
-      const handleUpdate = (id: number) => {
-        router.push(`/leasable-unit/update-leasable-unit/${id}`);
-      };
-
-      const handleStatus = async (id: number, status: string) => {
-        const payload = {
-          payload: {
-            id,
-            status: status === 'Active' ? 'Inactive' : 'Active'
-          },
-          id
-        };
-
-        try {
-          statusMutation.mutate(payload, {
-            onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
-              toast.success(`Status updated successfully`);
-            }
-          });
-        } catch (error) {
-          console.error('Error updating leasable-unit status:', error);
-        }
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0" variant="none">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleView(id)}>
-              View
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleUpdate(id)}>
-              Update
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleStatus(id, currentStatus)}>
-              {currentStatus === 'Active' ? 'De-list' : 'List'}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <LeasableUnitActionCell id={id} status={currentStatus} />;
     }
   }
 ];

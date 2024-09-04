@@ -3,7 +3,7 @@ import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { usePathname, useRouter } from 'next/navigation';
-import { useForm } from '@tanstack/react-form';
+import { useForm, FieldValues } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import PhoneInputField from '../fields/PhoneInput';
@@ -12,7 +12,7 @@ import {
   updatePropertyCoAdmin
 } from '@/services/property-co-admin.service';
 
-interface PropertyCoAdminForm {
+interface PropertyCoAdminFormProps {
   initialValues?: {
     id?: number;
     firstName: string;
@@ -27,20 +27,21 @@ interface PropertyCoAdminForm {
 
 export default function PropertyCoAdminForm({
   initialValues
-}: PropertyCoAdminForm) {
+}: PropertyCoAdminFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
   const isViewPropertyCoAdmin = pathname.includes('view-property-co-admin');
+
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: FieldValues) => {
       if (initialValues?.id) {
         return await updatePropertyCoAdmin({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createPropertyCoAdmin({ payload: data.value });
+        return await createPropertyCoAdmin({ payload: data });
       }
     },
     onSuccess: () => {
@@ -48,7 +49,7 @@ export default function PropertyCoAdminForm({
       router.push('/property-co-admin/');
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast.error(`Error: ${error.message}`);
     }
   });
@@ -90,14 +91,16 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput
               disabled={isViewPropertyCoAdmin}
               label="First Name"
               field={field}
             />
           )}
-        />
+        </form.Field>
+
         <form.Field
           name="lastName"
           validators={{
@@ -110,14 +113,16 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput
               disabled={isViewPropertyCoAdmin}
               label="Last Name"
               field={field}
             />
           )}
-        />
+        </form.Field>
+
         <form.Field
           name="email"
           validators={{
@@ -128,7 +133,8 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput
               disabled={isViewPropertyCoAdmin}
               type="email"
@@ -136,7 +142,8 @@ export default function PropertyCoAdminForm({
               field={field}
             />
           )}
-        />
+        </form.Field>
+
         <form.Field
           name="mobileNumber"
           validators={{
@@ -145,13 +152,13 @@ export default function PropertyCoAdminForm({
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <PhoneInputField
               label="Mobile Number"
               field={{
                 value: form.getFieldValue('mobileNumber'),
                 countryCode: form.getFieldValue('countryCode'),
-
                 setValue: (value: string) => {
                   form.setFieldValue('mobileNumber', value);
                 },
@@ -165,7 +172,7 @@ export default function PropertyCoAdminForm({
               disabled={isViewPropertyCoAdmin}
             />
           )}
-        />
+        </form.Field>
 
         <form.Field
           name="designation"
@@ -173,14 +180,16 @@ export default function PropertyCoAdminForm({
             onChange: ({ value }) =>
               !value ? 'Designation is required' : undefined
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput
               disabled={isViewPropertyCoAdmin}
               label="Designation"
               field={field}
             />
           )}
-        />
+        </form.Field>
+
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
@@ -192,7 +201,8 @@ export default function PropertyCoAdminForm({
           {!isViewPropertyCoAdmin && (
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
+            >
+              {([canSubmit]) => (
                 <Button
                   type="submit"
                   disabled={!canSubmit || mutation.isPending}
@@ -200,9 +210,10 @@ export default function PropertyCoAdminForm({
                   {mutation.isPending ? 'Submitting...' : 'Submit'}
                 </Button>
               )}
-            />
+            </form.Subscribe>
           )}
         </div>
+
         {mutation.isError && (
           <div className="col-span-full text-red-500">
             {mutation.error instanceof Error

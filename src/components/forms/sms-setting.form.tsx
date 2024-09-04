@@ -3,10 +3,9 @@ import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import {
   createEmailSetting,
@@ -28,6 +27,17 @@ interface SMSSettingFormProps {
   };
 }
 
+interface SMSSettingValues {
+  mailDeliver: string;
+  mailHost: string;
+  mailPort: string;
+  mailUsername: string;
+  mailPassword: string;
+  mailEncryption: string;
+  mailFromAddress: string;
+  mailFromName: string;
+}
+
 export default function SystemSettingForm({
   initialValues
 }: SMSSettingFormProps) {
@@ -35,14 +45,14 @@ export default function SystemSettingForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: SMSSettingValues) => {
       if (initialValues?.id) {
         return await updateEmailSetting({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createEmailSetting({ payload: data.value });
+        return await createEmailSetting({ payload: data });
       }
     },
     onSuccess: () => {
@@ -218,12 +228,13 @@ export default function SystemSettingForm({
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+        >
+          {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit || mutation.isPending}>
               {mutation.isPending ? 'Submitting...' : 'Save Changes'}
             </Button>
           )}
-        />
+        </form.Subscribe>
       </div>
 
       {mutation.isError && (

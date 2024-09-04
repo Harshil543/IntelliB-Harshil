@@ -11,7 +11,6 @@ import { changePassword } from '@/services/user.service';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 import { Icon } from '@iconify/react';
-
 interface ChangePasswordProps {
   initialValues?: {
     id?: number;
@@ -20,6 +19,13 @@ interface ChangePasswordProps {
     confirmPassword: string;
   };
 }
+
+interface ChangePasswordData {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export default function ChangePasswordForm({
   initialValues
 }: ChangePasswordProps) {
@@ -28,10 +34,10 @@ export default function ChangePasswordForm({
   const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: ChangePasswordData) => {
       if (initialValues?.id) {
         return await changePassword({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       }
@@ -40,10 +46,11 @@ export default function ChangePasswordForm({
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success(`Password Changed successfully`);
     },
-    onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+    onError: (error: unknown) => {
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
+
   const form = useForm({
     defaultValues: {
       oldPassword: '',
@@ -77,12 +84,13 @@ export default function ChangePasswordForm({
                   return 'Password must contain at least one lowercase letter';
                 if (!/[0-9]/.test(value))
                   return 'Password must contain at least one number';
-                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
                   return 'Password must contain at least one special character';
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <div className="relative">
                 <TextInput
                   type={showPassword ? 'text' : 'password'}
@@ -103,7 +111,7 @@ export default function ChangePasswordForm({
                 </button>
               </div>
             )}
-          />
+          </form.Field>
           <form.Field
             name="newPassword"
             validators={{
@@ -118,12 +126,13 @@ export default function ChangePasswordForm({
                   return 'Password must contain at least one lowercase letter';
                 if (!/[0-9]/.test(value))
                   return 'Password must contain at least one number';
-                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
                   return 'Password must contain at least one special character';
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <div className="relative">
                 <TextInput
                   type={showPassword ? 'text' : 'password'}
@@ -144,7 +153,7 @@ export default function ChangePasswordForm({
                 </button>
               </div>
             )}
-          />
+          </form.Field>
           <form.Field
             name="confirmPassword"
             validators={{
@@ -159,12 +168,13 @@ export default function ChangePasswordForm({
                   return 'Password must contain at least one lowercase letter';
                 if (!/[0-9]/.test(value))
                   return 'Password must contain at least one number';
-                if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
                   return 'Password must contain at least one special character';
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <div className="relative">
                 <TextInput
                   type={showPassword ? 'text' : 'password'}
@@ -185,7 +195,7 @@ export default function ChangePasswordForm({
                 </button>
               </div>
             )}
-          />
+          </form.Field>
         </div>
 
         <div className="col-span-full mt-10 flex justify-start space-x-4">
@@ -199,12 +209,13 @@ export default function ChangePasswordForm({
 
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit]) => (
+          >
+            {([canSubmit]) => (
               <Button type="submit" disabled={!canSubmit || mutation.isPending}>
                 {mutation.isPending ? 'Submitting...' : 'Save Changes'}
               </Button>
             )}
-          />
+          </form.Subscribe>
         </div>
 
         {mutation.isError && (

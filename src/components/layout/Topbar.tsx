@@ -1,4 +1,4 @@
-import { Avatar, AvatarImage, AvatarFallback } from '@radix-ui/react-avatar';
+import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { Icon } from '@iconify/react'; // Import Icon from Iconify
 import React from 'react';
 import Link from 'next/link';

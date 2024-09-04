@@ -8,7 +8,7 @@ import PropertyCoAdminForm from '@/components/forms/property-co-admin.form';
 
 export default function PropertyCoAdminUpdate() {
   const { id } = useParams();
-  const { status, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['property-co-admin', id],
     queryFn: () => getpropertyCoAdminById(Number(id))
   });

@@ -34,6 +34,25 @@ interface TenantFormProps {
   };
 }
 
+interface TenantFormValues {
+  companyName: string;
+  gstNumber: string;
+  cinNumber: string;
+  address: string;
+  firstName: string;
+  lastName: string;
+  designation: string;
+  mobileNumber: string;
+  email: string;
+  leasedUnit: string;
+  leasedStartDate: string;
+  leasedEndDate: string;
+  bilingMethod: string;
+  bilingType: string;
+  bilingCycle: string;
+  limit: string;
+}
+
 export default function TenantForm({ initialValues }: TenantFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -42,14 +61,14 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
   const isViewTenant = pathname.includes('view-tenant');
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: TenantFormValues) => {
       if (initialValues?.id) {
         return await updateTenant({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createTenant({ payload: data.value });
+        return await createTenant({ payload: data });
       }
     },
     onSuccess: () => {
@@ -107,14 +126,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="Company Name"
                 field={field}
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="gstNumber"
@@ -128,14 +148,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="GST Number"
                 field={field}
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="cinNumber"
@@ -149,7 +170,8 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 type="text"
                 label="CIN Number"
@@ -157,7 +179,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
         </div>
         <form.Field
           name="address"
@@ -165,10 +187,11 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
             onChange: ({ value }) =>
               !value ? 'Address is required' : undefined
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <TextInput label="Address" field={field} disabled={isViewTenant} />
           )}
-        />
+        </form.Field>
       </CardWrapper>
 
       <CardWrapper>
@@ -185,14 +208,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="First Name"
                 field={field}
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="lastName"
             validators={{
@@ -203,14 +227,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="Last Name"
                 field={field}
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
 
           <form.Field
             name="designation"
@@ -222,7 +247,8 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 type="text"
                 label="Designation"
@@ -230,7 +256,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="mobileNumber"
             validators={{
@@ -242,14 +268,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput
                 label="Mobile Number"
                 field={field}
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="email"
             validators={{
@@ -260,10 +287,11 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput label="Email" field={field} disabled={isViewTenant} />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
 
@@ -276,7 +304,8 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
               onChange: ({ value }) =>
                 !value ? 'Leased Unit is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 label="Leased Unit"
                 field={field}
@@ -288,14 +317,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="leasedStartDate"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Leased start date is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <DatePickerInput
                 label="Start Date"
                 field={field}
@@ -303,14 +333,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="leasedEndDate"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Leased end date is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <DatePickerInput
                 label="End Date"
                 field={field}
@@ -318,7 +349,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
 
@@ -331,7 +362,8 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
               onChange: ({ value }) =>
                 !value ? 'Biling Method is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 label="Biling Method"
                 field={field}
@@ -343,14 +375,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="bilingType"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Biling Type is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 label="Biling Type"
                 field={field}
@@ -362,14 +395,15 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="bilingCycle"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Biling Cycle is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 label="Biling Cycle"
                 field={field}
@@ -381,17 +415,18 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
                 disabled={isViewTenant}
               />
             )}
-          />
+          </form.Field>
           <form.Field
             name="limit"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Limit is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput label="Limit" field={field} disabled={isViewTenant} />
             )}
-          />
+          </form.Field>
         </div>
       </CardWrapper>
 
@@ -404,7 +439,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
           Cancel
         </Button>
 
-        {!isViewTenant && (
+        {/* {!isViewTenant && (
           <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit]) => (
@@ -413,6 +448,18 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
               </Button>
             )}
           />
+        )} */}
+
+        {!isViewTenant && (
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Submit'}
+              </Button>
+            )}
+          </form.Subscribe>
         )}
       </div>
 

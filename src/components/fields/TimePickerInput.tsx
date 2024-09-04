@@ -7,7 +7,12 @@ import { Label } from '@/components/ui/label';
 
 interface TimePickerInputProps {
   label: string;
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<
+    Date | null,
+    Date | null,
+    Date | null,
+    FieldState<Date | null>
+  >;
   placeholder?: string;
   disabled?: boolean;
   showTimeSelectOnly?: boolean; // Optional prop to allow date-time picker

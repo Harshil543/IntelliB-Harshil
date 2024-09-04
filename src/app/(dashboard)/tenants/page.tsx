@@ -1,9 +1,7 @@
 'use client';
 
-import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import { DataTable } from '@/components/fields/Table';
 import React from 'react';
-import Heading from '@/components/fields/Heading';
 import { useQuery } from '@tanstack/react-query';
 import { getTenant } from '@/services/tenant.service';
 import tenantColumn from '@/utils/tableColumn/tenant.column';
