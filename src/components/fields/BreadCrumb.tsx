@@ -12,17 +12,29 @@ import {
 } from '@/components/ui/breadcrumb';
 import { usePathname } from 'next/navigation';
 
+function capitalizeWords(text: string) {
+  return text
+    .split(/[-_]/) // Split on hyphens and underscores
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function generateBreadcrumbs(pathname: string) {
   const segments = pathname.split('/').filter(Boolean);
 
-  const breadcrumbs = segments.map((segment, index) => {
-    const href = `/${segments.slice(0, index + 1).join('/')}`;
-
-    return {
-      label: segment.charAt(0).toUpperCase() + segment.slice(1),
-      href: index === segments.length - 1 ? undefined : href
-    };
-  });
+  const breadcrumbs = [
+    {
+      label: 'Home',
+      href: '/'
+    },
+    ...segments.map((segment, index) => {
+      const href = `/${segments.slice(0, index + 1).join('/')}`;
+      return {
+        label: capitalizeWords(segment),
+        href: index === segments.length - 1 ? undefined : href
+      };
+    })
+  ];
 
   return breadcrumbs;
 }

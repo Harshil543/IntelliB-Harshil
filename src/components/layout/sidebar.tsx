@@ -7,7 +7,7 @@ import { DashboardNav } from './DashboardNav';
 import { navItems } from '@/constants/navdata.constants';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import logo from '@/assets/images/logo.jpeg';
+import logo from '@/assets/images/logo.png';
 
 type SidebarProps = {
   className?: string;
@@ -24,7 +24,7 @@ export default function Sidebar({ className }: SidebarProps) {
     setTimeout(() => setStatus(false), 500);
   };
   const handleLogout = () => {
-    router.push('/login');
+    router.push('/signin');
   };
   return (
     <nav
@@ -47,7 +47,6 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
-
             <DashboardNav items={navItems} />
           </div>
         </div>

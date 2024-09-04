@@ -4,6 +4,7 @@ import 'react-phone-input-2/lib/style.css';
 
 interface PhoneInputFieldProps {
   label: string;
+  disabled: boolean;
   field: {
     value: string;
     countryCode: string;
@@ -13,7 +14,11 @@ interface PhoneInputFieldProps {
   };
 }
 
-const PhoneInputField: React.FC<PhoneInputFieldProps> = ({ label, field }) => {
+const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
+  label,
+  field,
+  disabled
+}) => {
   const { value, countryCode, setValue, setCountryCode, errorMessage } = field;
 
   const concatenatedValue = `${countryCode}${value}`;
@@ -32,11 +37,13 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({ label, field }) => {
         country={'in'}
         value={concatenatedValue}
         onChange={handlePhoneChange}
+        disabled={disabled}
         inputStyle={{
           width: '100%',
           borderRadius: '4px',
           borderColor: '#ccc',
-          height: '2.5rem'
+          height: '2.5rem',
+          backgroundColor: 'transparent'
         }}
       />
       {errorMessage && <span className="text-red-500">{errorMessage}</span>}

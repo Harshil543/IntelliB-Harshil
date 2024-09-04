@@ -1,8 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
-import Heading from '@/components/CommonComponents/Heading';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getpropertyCoAdminById } from '@/services/property-co-admin.service';
@@ -17,8 +15,6 @@ export default function PropertyCoAdminUpdate() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property Co-Admin" />
       <PropertyCoAdminForm initialValues={data} />
     </div>
   );

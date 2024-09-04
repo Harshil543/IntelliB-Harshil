@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
-import Heading from '@/components/CommonComponents/Heading';
+import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
+import Heading from '@/components/fields/Heading';
 
 import CompanyForm from '@/components/forms/company.form';
 import { useParams } from 'next/navigation';
@@ -18,8 +18,6 @@ export default function CompanyUpdate() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
       <CompanyForm initialValues={data} />
     </div>
   );

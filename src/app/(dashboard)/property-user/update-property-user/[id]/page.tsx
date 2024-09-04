@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
-import Heading from '@/components/CommonComponents/Heading';
+import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
+import Heading from '@/components/fields/Heading';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getpropertyUserById } from '@/services/property-user.service';
@@ -17,8 +17,6 @@ export default function PropertyUserUpdate() {
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Property User" />
       <PropertyUserForm initialValues={data} />
     </div>
   );
