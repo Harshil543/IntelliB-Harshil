@@ -11,7 +11,18 @@ import {
   updateEmailSetting
 } from '@/services/email-setting.service';
 import Heading from '../fields/Heading';
-import { Switch } from '../fields/Switch';
+
+interface EmailSettingValues {
+  id?: number;
+  mailDeliver: string;
+  mailHost: string;
+  mailPort: string;
+  mailUsername: string;
+  mailPassword: string;
+  mailEncryption: string;
+  mailFromAddress: string;
+  mailFromName: string;
+}
 
 interface EmailSettingFormProps {
   initialValues?: {
@@ -60,12 +71,12 @@ export default function EmailSettingForm({
       router.push('/settings/email-setting/');
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast.error(`Error: ${error.message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<EmailSettingValues>({
     defaultValues: initialValues || {
       mailDeliver: '',
       mailHost: '',
@@ -77,8 +88,10 @@ export default function EmailSettingForm({
       mailFromName: ''
     },
     onSubmit: async (values) => {
+
       // await mutation.mutateAsync(values);
       console.log('EMail Setting values', values);
+
     }
   });
 
@@ -92,6 +105,7 @@ export default function EmailSettingForm({
       <CardWrapper>
         <Heading>Email Notification Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
+
           <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
             <p>New User</p>
             <Switch />
@@ -124,6 +138,7 @@ export default function EmailSettingForm({
             <p>Proposal Sent</p>
             <Switch />
           </div>
+
         </div>
       </CardWrapper>
 
