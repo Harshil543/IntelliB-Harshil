@@ -8,7 +8,7 @@ import { getEmailSettingById } from '@/services/email-setting.service';
 
 export default function UpdateEmailSetting() {
   const { id } = useParams();
-  const { status, data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['email-setting', id],
     queryFn: () => getEmailSettingById(Number(id))
   });

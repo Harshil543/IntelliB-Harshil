@@ -1,4 +1,3 @@
-import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
 import ChangePasswordForm from '@/components/forms/change-password.form';
 import ProfileForm from '@/components/forms/profile.form';
@@ -8,7 +7,7 @@ const ProfileSetting = () => {
   return (
     <div>
       <ProfileForm />
-      <Heading children="Change Password" />
+      <Heading>Change Password</Heading>
       <ChangePasswordForm />
     </div>
   );

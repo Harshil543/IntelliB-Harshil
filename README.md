@@ -1,1 +1,1 @@
-# IntelliB Admin UI 
+# IntelliB Admin UI

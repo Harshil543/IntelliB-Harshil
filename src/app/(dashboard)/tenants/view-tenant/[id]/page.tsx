@@ -1,8 +1,6 @@
 'use client';
 
 import * as React from 'react';
-import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
-import Heading from '@/components/fields/Heading';
 import { useParams } from 'next/navigation';
 import { getTenantById } from '@/services/tenant.service';
 import TenantForm from '@/components/forms/tenant.form';

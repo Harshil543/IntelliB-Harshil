@@ -7,7 +7,12 @@ import { Label } from '@/components/ui/label';
 
 interface TextInputProps {
   label: string;
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<
+    Date | null,
+    Date | null,
+    Date | null,
+    FieldState<Date | null>
+  >;
   type?: string;
   placeholder?: string;
   disabled: boolean;

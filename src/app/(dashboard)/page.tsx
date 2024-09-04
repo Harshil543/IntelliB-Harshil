@@ -1,11 +1,9 @@
-import Heading from '@/components/fields/Heading';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent } from '@/components/ui/tabs';
 import PaymentAnalysis from '@/components/CommonComponents/PaymentAnalysis';
 import IncomeExpenseAnalysis from '@/components/CommonComponents/IncomeExpenseAnalysis';
 import RecentTransaction from '@/components/CommonComponents/RecentTransaction';
 import DashboardContent from '@/components/CommonComponents/DashboardContentCard';
-import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 
 export default function Dashbord() {
   return (

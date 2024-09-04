@@ -17,15 +17,20 @@ import { Icon } from '@iconify/react';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 
+interface SignInFormValues {
+  email: string;
+  password: string;
+}
+
 const SignIn = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: SignInFormValues) => {
       return await loginUser({
-        email: data?.value?.email,
-        password: data?.value?.password
+        email: data.email,
+        password: data.password
       });
     },
     onSuccess: () => {
@@ -37,13 +42,13 @@ const SignIn = () => {
     }
   });
 
-  const form = useForm({
+  const form = useForm<SignInFormValues>({
     defaultValues: {
       email: '',
       password: ''
     },
-    onSubmit: async (value) => {
-      await mutation.mutateAsync(value);
+    onSubmit: async (values) => {
+      await mutation.mutateAsync(values);
     }
   });
 
@@ -72,28 +77,27 @@ const SignIn = () => {
               validators={{
                 onChange: ({ value }) => {
                   if (!value) return 'Email is required';
-                  // Email pattern validation
                   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                   if (!emailRegex.test(value)) return 'Invalid email format';
                   return undefined;
                 }
               }}
-              children={(field) => (
+            >
+              {(field) => (
                 <TextInput
                   type="email"
                   label="Email"
                   field={field}
-                  placeholder="example@gamil.com"
+                  placeholder="example@example.com"
                   disabled={false}
                 />
               )}
-            />
+            </form.Field>
             <form.Field
               name="password"
               validators={{
                 onChange: ({ value }) => {
                   if (!value) return 'Password is required';
-                  // Password validation: minimum length and complexity
                   if (value.length < 8)
                     return 'Password must be at least 8 characters long';
                   if (!/[A-Z]/.test(value))
@@ -102,12 +106,13 @@ const SignIn = () => {
                     return 'Password must contain at least one lowercase letter';
                   if (!/[0-9]/.test(value))
                     return 'Password must contain at least one number';
-                  if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+                  if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
                     return 'Password must contain at least one special character';
                   return undefined;
                 }
               }}
-              children={(field) => (
+            >
+              {(field) => (
                 <div className="relative">
                   <TextInput
                     type={showPassword ? 'text' : 'password'}
@@ -128,7 +133,7 @@ const SignIn = () => {
                   </button>
                 </div>
               )}
-            />
+            </form.Field>
 
             <Link href={'#'}>
               <p className="text-sm text-slate-500 underline">
@@ -156,12 +161,13 @@ const SignIn = () => {
 
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
+            >
+              {([canSubmit, isSubmitting]) => (
                 <Button type="submit" disabled={!canSubmit}>
                   {isSubmitting ? 'Submitting...' : 'Sign In'}
                 </Button>
               )}
-            />
+            </form.Subscribe>
           </form>
         </div>
       </div>

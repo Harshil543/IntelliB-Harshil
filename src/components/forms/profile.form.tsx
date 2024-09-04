@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
-import { useForm } from '@tanstack/react-form';
+import { useForm, Form, Field } from '@tanstack/react-form';
 import TextInput from '@components/fields/TextInput';
 import { Button } from '@components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -26,10 +26,16 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: {
+      salutation: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      mobileNumber: string;
+    }) => {
       if (initialValues?.id) {
         return await updateUser({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       }
@@ -65,13 +71,14 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
     >
       <CardWrapper>
         <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
+          <Field
             name="salutation"
             validators={{
               onChange: ({ value }) =>
                 !value ? 'Salutation is required' : undefined
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <SelectInput
                 disabled={false}
                 label="Salutation"
@@ -84,8 +91,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 ]}
               />
             )}
-          />
-          <form.Field
+          </Field>
+
+          <Field
             name="firstName"
             validators={{
               onChange: ({ value }) => {
@@ -95,11 +103,13 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput disabled={false} label="First Name" field={field} />
             )}
-          />
-          <form.Field
+          </Field>
+
+          <Field
             name="lastName"
             validators={{
               onChange: ({ value }) => {
@@ -109,13 +119,15 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput disabled={false} label="Last Name" field={field} />
             )}
-          />
+          </Field>
         </div>
+
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
+          <Field
             name="email"
             validators={{
               onChange: ({ value }) => {
@@ -125,11 +137,13 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput disabled={false} label="Email" field={field} />
             )}
-          />
-          <form.Field
+          </Field>
+
+          <Field
             name="mobileNumber"
             validators={{
               onChange: ({ value }) => {
@@ -140,11 +154,13 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 return undefined;
               }
             }}
-            children={(field) => (
+          >
+            {(field) => (
               <TextInput disabled={false} label="Mobile Number" field={field} />
             )}
-          />
+          </Field>
         </div>
+
         <div className="col-span-full mt-10 flex justify-start space-x-4">
           <Button
             type="button"
@@ -154,14 +170,15 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             Cancel
           </Button>
 
-          <form.Subscribe
+          <Form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit]) => (
+          >
+            {([canSubmit]) => (
               <Button type="submit" disabled={!canSubmit || mutation.isPending}>
                 {mutation.isPending ? 'Submitting...' : 'Save Changes'}
               </Button>
             )}
-          />
+          </Form.Subscribe>
         </div>
 
         {mutation.isError && (

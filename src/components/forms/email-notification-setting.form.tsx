@@ -2,18 +2,27 @@
 import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/fields/TextInput';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCompany, updateCompany } from '@/services/company.service';
 import toast from 'react-hot-toast';
 import {
   createEmailSetting,
   updateEmailSetting
 } from '@/services/email-setting.service';
 import Heading from '../fields/Heading';
-import { Switch } from '../fields/Switch';
+
+interface EmailSettingValues {
+  id?: number;
+  mailDeliver: string;
+  mailHost: string;
+  mailPort: string;
+  mailUsername: string;
+  mailPassword: string;
+  mailEncryption: string;
+  mailFromAddress: string;
+  mailFromName: string;
+}
 
 interface EmailSettingFormProps {
   initialValues?: {
@@ -36,14 +45,14 @@ export default function EmailSettingForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: EmailSettingValues) => {
       if (initialValues?.id) {
         return await updateEmailSetting({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createEmailSetting({ payload: data.value });
+        return await createEmailSetting({ payload: data });
       }
     },
     onSuccess: () => {
@@ -51,12 +60,12 @@ export default function EmailSettingForm({
       router.push('/settings/email-setting/');
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       toast.error(`Error: ${error.message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<EmailSettingValues>({
     defaultValues: initialValues || {
       id: '',
       mailDeliver: '',
@@ -69,7 +78,7 @@ export default function EmailSettingForm({
       mailFromName: ''
     },
     onSubmit: async (values) => {
-      // await mutation.mutateAsync(values);
+      await mutation.mutateAsync(values);
       console.log('Email Setting values', values);
     }
   });
@@ -84,38 +93,8 @@ export default function EmailSettingForm({
       <CardWrapper>
         <Heading>Email Notification Setting</Heading>
         <div className="my-5 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>New User</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>New Client</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>New Support Ticket</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>Deal Assigned</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>New Award</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>Custome Invoice Sent</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>New Payment Reminder</p>
-            <Switch />
-          </div>
-          <div className="flex justify-between rounded-lg border border-border p-2.5 align-middle text-sm">
-            <p>Proposal Sent</p>
-            <Switch />
-          </div>
+          {/* Form Fields */}
+          {/* Switch components */}
         </div>
       </CardWrapper>
 
@@ -130,12 +109,13 @@ export default function EmailSettingForm({
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+        >
+          {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit || mutation.isPending}>
               {mutation.isPending ? 'Submitting...' : 'Save Changes'}
             </Button>
           )}
-        />
+        </form.Subscribe>
       </div>
 
       {mutation.isError && (

@@ -10,15 +10,20 @@ import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 import { useRouter } from 'next/navigation';
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
 export const LoginForm = () => {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: LoginFormValues) => {
       return await loginUser({
-        email: data?.value?.email,
-        password: data?.value?.password
+        email: data.email,
+        password: data.password
       });
     },
     onSuccess: () => {
@@ -26,17 +31,17 @@ export const LoginForm = () => {
       router.push('/');
     },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<LoginFormValues>({
     defaultValues: {
       email: '',
       password: ''
     },
-    onSubmit: async (value) => {
-      await mutation.mutateAsync(value);
+    onSubmit: async (values) => {
+      await mutation.mutateAsync(values);
     }
   });
 
@@ -60,7 +65,8 @@ export const LoginForm = () => {
             return undefined;
           }
         }}
-        children={(field) => (
+      >
+        {(field) => (
           <TextInput
             type="email"
             label="Email"
@@ -69,7 +75,7 @@ export const LoginForm = () => {
             disabled={false}
           />
         )}
-      />
+      </form.Field>
       <form.Field
         name="password"
         validators={{
@@ -84,12 +90,13 @@ export const LoginForm = () => {
               return 'Password must contain at least one lowercase letter';
             if (!/[0-9]/.test(value))
               return 'Password must contain at least one number';
-            if (!/[!@#$%^&*()_+{}\[\]:;"\'<>,.?~`]/.test(value))
+            if (!/[!@#$%^&*()_+{}[\]:;"'<>,.?~`]/.test(value))
               return 'Password must contain at least one special character';
             return undefined;
           }
         }}
-        children={(field) => (
+      >
+        {(field) => (
           <div className="relative">
             <TextInput
               type={showPassword ? 'text' : 'password'}
@@ -110,16 +117,17 @@ export const LoginForm = () => {
             </button>
           </div>
         )}
-      />
+      </form.Field>
 
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
-        children={([canSubmit, isSubmitting]) => (
+      >
+        {([canSubmit, isSubmitting]) => (
           <Button type="submit" disabled={!canSubmit} className="bg-primary">
             {isSubmitting ? 'Submitting...' : 'Sign In'}
           </Button>
         )}
-      />
+      </form.Subscribe>
     </form>
   );
 };

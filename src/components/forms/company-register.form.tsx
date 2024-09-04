@@ -58,7 +58,7 @@ const CompanyRegisterForm: React.FC = () => {
       status: 'Active'
     },
     onSubmit: async (values) => {
-      console.log('Form Submitted ');
+      console.log('Form Submitted ', values);
     }
   });
 

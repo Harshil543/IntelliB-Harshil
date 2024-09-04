@@ -1,6 +1,6 @@
 import React from 'react';
-import type { FieldApi } from '@tanstack/react-form';
-import Select from 'react-select';
+import type { FieldApi, FieldState } from '@tanstack/react-form';
+import Select, { StylesConfig } from 'react-select';
 import { Label } from '@/components/ui/label';
 
 interface Option {
@@ -10,12 +10,50 @@ interface Option {
 
 interface MultiSelectInputProps {
   label: string;
-  field: FieldApi<any, any, any, any>;
+  field: FieldApi<
+    string[], // Assuming you have an array of strings as value
+    string[],
+    string[],
+    FieldState<string[]>
+  >;
   options: Option[];
   placeholder?: string;
   disabled: boolean;
   onChange?: (selectedOptions: Option[] | null) => void; // Adjust onChange prop for multiple selections
 }
+
+const customStyles: StylesConfig<Option, true> = {
+  container: (provided) => ({
+    ...provided,
+    border: '1px solid var(--border)',
+    borderRadius: '6px',
+    backgroundColor: 'transparent'
+  }),
+  control: (provided) => ({
+    ...provided,
+    border: '0px',
+    boxShadow: 'none',
+    backgroundColor: 'transparent',
+    fontSize: '14px'
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    color: '#000'
+  }),
+  menu: (provided) => ({
+    ...provided,
+    borderRadius: '4px',
+    border: '1px solid var(--border)',
+    backgroundColor: 'white',
+    zIndex: 1000,
+    position: 'absolute',
+    marginTop: '4px'
+  }),
+  menuList: (provided) => ({
+    ...provided,
+    backgroundColor: 'white'
+  })
+};
 
 const MultiSelectInput: React.FC<MultiSelectInputProps> = ({
   label,
@@ -55,38 +93,7 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = ({
         getOptionLabel={(option: Option) => option.label}
         getOptionValue={(option: Option) => option.value}
         aria-live="off"
-        styles={{
-          container: (provided: any) => ({
-            ...provided,
-            border: '1px solid var(--border)',
-            borderRadius: '6px',
-            backgroundColor: 'transparent'
-          }),
-          control: (provided: any) => ({
-            ...provided,
-            border: '0px',
-            boxShadow: 'none',
-            backgroundColor: 'transparent',
-            fontSize: '14px'
-          }),
-          singleValue: (provided: any) => ({
-            ...provided,
-            color: '#000'
-          }),
-          menu: (provided: any) => ({
-            ...provided,
-            borderRadius: '4px',
-            border: '1px solid var(--border)',
-            backgroundColor: 'white',
-            zIndex: 1000,
-            position: 'absolute',
-            marginTop: '4px'
-          }),
-          menuList: (provided: any) => ({
-            ...provided,
-            backgroundColor: 'white'
-          })
-        }}
+        styles={customStyles}
       />
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
         <span className="text-sm text-red-600">

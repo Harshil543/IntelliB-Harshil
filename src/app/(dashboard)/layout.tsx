@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
 import { MobileSidebar } from '@/components/layout/mobile-sidebar';

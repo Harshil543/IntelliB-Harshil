@@ -13,18 +13,20 @@ import {
 } from '@/services/email-setting.service';
 import Heading from '@/components/fields/Heading';
 
+interface EmailSettingFormValues {
+  id?: number;
+  mailDeliver: string;
+  mailHost: string;
+  mailPort: string;
+  mailUsername: string;
+  mailPassword: string;
+  mailEncryption: string;
+  mailFromAddress: string;
+  mailFromName: string;
+}
+
 interface EmailSettingFormProps {
-  initialValues?: {
-    id?: number;
-    mailDeliver: string;
-    mailHost: string;
-    mailPort: string;
-    mailUsername: string;
-    mailPassword: string;
-    mailEncryption: string;
-    mailFromAddress: string;
-    mailFromName: string;
-  };
+  initialValues?: EmailSettingFormValues;
 }
 
 export default function EmailSettingForm({
@@ -34,14 +36,14 @@ export default function EmailSettingForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: EmailSettingFormValues) => {
       if (initialValues?.id) {
         return await updateEmailSetting({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createEmailSetting({ payload: data.value });
+        return await createEmailSetting({ payload: data });
       }
     },
     onSuccess: () => {
@@ -50,13 +52,13 @@ export default function EmailSettingForm({
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<EmailSettingFormValues>({
     defaultValues: initialValues || {
-      id: '',
+      id: undefined,
       mailDeliver: '',
       mailHost: '',
       mailPort: '',
@@ -66,9 +68,8 @@ export default function EmailSettingForm({
       mailFromAddress: '',
       mailFromName: ''
     },
-    onSubmit: async (values) => {
-      // await mutation.mutateAsync(values);
-      console.log('Email Setting values', values);
+    onSubmit: async (value) => {
+      await mutation.mutateAsync(value);
     }
   });
 
@@ -217,12 +218,13 @@ export default function EmailSettingForm({
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+        >
+          {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit || mutation.isPending}>
               {mutation.isPending ? 'Submitting...' : 'Save Changes'}
             </Button>
           )}
-        />
+        </form.Subscribe>
       </div>
 
       {mutation.isError && (

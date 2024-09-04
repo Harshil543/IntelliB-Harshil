@@ -15,22 +15,24 @@ import SelectInput from '../fields/SelectInput';
 import Heading from '../fields/Heading';
 import TimePickerInput from '../fields/TimePickerInput';
 
+interface CompanySettingFormValues {
+  id?: number;
+  companyName: string;
+  city: string;
+  state: string;
+  zipcode: string;
+  country: string;
+  address: string;
+  telephone: string;
+  registrationNumber: string;
+  startTime: string;
+  endTime: string;
+  timezone: string;
+  taxNumber: string;
+}
+
 interface CompanySettingFormProps {
-  initialValues?: {
-    id?: number;
-    companyName: string;
-    city: string;
-    state: string;
-    zipcode: string;
-    country: string;
-    address: string;
-    telephone: string;
-    registrationNumber: string;
-    startTime: string;
-    endTime: string;
-    timezone: string;
-    taxNumber: string;
-  };
+  initialValues?: CompanySettingFormValues;
 }
 
 export default function CompanySettingForm({
@@ -40,14 +42,14 @@ export default function CompanySettingForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: CompanySettingFormValues) => {
       if (initialValues?.id) {
         return await updateEmailSetting({
-          payload: data?.value,
+          payload: data,
           id: initialValues.id
         });
       } else {
-        return await createEmailSetting({ payload: data.value });
+        return await createEmailSetting({ payload: data });
       }
     },
     onSuccess: () => {
@@ -56,11 +58,11 @@ export default function CompanySettingForm({
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
-  const form = useForm({
+  const form = useForm<CompanySettingFormValues>({
     defaultValues: initialValues || {
       companyName: '',
       city: '',
@@ -76,11 +78,9 @@ export default function CompanySettingForm({
       taxNumber: ''
     },
     onSubmit: async (values) => {
-      // await mutation.mutateAsync(values);
-      console.log('Company Setting Values', values);
+      await mutation.mutateAsync(values);
     }
   });
-
   return (
     <form
       onSubmit={(e) => {
@@ -295,12 +295,13 @@ export default function CompanySettingForm({
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit]) => (
+        >
+          {([canSubmit]) => (
             <Button type="submit" disabled={!canSubmit || mutation.isPending}>
               {mutation.isPending ? 'Submitting...' : 'Save Changes'}
             </Button>
           )}
-        />
+        </form.Subscribe>
       </div>
 
       {mutation.isError && (

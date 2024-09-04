@@ -5,7 +5,7 @@ export interface IAuthContext {
   isAuth: boolean;
   loading: boolean;
   user: any;
-  logout: () => void
+  logout: () => void;
   // other properties...
 }
 
