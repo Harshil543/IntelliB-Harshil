@@ -38,9 +38,15 @@ export const navItems: NavItem[] = [
     label: 'leasable-unit'
   },
   {
+    title: 'Meter',
+    href: '/meter/',
+    icon: 'profile',
+    label: 'meter'
+  },
+  {
     title: 'Settings',
-    href: '#', // Parent item does not have a link
-    icon: 'settings', // Assuming you have an icon for settings
+    href: '#',
+    icon: 'settings',
     label: 'settings',
     children: [
       {
