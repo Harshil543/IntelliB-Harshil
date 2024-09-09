@@ -13,11 +13,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { statusLeasableUnit } from '@/services/leasable-unit.service';
+import { statusMeter } from '@/services/meter.service';
 
 interface MeterActionCellProps {
   id: number;
+  meterType: string;
+  meterNumber: string;
+  installationDate: Date;
   status: string;
+  leasableUnitId: number;
 }
 
 const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
@@ -25,15 +29,15 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: statusLeasableUnit
+    mutationFn: statusMeter
   });
 
   const handleView = () => {
-    router.push(`/leasable-unit/view-leasable-unit/${id}`);
+    router.push(`/meter/view-meter/${id}`);
   };
 
   const handleUpdate = () => {
-    router.push(`/leasable-unit/update-leasable-unit/${id}`);
+    router.push(`/meter/update-meter/${id}`);
   };
 
   const handleStatus = async () => {
@@ -48,10 +52,10 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
 
     try {
       await statusMutation.mutateAsync(payload);
-      queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
+      queryClient.invalidateQueries({ queryKey: ['meter'] });
       toast.success(`Status updated successfully`);
     } catch (error) {
-      console.error('Error updating leasable-unit status:', error);
+      console.error('Error updating meter status:', error);
     }
   };
 
@@ -70,7 +74,7 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
         <DropdownMenuItem onClick={handleUpdate}>Update</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleStatus}>
-          {status === 'Active' ? 'De-list' : 'List'}
+          {status === 'Active' ? 'De-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

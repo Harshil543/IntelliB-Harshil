@@ -5,6 +5,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import meterColumn from '@/utils/tableColumn/meter.column';
 import { getMeter } from '@/services/meter.service';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function LeasableUnit() {
   const { status, data, error } = useQuery({
@@ -13,7 +14,7 @@ export default function LeasableUnit() {
   });
 
   if (status === 'pending') {
-    return <span>Loading...</span>;
+    return <Loader />;
   }
 
   if (status === 'error') {
