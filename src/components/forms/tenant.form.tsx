@@ -10,7 +10,14 @@ import toast from 'react-hot-toast';
 import Heading from '../fields/Heading';
 import SelectInput from '../fields/SelectInput';
 import DatePickerInput from '../fields/DatePickerInput';
-import { createTenant, updateTenant } from '@/services/tenant.service';
+import {
+  createLeasableUnitData,
+  createTenantBillingData,
+  createTenantData,
+  updateLeasableUnitData,
+  updateTenantBillingData,
+  updateTenantData
+} from '@/services/tenant.service';
 
 interface TenantFormProps {
   initialValues?: {
@@ -53,7 +60,7 @@ interface TenantFormValues {
   limit: string;
 }
 
-export default function TenantForm({ initialValues }: TenantFormProps) {
+export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -63,12 +70,12 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
   const mutation = useMutation({
     mutationFn: async (data: TenantFormValues) => {
       if (initialValues?.id) {
-        return updateTenant({
+        return updateTenantData({
           id: initialValues.id,
           payload: data
         });
       } else {
-        return createTenant(data);
+        return createTenantData(data);
       }
     },
     onSuccess: () => {
@@ -92,13 +99,6 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       designation: '',
       mobileNumber: '',
       email: '',
-      leasedUnit: '',
-      leasedStartDate: '',
-      leasedEndDate: '',
-      bilingMethod: '',
-      bilingType: '',
-      bilingCycle: '',
-      limit: '',
       status: 'Active'
     },
     onSubmit: async (values: any) => {
@@ -114,7 +114,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
       }}
     >
       <CardWrapper>
-        <Heading>Tenant Company Info</Heading>
+        <Heading>Tenant Company Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="companyName"
@@ -192,11 +192,7 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
             <TextInput label="Address" field={field} disabled={isViewTenant} />
           )}
         </form.Field>
-      </CardWrapper>
-
-      <CardWrapper>
-        <Heading>Tenant Personal Info</Heading>
-
+        <Heading className="mt-5">Tenant Personal Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="firstName"
@@ -293,144 +289,133 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
             )}
           </form.Field>
         </div>
-      </CardWrapper>
+        <div className="col-span-full mt-10 flex justify-start space-x-4">
+          <Button
+            type="button"
+            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
 
-      <CardWrapper>
-        <Heading>Leased Unit Info</Heading>
-        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
-            name="leasedUnit"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Leased Unit is required' : undefined
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Leased Unit"
-                field={field}
-                options={[
-                  { value: '567', label: '567' },
-                  { value: '679', label: '679' },
-                  { value: '567', label: '567' }
-                ]}
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="leasedStartDate"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Leased start date is required' : undefined
-            }}
-          >
-            {(field) => (
-              <DatePickerInput
-                label="Start Date"
-                field={field}
-                placeholder="Select a date"
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="leasedEndDate"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Leased end date is required' : undefined
-            }}
-          >
-            {(field) => (
-              <DatePickerInput
-                label="End Date"
-                field={field}
-                placeholder="Select a date"
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
+          {!isViewTenant && (
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
+                </Button>
+              )}
+            </form.Subscribe>
+          )}
         </div>
       </CardWrapper>
+    </form>
+  );
+};
 
-      <CardWrapper>
-        <Heading>Billing Info</Heading>
-        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
-            name="bilingMethod"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Biling Method is required' : undefined
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Biling Method"
-                field={field}
-                options={[
-                  { value: '567', label: '567' },
-                  { value: '679', label: '679' },
-                  { value: '567', label: '567' }
-                ]}
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="bilingType"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Biling Type is required' : undefined
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Biling Type"
-                field={field}
-                options={[
-                  { value: '567', label: '567' },
-                  { value: '679', label: '679' },
-                  { value: '567', label: '567' }
-                ]}
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="bilingCycle"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Biling Cycle is required' : undefined
-            }}
-          >
-            {(field) => (
-              <SelectInput
-                label="Biling Cycle"
-                field={field}
-                options={[
-                  { value: '567', label: '567' },
-                  { value: '679', label: '679' },
-                  { value: '567', label: '567' }
-                ]}
-                disabled={isViewTenant}
-              />
-            )}
-          </form.Field>
-          <form.Field
-            name="limit"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Limit is required' : undefined
-            }}
-          >
-            {(field) => (
-              <TextInput label="Limit" field={field} disabled={isViewTenant} />
-            )}
-          </form.Field>
-        </div>
-      </CardWrapper>
+export const TenantLeasableForm = ({ initialValues }: TenantFormProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const pathname = usePathname();
 
-      <div className="col-span-full mt-10 flex justify-end space-x-4">
+  const isViewTenant = pathname.includes('view-tenant');
+
+  const mutation = useMutation({
+    mutationFn: async (data: TenantFormValues) => {
+      if (initialValues?.id) {
+        return updateLeasableUnitData({
+          id: initialValues.id,
+          payload: data
+        });
+      } else {
+        return createLeasableUnitData(data);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tenant'] });
+      router.push('/tenants/');
+      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
+
+  const form = useForm({
+    defaultValues: initialValues || {
+      leasedUnit: '',
+      leasedStartDate: '',
+      leasedEndDate: '',
+      status: 'Active'
+    },
+    onSubmit: async (values: any) => {
+      await mutation.mutateAsync(values);
+    }
+  });
+
+  return (
+    <CardWrapper>
+      <Heading>Leased Unit Data</Heading>
+      <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <form.Field
+          name="leasedUnit"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Leased Unit is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              label="Leased Unit"
+              field={field}
+              options={[
+                { value: '567', label: '567' },
+                { value: '679', label: '679' },
+                { value: '567', label: '567' }
+              ]}
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+        <form.Field
+          name="leasedStartDate"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Leased start date is required' : undefined
+          }}
+        >
+          {(field) => (
+            <DatePickerInput
+              label="Start Date"
+              field={field}
+              placeholder="Select a date"
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+        <form.Field
+          name="leasedEndDate"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Leased end date is required' : undefined
+          }}
+        >
+          {(field) => (
+            <DatePickerInput
+              label="End Date"
+              field={field}
+              placeholder="Select a date"
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+      </div>
+      <div className="col-span-full mt-10 flex justify-start space-x-4">
         <Button
           type="button"
           className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
@@ -438,17 +423,6 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
         >
           Cancel
         </Button>
-
-        {/* {!isViewTenant && (
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
-            )}
-          />
-        )} */}
 
         {!isViewTenant && (
           <form.Subscribe
@@ -462,14 +436,147 @@ export default function TenantForm({ initialValues }: TenantFormProps) {
           </form.Subscribe>
         )}
       </div>
-
-      {mutation.isError && (
-        <div className="col-span-full text-red-500">
-          {mutation.error instanceof Error
-            ? mutation.error.message
-            : 'An error occurred during submission.'}
-        </div>
-      )}
-    </form>
+    </CardWrapper>
   );
-}
+};
+
+export const TenantBillingForm = ({ initialValues }: TenantFormProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const pathname = usePathname();
+
+  const isViewTenant = pathname.includes('view-tenant');
+
+  const mutation = useMutation({
+    mutationFn: async (data: TenantFormValues) => {
+      if (initialValues?.id) {
+        return updateTenantBillingData({
+          id: initialValues.id,
+          payload: data
+        });
+      } else {
+        return createTenantBillingData(data);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tenant'] });
+      router.push('/tenants/');
+      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
+
+  const form = useForm({
+    defaultValues: initialValues || {
+      bilingMethod: '',
+      bilingType: '',
+      bilingCycle: '',
+      limit: '',
+      status: 'Active'
+    },
+    onSubmit: async (values: any) => {
+      await mutation.mutateAsync(values);
+    }
+  });
+
+  return (
+    <CardWrapper>
+      <Heading>Billing Data</Heading>
+      <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <form.Field
+          name="bilingMethod"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Biling Method is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              label="Biling Method"
+              field={field}
+              options={[
+                { value: '567', label: '567' },
+                { value: '679', label: '679' },
+                { value: '567', label: '567' }
+              ]}
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+        <form.Field
+          name="bilingType"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Biling Type is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              label="Biling Type"
+              field={field}
+              options={[
+                { value: '567', label: '567' },
+                { value: '679', label: '679' },
+                { value: '567', label: '567' }
+              ]}
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+        <form.Field
+          name="bilingCycle"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Biling Cycle is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              label="Biling Cycle"
+              field={field}
+              options={[
+                { value: '567', label: '567' },
+                { value: '679', label: '679' },
+                { value: '567', label: '567' }
+              ]}
+              disabled={isViewTenant}
+            />
+          )}
+        </form.Field>
+        <form.Field
+          name="limit"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Limit is required' : undefined)
+          }}
+        >
+          {(field) => (
+            <TextInput label="Limit" field={field} disabled={isViewTenant} />
+          )}
+        </form.Field>
+      </div>
+      <div className="col-span-full mt-10 flex justify-start space-x-4">
+        <Button
+          type="button"
+          className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
+          onClick={() => router.back()}
+        >
+          Cancel
+        </Button>
+
+        {!isViewTenant && (
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Submit'}
+              </Button>
+            )}
+          </form.Subscribe>
+        )}
+      </div>
+    </CardWrapper>
+  );
+};

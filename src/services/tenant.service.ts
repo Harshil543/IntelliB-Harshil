@@ -1,6 +1,6 @@
 import apiClient from '@/config/api.config';
 
-interface TenantPayload {
+interface TenantDataPayload {
   companyName: string;
   gstNumber: string;
   cinNumber: string;
@@ -10,28 +10,14 @@ interface TenantPayload {
   designation: string;
   mobileNumber: string;
   email: string;
+}
+interface TenantLeasableUnitDataPayload {
   leasedUnit: string;
   leasedStartDate: string;
   leasedEndDate: string;
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
 }
 
-interface UpdateTenantPayload {
-  companyName: string;
-  gstNumber: string;
-  cinNumber: string;
-  address: string;
-  firstName: string;
-  lastName: string;
-  designation: string;
-  mobileNumber: string;
-  email: string;
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
+interface TenantBillingDataPayload {
   bilingMethod: string;
   bilingType: string;
   bilingCycle: string;
@@ -48,7 +34,8 @@ export const getTenant = async () => {
   }
 };
 
-export const getTenantById = async (tenantId: number) => {
+// Tenant Company/Personal Data
+export const getTenantDataById = async (tenantId: number) => {
   try {
     const response = await apiClient.get(`/tenant/${tenantId}`);
     return response.data;
@@ -58,7 +45,7 @@ export const getTenantById = async (tenantId: number) => {
   }
 };
 
-export const createTenant = async (payload: TenantPayload) => {
+export const createTenantData = async (payload: TenantDataPayload) => {
   try {
     const response = await apiClient.post('/tenant/', payload);
     return response.data;
@@ -68,12 +55,12 @@ export const createTenant = async (payload: TenantPayload) => {
   }
 };
 
-export const updateTenant = async ({
+export const updateTenantData = async ({
   id,
   payload
 }: {
   id: number;
-  payload: UpdateTenantPayload;
+  payload: TenantDataPayload;
 }) => {
   try {
     const response = await apiClient.put(`/tenant/${id}`, payload);
@@ -84,7 +71,84 @@ export const updateTenant = async ({
   }
 };
 
-// Assuming statusTenant might be for changing status or other operations, define a type for payload
+// Tenant Leasable Unit Data
+export const getLeasableUnitDataById = async (tenantId: number) => {
+  try {
+    const response = await apiClient.get(`/tenant/${tenantId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching by id tenant:', error);
+    throw error;
+  }
+};
+
+export const createLeasableUnitData = async (
+  payload: TenantLeasableUnitDataPayload
+) => {
+  try {
+    const response = await apiClient.post('/tenant/', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating tenant:', error);
+    throw error;
+  }
+};
+
+export const updateLeasableUnitData = async ({
+  id,
+  payload
+}: {
+  id: number;
+  payload: TenantLeasableUnitDataPayload;
+}) => {
+  try {
+    const response = await apiClient.put(`/tenant/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating tenant:', error);
+    throw error;
+  }
+};
+
+// Tenant Billing Data
+export const getTenantBillingDataById = async (tenantId: number) => {
+  try {
+    const response = await apiClient.get(`/tenant/${tenantId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching by id tenant:', error);
+    throw error;
+  }
+};
+
+export const createTenantBillingData = async (
+  payload: TenantBillingDataPayload
+) => {
+  try {
+    const response = await apiClient.post('/tenant/', payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error creating tenant:', error);
+    throw error;
+  }
+};
+
+export const updateTenantBillingData = async ({
+  id,
+  payload
+}: {
+  id: number;
+  payload: TenantBillingDataPayload;
+}) => {
+  try {
+    const response = await apiClient.put(`/tenant/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    console.error('Error updating tenant:', error);
+    throw error;
+  }
+};
+
 export const statusTenant = async ({
   payload
 }: {
