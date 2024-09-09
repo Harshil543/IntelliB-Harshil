@@ -1,13 +1,8 @@
+import MeterForm from '@/components/forms/meter.form';
 import React from 'react';
 
 const RegisterMeter = () => {
-  //   meterType: string;
-  //   meterNumber: string;
-  //   installationDate: Date;
-  // status:string
-  // leasableUnitId: integer
-
-  return <div>RegisterMeter</div>;
+  return <MeterForm />;
 };
 
 export default RegisterMeter;

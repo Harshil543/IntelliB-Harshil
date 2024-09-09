@@ -55,6 +55,13 @@ const meterColumn: ColumnDef<meterData>[] = [
     )
   },
   {
+    accessorKey: 'meterNumber',
+    header: 'Meter Number',
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue('meterNumber') ?? 'N/A'}</div>
+    )
+  },
+  {
     accessorKey: 'installationDate',
     header: 'Installation Date',
     cell: ({ row }) => (
