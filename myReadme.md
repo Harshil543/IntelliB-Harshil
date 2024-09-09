@@ -97,6 +97,27 @@ npx husky-init && npm install
 ```
 
 This will create a `.husky` directory with a `pre-commit` hook set up.
+Add this code to your `pre-commit`:
+
+```
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+
+npm run lint
+
+
+```
+
+Add this code to your `pre-push`:
+
+```
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run lint
+
+```
 
 **Step 5.2: Set Up Lint-Staged**
 Add `lint-staged` to your `package.json`:
@@ -123,8 +144,12 @@ Add useful scripts to your `package.json`:
 ```json
 {
   "scripts": {
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
-    "format": "prettier --write ."
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "lint": "eslint --ext .js,.jsx,.tsx .",
+    "format": "prettier --write .",
+    "prepare": "husky install",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
 ```
