@@ -2,23 +2,29 @@
 
 import { DataTable } from '@/components/fields/Table';
 import React from 'react';
-
 import { useQuery } from '@tanstack/react-query';
-import { getPropertyUser } from '@/services/property-user.service';
 import propertyUserColumns from '@/utils/tableColumn/property-user.column';
+import { getPropertyUser } from '@/services/property-user.service';
+import Loader from '@/components/CommonComponents/Loader';
 
-export default function PropertyUserPage() {
-  const { status, data, error } = useQuery({
+export default function PropertyCoAdminPage() {
+  const { status, data } = useQuery({
     queryKey: ['property-user'],
     queryFn: getPropertyUser
   });
 
   if (status === 'pending') {
-    return <span>Loading...</span>;
+    return <Loader />;
   }
 
   if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+    return (
+      <DataTable
+        columns={propertyUserColumns}
+        data={[]}
+        path="/property-co-admin/register-property-co-admin/"
+      />
+    );
   }
 
   return (
@@ -26,7 +32,7 @@ export default function PropertyUserPage() {
       <DataTable
         columns={propertyUserColumns}
         data={data}
-        path="/property-user/register-property-user/"
+        path="/property-co-admin/register-property-co-admin/"
       />
     </div>
   );

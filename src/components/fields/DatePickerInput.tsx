@@ -1,17 +1,11 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import type { FieldApi, FieldState } from '@tanstack/react-form';
-import { Label } from '@/components/ui/label'; // Adjust the path to your Label component
+import { Label } from '@/components/ui/label';
 
 interface DatePickerInputProps {
   label: string;
-  field: FieldApi<
-    Date | null,
-    Date | null,
-    Date | null,
-    FieldState<Date | null>
-  >;
+  field: any;
   placeholder?: string;
   disabled: boolean;
 }
@@ -32,7 +26,7 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
       <DatePicker
         disabled={disabled}
         id={field.name}
-        selected={(field.state.value && new Date(field.state.value)) || null}
+        selected={field.state.value || null}
         onChange={handleChange}
         placeholderText={placeholder}
         className={`mt-1 h-10 w-full rounded-lg border border-border px-3 text-sm shadow-sm`}

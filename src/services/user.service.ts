@@ -1,27 +1,36 @@
 import apiClient from '@/config/api.config';
 
+// Define the payload types based on your API requirements
+interface UpdateUserPayload {
+  name?: string;
+  email?: string;
+}
+
+interface ChangePasswordPayload {
+  oldPassword: string;
+  newPassword: string;
+}
+
 export const getUserById = async (profileId: number) => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.profile}/profile/${profileId}`);
     const response = await apiClient.get(`/user/${profileId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching by id user:', error);
+    console.error('Error fetching user by id:', error);
     throw error;
   }
 };
 
 export const updateUser = async ({
-  id,
-  payload
+  payload,
+  id
 }: {
-  payload: any;
+  payload: UpdateUserPayload;
   id: number;
 }) => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.profile}/profile/${id}`, payload);
-    // const response = await apiClient.put(`/user/${id}`, payload);
-    // return response.data;
+    const response = await apiClient.put(`/user/${id}`, payload);
+    return response.data;
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;
@@ -32,16 +41,17 @@ export const changePassword = async ({
   id,
   payload
 }: {
-  payload: any;
   id: number;
+  payload: ChangePasswordPayload;
 }) => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.profile}/profile/${id}`, payload);
-    const response = await apiClient.put(`/user/${id}`, payload);
-
+    const response = await apiClient.put(
+      `/user/${id}/change-password`,
+      payload
+    );
     return response.data;
   } catch (error) {
-    console.error('Error updating user:', error);
+    console.error('Error changing password:', error);
     throw error;
   }
 };

@@ -2,18 +2,12 @@
 import React from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import {
-  createEmailSetting,
-  updateEmailSetting
-} from '@/services/email-setting.service';
+import { useMutation } from '@tanstack/react-query';
 import Heading from '../fields/Heading';
 import { Switch } from '../fields/Switch';
 
-interface EmailSettingValues {
+interface EmailNotificationSettingValues {
   id?: number;
   mailDeliver: string;
   mailHost: string;
@@ -25,7 +19,7 @@ interface EmailSettingValues {
   mailFromName: string;
 }
 
-interface EmailSettingFormProps {
+interface EmailNotificationSettingFormProps {
   initialValues?: {
     id?: number;
     mailDeliver: string;
@@ -39,7 +33,7 @@ interface EmailSettingFormProps {
   };
 }
 
-interface EmailSettingValues {
+interface EmailNotificationSettingValues {
   mailDeliver: string;
   mailHost: string;
   mailPort: string;
@@ -50,34 +44,31 @@ interface EmailSettingValues {
   mailFromName: string;
 }
 
-export default function EmailSettingForm({
+export default function EmailNotificationSettingForm({
   initialValues
-}: EmailSettingFormProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+}: EmailNotificationSettingFormProps) {
+  // const router = useRouter();
+  // const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: EmailSettingValues) => {
-      if (initialValues?.id) {
-        return await updateEmailSetting({
-          payload: data,
-          id: initialValues.id
-        });
-      } else {
-        return await createEmailSetting({ payload: data });
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['email-setting'] });
-      router.push('/settings/email-setting/');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
-    },
-    onError: (error: Error) => {
-      toast.error(`Error: ${error.message}`);
-    }
+    // mutationFn: async (data: EmailNotificationSettingValues) => {
+    //   if (initialValues?.id) {
+    //     return await updateEmailSetting(initialValues.id, data);
+    //   } else {
+    //     return await createEmailSetting(data);
+    //   }
+    // },
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries({ queryKey: ['email-setting'] });
+    //   router.push('/settings/email-setting/');
+    //   toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+    // },
+    // onError: (error: Error) => {
+    //   toast.error(`Error: ${error.message}`);
+    // }
   });
 
-  const form = useForm<EmailSettingValues>({
+  const form = useForm<EmailNotificationSettingValues>({
     defaultValues: initialValues || {
       mailDeliver: '',
       mailHost: '',
@@ -140,14 +131,6 @@ export default function EmailSettingForm({
       </CardWrapper>
 
       <div className="col-span-full mt-10 flex justify-start space-x-4">
-        <Button
-          type="button"
-          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
-          onClick={() => router.back()}
-        >
-          Cancel
-        </Button>
-
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
         >

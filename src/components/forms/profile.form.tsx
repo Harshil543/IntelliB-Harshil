@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
-import { useForm, Form, Field } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 import TextInput from '@components/fields/TextInput';
 import { Button } from '@components/ui/button';
 import { useRouter } from 'next/navigation';
@@ -41,7 +41,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company'] });
+      queryClient.invalidateQueries({ queryKey: ['profile'] });
       toast.success(`Profile Updated successfully`);
     },
     onError: (error) => {
@@ -57,7 +57,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
       email: '',
       mobileNumber: ''
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });
@@ -71,7 +71,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
     >
       <CardWrapper>
         <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Field
+          <form.Field
             name="salutation"
             validators={{
               onChange: ({ value }) =>
@@ -91,9 +91,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 ]}
               />
             )}
-          </Field>
+          </form.Field>
 
-          <Field
+          <form.Field
             name="firstName"
             validators={{
               onChange: ({ value }) => {
@@ -107,9 +107,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             {(field) => (
               <TextInput disabled={false} label="First Name" field={field} />
             )}
-          </Field>
+          </form.Field>
 
-          <Field
+          <form.Field
             name="lastName"
             validators={{
               onChange: ({ value }) => {
@@ -123,11 +123,11 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             {(field) => (
               <TextInput disabled={false} label="Last Name" field={field} />
             )}
-          </Field>
+          </form.Field>
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <Field
+          <form.Field
             name="email"
             validators={{
               onChange: ({ value }) => {
@@ -141,9 +141,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             {(field) => (
               <TextInput disabled={false} label="Email" field={field} />
             )}
-          </Field>
+          </form.Field>
 
-          <Field
+          <form.Field
             name="mobileNumber"
             validators={{
               onChange: ({ value }) => {
@@ -158,19 +158,19 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
             {(field) => (
               <TextInput disabled={false} label="Mobile Number" field={field} />
             )}
-          </Field>
+          </form.Field>
         </div>
 
         <div className="col-span-full mt-10 flex justify-start space-x-4">
           <Button
             type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
             onClick={() => router.back()}
           >
             Cancel
           </Button>
 
-          <Form.Subscribe
+          <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
           >
             {([canSubmit]) => (
@@ -178,7 +178,7 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 {mutation.isPending ? 'Submitting...' : 'Save Changes'}
               </Button>
             )}
-          </Form.Subscribe>
+          </form.Subscribe>
         </div>
 
         {mutation.isError && (

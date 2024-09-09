@@ -1,3 +1,4 @@
+'use client';
 // components/PropertyUserActionsCell.tsx
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -49,7 +50,7 @@ const PropertyUserActionsCell: React.FC<PropertyUserActionsCellProps> = ({
     };
 
     try {
-      statusMutation.mutate(payload, {
+      statusMutation.mutate(payload as any, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['property-user'] });
           toast.success(`Status updated successfully`);

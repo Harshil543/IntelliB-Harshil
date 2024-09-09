@@ -1,9 +1,46 @@
 import apiClient from '@/config/api.config';
 
+interface TenantPayload {
+  companyName: string;
+  gstNumber: string;
+  cinNumber: string;
+  address: string;
+  firstName: string;
+  lastName: string;
+  designation: string;
+  mobileNumber: string;
+  email: string;
+  leasedUnit: string;
+  leasedStartDate: string;
+  leasedEndDate: string;
+  bilingMethod: string;
+  bilingType: string;
+  bilingCycle: string;
+  limit: string;
+}
+
+interface UpdateTenantPayload {
+  companyName: string;
+  gstNumber: string;
+  cinNumber: string;
+  address: string;
+  firstName: string;
+  lastName: string;
+  designation: string;
+  mobileNumber: string;
+  email: string;
+  leasedUnit: string;
+  leasedStartDate: string;
+  leasedEndDate: string;
+  bilingMethod: string;
+  bilingType: string;
+  bilingCycle: string;
+  limit: string;
+}
+
 export const getTenant = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.company}/company`);
-    const response = await apiClient.get(`/tenant/`);
+    const response = await apiClient.get('/tenant/');
     return response.data;
   } catch (error) {
     console.error('Error fetching tenant:', error);
@@ -13,7 +50,6 @@ export const getTenant = async () => {
 
 export const getTenantById = async (tenantId: number) => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.company}/company/${tenantId}`);
     const response = await apiClient.get(`/tenant/${tenantId}`);
     return response.data;
   } catch (error) {
@@ -22,10 +58,9 @@ export const getTenantById = async (tenantId: number) => {
   }
 };
 
-export const createTenant = async ({ payload }: { payload: any }) => {
+export const createTenant = async (payload: TenantPayload) => {
   try {
-    // const response = await apiClient.post(`${BASE_URLS?.company}/company`, payload);
-    const response = await apiClient.post(`/tenant/`, payload);
+    const response = await apiClient.post('/tenant/', payload);
     return response.data;
   } catch (error) {
     console.error('Error creating tenant:', error);
@@ -37,34 +72,33 @@ export const updateTenant = async ({
   id,
   payload
 }: {
-  payload: any;
   id: number;
+  payload: UpdateTenantPayload;
 }) => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.company}/company/${id}`, payload);
     const response = await apiClient.put(`/tenant/${id}`, payload);
-
     return response.data;
   } catch (error) {
-    console.error('Error creating tenant:', error);
+    console.error('Error updating tenant:', error);
     throw error;
   }
 };
 
+// Assuming statusTenant might be for changing status or other operations, define a type for payload
 export const statusTenant = async ({
-  id,
   payload
 }: {
-  payload: any;
   id: number;
+  payload: { status: string }; // Update this type based on your actual payload
 }) => {
   try {
-    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
-    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
-    // return response.data;
+    // Example usage of payload
     console.log('tenant status', payload);
+    // Uncomment and update the API call if needed
+    // const response = await apiClient.patch(`/tenant/${id}/status`, payload);
+    // return response.data;
   } catch (error) {
-    console.error('Error status tenant:', error);
+    console.error('Error changing tenant status:', error);
     throw error;
   }
 };

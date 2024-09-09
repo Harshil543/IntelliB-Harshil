@@ -40,12 +40,9 @@ export default function LeasableUnitForm({
   const mutation = useMutation({
     mutationFn: async (data: LeasableUnitFormValues) => {
       if (initialValues?.id) {
-        return await updateLeasableUnit({
-          payload: data,
-          id: initialValues.id
-        });
+        return await updateLeasableUnit(initialValues.id, data);
       } else {
-        return await createLeasableUnit({ payload: data });
+        return await createLeasableUnit(data);
       }
     },
     onSuccess: () => {
@@ -65,7 +62,7 @@ export default function LeasableUnitForm({
       smartMeterId: [],
       status: 'Active'
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });
@@ -164,7 +161,7 @@ export default function LeasableUnitForm({
       <div className="col-span-full mt-10 flex justify-end space-x-4">
         <Button
           type="button"
-          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+          className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
           onClick={() => router.back()}
         >
           Cancel

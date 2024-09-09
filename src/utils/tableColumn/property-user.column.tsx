@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import PropertyUserActionsCell from '../cellsAction/property.user.action.cell';
+import PropertyUserActionsCell from '@/utils/cellsAction/property.user.action.cell';
 
 interface PropertyUserColumns {
   id: number;
@@ -39,13 +39,8 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'serialNumber',
-    header: 'Sr No',
-    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
-  },
-  {
     accessorKey: 'id',
-    header: 'id',
+    header: 'ID',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
@@ -54,12 +49,11 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'firstName',
     header: 'Name',
     cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
+      const firstName = row.getValue('firstName');
+      const lastName = row.getValue('lastName');
       return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
     }
   },
-
   {
     accessorKey: 'email',
     header: 'Email',
@@ -67,19 +61,17 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
       <div className="lowercase">{row.getValue('email') ?? 'N/A'}</div>
     )
   },
-
   {
     accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
-      const countryCode = row.original.countryCode;
-      const mobileNumber = row.original.mobileNumber;
+      const countryCode = row.getValue('countryCode');
+      const mobileNumber = row.getValue('mobileNumber');
       return (
         <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },
-
   {
     accessorKey: 'designation',
     header: 'Designation',
@@ -98,7 +90,6 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
       </Badge>
     )
   },
-
   {
     id: 'actions',
     enableHiding: false,

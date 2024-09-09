@@ -1,3 +1,4 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ interface CompanyFormValues {
   websiteUrl: string;
   gstNumber: string;
   cinNumber: string;
-  status?: string; // Adding status if used in the form
+  status?: string;
 }
 
 interface CompanyFormProps {
@@ -56,12 +57,9 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const mutation = useMutation({
     mutationFn: async (data: CompanyFormValues) => {
       if (initialValues?.id) {
-        return await updateCompany({
-          payload: data,
-          id: initialValues.id
-        });
+        return await updateCompany(initialValues.id, data);
       } else {
-        return await createCompany({ payload: data });
+        return await createCompany(data);
       }
     },
     onSuccess: () => {
@@ -91,8 +89,8 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       cinNumber: '',
       status: 'Active'
     },
-    onSubmit: async (values) => {
-      await mutation.mutateAsync(values);
+    onSubmit: async (value: any) => {
+      await mutation.mutateAsync(value);
     }
   });
 
@@ -110,7 +108,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     setStates(stateList);
     form.setFieldValue('state', '');
     form.setFieldValue('city', '');
-    setCities([]); // Clear cities when country changes
+    setCities([]);
   };
 
   const handleStateChange = (
@@ -391,7 +389,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       <div className="col-span-full mt-10 flex justify-end space-x-4">
         <Button
           type="button"
-          className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+          className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
           onClick={() => router.back()}
         >
           Cancel

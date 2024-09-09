@@ -1,9 +1,29 @@
 import apiClient from '@/config/api.config';
-import { BASE_URLS } from '@/constants/api.constants';
+
+// Define interfaces for payloads
+interface CompanyPayload {
+  companyName: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  websiteUrl: string;
+  gstNumber: string;
+  cinNumber: string;
+  status?: string;
+}
+
+interface StatusPayload {
+  status: string;
+}
 
 export const getCompany = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.company}/company`);
     const response = await apiClient.get(`/company/`);
     return response.data;
   } catch (error) {
@@ -14,7 +34,6 @@ export const getCompany = async () => {
 
 export const getCompanyById = async (companyId: number) => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.company}/company/${companyId}`);
     const response = await apiClient.get(`/company/${companyId}`);
     return response.data;
   } catch (error) {
@@ -23,9 +42,8 @@ export const getCompanyById = async (companyId: number) => {
   }
 };
 
-export const createCompany = async ({ payload }: { payload: any }) => {
+export const createCompany = async (payload: CompanyPayload) => {
   try {
-    // const response = await apiClient.post(`${BASE_URLS?.company}/company`, payload);
     const response = await apiClient.post(`/company/`, payload);
     return response.data;
   } catch (error) {
@@ -34,36 +52,20 @@ export const createCompany = async ({ payload }: { payload: any }) => {
   }
 };
 
-export const updateCompany = async ({
-  id,
-  payload
-}: {
-  payload: any;
-  id: number;
-}) => {
+export const updateCompany = async (id: number, payload: CompanyPayload) => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.company}/company/${id}`, payload);
     const response = await apiClient.put(`/company/${id}`, payload);
-
     return response.data;
   } catch (error) {
-    console.error('Error creating company:', error);
+    console.error('Error updating company:', error);
     throw error;
   }
 };
 
-export const statusCompany = async ({
-  id,
-  payload
-}: {
-  payload: any;
-  id: number;
-}) => {
+export const statusCompany = async (id: number, payload: StatusPayload) => {
   try {
-    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
-    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
-    // return response.data;
     console.log('company status', payload);
+    // Implement the status update logic here if needed
   } catch (error) {
     console.error('Error status company:', error);
     throw error;

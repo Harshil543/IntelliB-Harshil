@@ -3,7 +3,7 @@ import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { usePathname, useRouter } from 'next/navigation';
-import { useForm, FieldValues } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import PhoneInputField from '../fields/PhoneInput';
@@ -34,7 +34,7 @@ export default function PropertyCoAdminForm({
   const isViewPropertyCoAdmin = pathname.includes('view-property-co-admin');
 
   const mutation = useMutation({
-    mutationFn: async (data: FieldValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
         return await updatePropertyCoAdmin({
           payload: data,
@@ -193,7 +193,7 @@ export default function PropertyCoAdminForm({
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
             onClick={() => router.back()}
           >
             Cancel

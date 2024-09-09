@@ -12,12 +12,12 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
+// import autoTable from 'jspdf-autotable';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import autoTable from 'jspdf-autotable';
 import { Input } from '@/components/ui/input';
 import {
   Table,
@@ -27,10 +27,10 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Parser } from 'json2csv';
+// import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
 
 type DataTableProps<T> = {
   columns: ColumnDef<T>[];
@@ -40,6 +40,7 @@ type DataTableProps<T> = {
 
 export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
   const router = useRouter();
+  const pathname = usePathname();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -82,13 +83,16 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
       .getRowModel()
       .rows.filter((row) => row.getIsSelected());
     const rows = selectedRows.map((row) => row.original);
-    const parser = new Parser();
+
+    const fields = Object.keys(rows[0] || {});
+    const parser = new Parser({ fields });
     const csv = parser.parse(rows);
+
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', 'data.csv');
+    link.setAttribute('download', `${pathname.split('/')[1]}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -103,34 +107,30 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-    XLSX.writeFile(workbook, 'data.xlsx');
+    XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   };
 
   const exportPDF = () => {
-    const selectedRows = table
-      .getRowModel()
-      .rows.filter((row) => row.getIsSelected());
-    const rows = selectedRows.map((row) => row.original);
-
-    const doc = new jsPDF();
-    doc.text('Table Data', 20, 20);
-
-    const filteredColumns = columns.filter((column) => column.id !== 'select');
-    const tableColumn = filteredColumns.map((col) => col.header as string);
-    const tableRows = rows.map((row) =>
-      filteredColumns.map((col) => {
-        // Using `col.accessorKey` assuming it's a string key in the row object
-        const accessor = col.accessorKey as keyof T;
-        return row[accessor];
-      })
-    );
-
-    autoTable(doc, {
-      head: [tableColumn],
-      body: tableRows
-    });
-
-    doc.save('data.pdf');
+    // const selectedRows = table
+    //   .getRowModel()
+    //   .rows.filter((row) => row.getIsSelected());
+    // const rows = selectedRows.map((row) => row.original);
+    // const doc = new jsPDF();
+    // doc.text('Table Data', 20, 20);
+    // const filteredColumns = columns.filter((column) => column.id !== 'select');
+    // const tableColumn = filteredColumns.map((col) => col.header as string);
+    // const tableRows = rows.map((row) =>
+    //   filteredColumns.map((col) => {
+    //     // Using `col.accessorKey` assuming it's a string key in the row object
+    //     const accessor = col.accessorKey as keyof T;
+    //     return row[accessor];
+    //   })
+    // );
+    // autoTable(doc, {
+    //   head: [tableColumn],
+    //   body: tableRows
+    // });
+    // doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
   const handleDownloadTemplate = () => {
@@ -153,7 +153,7 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
 
     // Export the workbook as an XLSX file
-    XLSX.writeFile(workbook, 'template.xlsx');
+    XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   };
 
   return (
@@ -257,9 +257,13 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
         </Table>
       </div>
       <div className="flex items-center justify-between py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Page {table.getState().pagination.pageIndex + 1} of{' '}
+          {table.getPageCount()}
         </div>
         <div className="space-x-2">
           <Button

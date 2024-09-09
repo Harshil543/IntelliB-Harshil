@@ -1,6 +1,5 @@
 import React from 'react';
-import type { FieldApi, FieldState } from '@tanstack/react-form';
-import Select, { StylesConfig } from 'react-select';
+import Select, { StylesConfig, MultiValue, ActionMeta } from 'react-select';
 import { Label } from '@/components/ui/label';
 
 interface Option {
@@ -10,16 +9,14 @@ interface Option {
 
 interface MultiSelectInputProps {
   label: string;
-  field: FieldApi<
-    string[], // Assuming you have an array of strings as value
-    string[],
-    string[],
-    FieldState<string[]>
-  >;
+  field: any;
   options: Option[];
   placeholder?: string;
   disabled: boolean;
-  onChange?: (selectedOptions: Option[] | null) => void; // Adjust onChange prop for multiple selections
+  onChange?: (
+    selectedOptions: MultiValue<Option>,
+    actionMeta: ActionMeta<Option>
+  ) => void;
 }
 
 const customStyles: StylesConfig<Option, true> = {
@@ -63,17 +60,19 @@ const MultiSelectInput: React.FC<MultiSelectInputProps> = ({
   disabled,
   onChange
 }) => {
-  // Find the selected options based on the current field value
   const selectedOptions = options.filter((option) =>
     field.state.value.includes(option.value)
   );
 
-  const handleChange = (selectedOptions: Option[] | null) => {
-    const values = selectedOptions
-      ? selectedOptions.map((option) => option.value)
+  const handleChange = (
+    newValue: MultiValue<Option>,
+    actionMeta: ActionMeta<Option>
+  ) => {
+    const values = newValue
+      ? (newValue as Option[]).map((option) => option.value)
       : [];
     field.handleChange(values);
-    if (onChange) onChange(selectedOptions); // Call onChange if it exists
+    if (onChange) onChange(newValue, actionMeta);
   };
 
   return (

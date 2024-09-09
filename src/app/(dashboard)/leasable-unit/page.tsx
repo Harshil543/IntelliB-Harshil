@@ -7,19 +7,26 @@ import { useQuery } from '@tanstack/react-query';
 
 import { getLeasableUnit } from '@/services/leasable-unit.service';
 import leasableUnitColumn from '@/utils/tableColumn/leasable-unit.column';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function LeasableUnit() {
-  const { status, data, error } = useQuery({
+  const { status, data } = useQuery({
     queryKey: ['leasable-unit'],
     queryFn: getLeasableUnit
   });
 
   if (status === 'pending') {
-    return <span>Loading...</span>;
+    return <Loader />;
   }
 
   if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+    return (
+      <DataTable
+        columns={leasableUnitColumn}
+        data={[]}
+        path="/leasable-unit/register-leasable-unit"
+      />
+    );
   }
 
   return (

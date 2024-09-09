@@ -1,20 +1,41 @@
 import apiClient from '@/config/api.config';
-import { BASE_URLS } from '@/constants/api.constants';
+
+// Define appropriate types
+interface PropertyUserPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  designation: string;
+  status: string;
+}
+
+interface PropertyUserResponse {
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  designation: string;
+  status: string;
+}
 
 export const getPropertyUser = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.property-user}/property-user`);
+    // const response = await apiClient.get(`${BASE_URLS?.property-co-admin}/property-co-admin`);
     const response = await apiClient.get(`/property-user/`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching property-user:', error);
+    console.error('Error fetching property co-admin:', error);
     throw error;
   }
 };
 
-export const getpropertyUserById = async (propertyUserId: number) => {
+export const getPropertyUserById = async (
+  propertyUserId: number
+): Promise<PropertyUserResponse> => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
     const response = await apiClient.get(`/property-user/${propertyUserId}`);
     return response.data;
   } catch (error) {
@@ -23,9 +44,10 @@ export const getpropertyUserById = async (propertyUserId: number) => {
   }
 };
 
-export const createPropertyUser = async ({ payload }: { payload: any }) => {
+export const createPropertyUser = async (
+  payload: PropertyUserPayload
+): Promise<PropertyUserResponse> => {
   try {
-    // const response = await apiClient.post(`${BASE_URLS?.property-user}/property-user`, payload);
     const response = await apiClient.post(`/property-user/`, payload);
     return response.data;
   } catch (error) {
@@ -34,38 +56,26 @@ export const createPropertyUser = async ({ payload }: { payload: any }) => {
   }
 };
 
-export const updatePropertyUser = async ({
-  id,
-  payload
-}: {
-  payload: any;
-  id: number;
-}) => {
+export const updatePropertyUser = async (
+  id: number,
+  payload: PropertyUserPayload
+): Promise<PropertyUserResponse> => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.property-user}/property-user/${id}`, payload);
     const response = await apiClient.put(`/property-user/${id}`, payload);
-
     return response.data;
   } catch (error) {
-    console.error('Error creating property-user:', error);
+    console.error('Error updating property-user:', error);
     throw error;
   }
 };
 
-export const statusPropertyUser = async ({
-  id,
-  payload
-}: {
-  payload: any;
-  id: number;
-}) => {
+export const statusPropertyUser = async (
+  payload: PropertyUserPayload
+): Promise<void> => {
   try {
-    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
-    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
-    // return response.data;
     console.log('property user status', payload);
   } catch (error) {
-    console.error('Error deleting property-user:', error);
+    console.error('Error processing property-user status:', error);
     throw error;
   }
 };
