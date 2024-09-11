@@ -15,7 +15,6 @@ import editIcon from '@iconify/icons-mdi/edit';
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
 
-// Interface for form values, including id for update cases
 interface FixedBillingFormValue {
   id?: number;
   rs: number;
@@ -128,7 +127,7 @@ export const FixedBillingModel = ({ initialValues }: FixedBillingFormProps) => {
               </form.Field>
             </div>
           </div>
-          <div>
+          <div className="flex gap-5">
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
@@ -141,13 +140,13 @@ export const FixedBillingModel = ({ initialValues }: FixedBillingFormProps) => {
                 </Button>
               )}
             </form.Subscribe>
-            <Button
+            <button
               type="button"
-              className="text-dark hover:text-dark ml-3 bg-secondary hover:bg-opacity-80"
+              className="text-dark hover:text-dark ml-3 flex h-10 w-10 items-center justify-center rounded-lg bg-secondary align-middle hover:bg-opacity-80"
               onClick={() => router.back()}
             >
               <Icon icon={editIcon} />
-            </Button>
+            </button>
           </div>
         </div>
       </form>
@@ -234,22 +233,31 @@ export const SlabWiseRateBillingModel = ({
           form.handleSubmit();
         }}
       >
-        <Heading className="text-lg">Slab-Wise Rate</Heading>
+        <div className="mb-7 flex justify-between">
+          <Heading className="text-lg">Slab-Wise Rate</Heading>
+          <button
+            type="button"
+            className="text-dark hover:text-dark ml-3 flex h-10 w-10 items-center justify-center rounded-lg bg-secondary align-middle hover:bg-opacity-80"
+            onClick={() => router.back()}
+          >
+            <Icon icon={editIcon} />
+          </button>
+        </div>
         <table className="w-full">
           <thead>
-            <tr className="rounded-md h-10 bg-secondary">
-              <th>Slab</th>
+            <tr className="my-10 h-10 rounded-lg bg-secondary">
+              <th className="px-8">Slab</th>
               <th>Slab Start Unit</th>
               <th>Slab End Unit</th>
-              <th>RS.</th>
-              <th>PS.</th>
+              <th>Rs.</th>
+              <th>Ps.</th>
             </tr>
           </thead>
           <tbody>
             {slabs.map((slab, index) => (
               <tr key={index}>
-                <td>{index + 1}</td>
-                <td className="px-24">
+                <td className="px-8">{index + 1}</td>
+                <td className="px-20">
                   <form.Field name={`slabs[${index}].slabStartUnit`}>
                     {(field) => (
                       <TextInput
@@ -261,7 +269,7 @@ export const SlabWiseRateBillingModel = ({
                     )}
                   </form.Field>
                 </td>
-                <td className="px-24">
+                <td className="px-20">
                   <form.Field name={`slabs[${index}].slabEndUnit`}>
                     {(field) => (
                       <TextInput
@@ -273,7 +281,7 @@ export const SlabWiseRateBillingModel = ({
                     )}
                   </form.Field>
                 </td>
-                <td className="px-24">
+                <td className="px-20">
                   <form.Field name={`slabs[${index}].rs`}>
                     {(field) => (
                       <TextInput
@@ -285,7 +293,7 @@ export const SlabWiseRateBillingModel = ({
                     )}
                   </form.Field>
                 </td>
-                <td className="px-24">
+                <td className="px-20">
                   <form.Field name={`slabs[${index}].ps`}>
                     {(field) => (
                       <TextInput
