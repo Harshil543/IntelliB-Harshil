@@ -28,7 +28,7 @@ export const getMeterById = async (id: number) => {
 
 export const createMeter = async (payload: MeterPayload) => {
   try {
-    const response = await apiClient.post(`/meter/`, payload?.value);
+    const response = await apiClient.post(`/meter/`, payload);
     return response.data;
   } catch (error) {
     throw error;
@@ -37,14 +37,19 @@ export const createMeter = async (payload: MeterPayload) => {
 
 export const updateMeter = async (id: number, payload: MeterPayload) => {
   try {
-    const response = await apiClient.put(`/meter/${id}`, payload?.value);
+    const response = await apiClient.put(`/meter/${id}`, payload);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const statusMeter = async (id: number, payload: MeterPayload) => {
+export const statusMeter = async ({
+  payload
+}: {
+  payload: MeterPayload;
+  id: number;
+}) => {
   try {
     console.log(`Meter status`, payload);
   } catch (error) {

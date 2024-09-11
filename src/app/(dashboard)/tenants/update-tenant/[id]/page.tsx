@@ -2,20 +2,20 @@
 
 import * as React from 'react';
 import { useParams } from 'next/navigation';
-import { getTenantById } from '@/services/tenant.service';
-import TenantForm from '@/components/forms/tenant.form';
 import { useQuery } from '@tanstack/react-query';
+import { getTenantDataById } from '@/services/tenant.service';
+import { TenantDataForm } from '@/components/forms/tenant.form';
 
 export default function TenantUpdate() {
   const { id } = useParams();
   const { data } = useQuery({
     queryKey: ['tenant', id],
-    queryFn: () => getTenantById(Number(id))
+    queryFn: () => getTenantDataById(Number(id))
   });
 
   return (
     <div>
-      <TenantForm initialValues={data} />
+      <TenantDataForm initialValues={data} />
     </div>
   );
 }

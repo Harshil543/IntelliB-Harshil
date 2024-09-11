@@ -3,7 +3,7 @@ import {
   createFixedBillingModel,
   updateFixedBillingModel
 } from '@/services/billing-model.service';
-import { useForm } from '@tanstack/react-form';
+import { FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -157,6 +157,15 @@ export const FixedBillingModel = ({ initialValues }: FixedBillingFormProps) => {
 
 // Slab Wise Billing Model
 
+interface SlabWiseRateBillingFormValue {
+  slabs: {
+    slabStartUnit: number;
+    slabEndUnit: number;
+    rs: number;
+    ps: number;
+  }[];
+}
+
 export const SlabWiseRateBillingModel = ({
   initialValues
 }: SlabWiseRateFixedBillingFormProps) => {
@@ -193,14 +202,14 @@ export const SlabWiseRateBillingModel = ({
   });
 
   const form = useForm<SlabWiseRateBillingFormValue>({
-    defaultValues: initialValues || {
-      rs: 0,
-      ps: 0,
-      slabStartUnit: 0,
-      slabEndUnit: 0
-    },
-    onSubmit: async (values: any) => {
-      await mutation.mutateAsync(values);
+    defaultValues: initialValues,
+    onSubmit: async ({
+      value
+    }: {
+      value: SlabWiseRateBillingFormValue;
+      formApi: FormApi<SlabWiseRateBillingFormValue, undefined>;
+    }) => {
+      await mutation.mutateAsync(value);
     }
   });
 

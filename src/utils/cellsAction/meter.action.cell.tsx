@@ -39,19 +39,17 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
   const handleUpdate = () => {
     router.push(`/meter/update-meter/${id}`);
   };
-
-  const handleStatus = async () => {
-    const newStatus = status === 'Active' ? 'Inactive' : 'Active';
+  const handleStatus = async (id: number, status: string) => {
     const payload = {
       payload: {
         id,
-        status: newStatus
+        status: status === 'Active' ? 'Inactive' : 'Active'
       },
       id
     };
 
     try {
-      await statusMutation.mutateAsync(payload);
+      await statusMutation.mutateAsync(payload as any);
       queryClient.invalidateQueries({ queryKey: ['meter'] });
       toast.success(`Status updated successfully`);
     } catch (error) {
@@ -73,7 +71,7 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
         <DropdownMenuItem onClick={handleView}>View</DropdownMenuItem>
         <DropdownMenuItem onClick={handleUpdate}>Update</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleStatus}>
+        <DropdownMenuItem onClick={() => handleStatus(id, status)}>
           {status === 'Active' ? 'De-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>

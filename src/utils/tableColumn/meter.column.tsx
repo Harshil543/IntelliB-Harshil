@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import MeterActionCell from '../cellsAction/meter.action.cell';
 
-interface meterData {
+interface MeterData {
   id: number;
   meterType: string;
   meterNumber: string;
@@ -12,7 +12,7 @@ interface meterData {
   leasableUnitId: number;
 }
 
-const meterColumn: ColumnDef<meterData>[] = [
+const meterColumn: ColumnDef<MeterData>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -73,16 +73,10 @@ const meterColumn: ColumnDef<meterData>[] = [
   {
     accessorKey: 'leasableUnitId',
     header: 'Leasable Unit Id',
-    cell: ({ row }) => {
-      return (
-        <div className="lowercase">
-          {' '}
-          {row.getValue('leasableUnitId') ?? 'N/A'}
-        </div>
-      );
-    }
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue('leasableUnitId') ?? 'N/A'}</div>
+    )
   },
-
   {
     accessorKey: 'status',
     header: 'Status',
@@ -98,9 +92,25 @@ const meterColumn: ColumnDef<meterData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const id = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
-      return <MeterActionCell id={id} status={currentStatus} />;
+      const {
+        id,
+        meterType,
+        meterNumber,
+        installationDate,
+        leasableUnitId,
+        status
+      } = row.original;
+
+      return (
+        <MeterActionCell
+          id={id}
+          meterType={meterType}
+          meterNumber={meterNumber}
+          installationDate={installationDate}
+          leasableUnitId={leasableUnitId}
+          status={status}
+        />
+      );
     }
   }
 ];
