@@ -1,4 +1,6 @@
 // components/TenantForm.tsx
+'use client';
+
 import React from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';

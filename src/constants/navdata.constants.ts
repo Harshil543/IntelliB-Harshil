@@ -47,7 +47,22 @@ export const navItems: NavItem[] = [
     title: 'Meter',
     href: '/meter/',
     icon: 'profile',
-    label: 'meter'
+    label: 'meter',
+    children: undefined
+  },
+  {
+    title: 'Billing Model',
+    href: '/billing-model/',
+    icon: 'profile',
+    label: 'billing-model',
+    children: undefined
+  },
+  {
+    title: 'Billing Cycle',
+    href: '/billing-cycle/',
+    icon: 'profile',
+    label: 'billing-cycle',
+    children: undefined
   },
   {
     title: 'Settings',
