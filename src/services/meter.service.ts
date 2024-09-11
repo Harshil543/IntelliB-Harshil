@@ -28,8 +28,6 @@ export const getMeterById = async (id: number) => {
 
 export const createMeter = async (payload: MeterPayload) => {
   try {
-    console.log('payload', payload);
-
     const response = await apiClient.post(`/meter/`, payload?.value);
     return response.data;
   } catch (error) {
