@@ -1,9 +1,18 @@
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
-import { Icon } from '@iconify/react'; // Import Icon from Iconify
+import { Icon } from '@iconify/react';
 import React from 'react';
 import Link from 'next/link';
 
-const Topbar = () => {
+// Define the type for the data prop
+interface TopbarProps {
+  data: {
+    data?: {
+      profilePicture?: string;
+    };
+  };
+}
+
+const Topbar: React.FC<TopbarProps> = ({ data }) => {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-4">
@@ -17,7 +26,11 @@ const Topbar = () => {
         <Link href={'/profile'}>
           <Avatar>
             <AvatarImage
-              src="https://picsum.photos/40"
+              src={
+                data?.data?.profilePicture
+                  ? data?.data?.profilePicture
+                  : 'https://picsum.photos/40'
+              }
               alt="User Name"
               className="rounded-full"
             />

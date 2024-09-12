@@ -1,35 +1,26 @@
 import apiClient from '@/config/api.config';
-
-// Define the payload types based on your API requirements
-interface UpdateUserPayload {
-  name?: string;
-  email?: string;
-}
+import { BASE_URLS } from '@/constants/api.constants';
 
 interface ChangePasswordPayload {
   oldPassword: string;
   newPassword: string;
 }
 
-export const getUserById = async (profileId: number) => {
+export const getUser = async () => {
   try {
-    const response = await apiClient.get(`/user/${profileId}`);
+    const response = await apiClient.get(`${BASE_URLS?.user}/profile/`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching user by id:', error);
     throw error;
   }
 };
 
-export const updateUser = async ({
-  payload,
-  id
-}: {
-  payload: UpdateUserPayload;
-  id: number;
-}) => {
+export const updateUser = async ({ payload }: { payload: any }) => {
   try {
-    const response = await apiClient.put(`/user/${id}`, payload);
+    const response = await apiClient.put(
+      `${BASE_URLS?.user}/profile/`,
+      payload.value
+    );
     return response.data;
   } catch (error) {
     console.error('Error updating user:', error);

@@ -10,6 +10,8 @@ import { Toaster } from 'react-hot-toast';
 import Topbar from '@/components/layout/Topbar';
 import { useSidebar } from '@/hooks/useSidebar';
 import AuthProvider from '@/providers/auth.provider';
+import { useQuery } from '@tanstack/react-query';
+import { getUser } from '@/services/user.service';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -31,11 +33,16 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     .replace(/-/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
+  const { data } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUser
+  });
+
   return (
     <>
       <div className="flex flex-col md:flex-row">
         <div className="fixed hidden md:block">
-          <Sidebar />
+          <Sidebar data={data} />
         </div>
         <div className="block px-10 pt-10 md:hidden">
           <MobileSidebar />
@@ -45,10 +52,12 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
         >
           <div className="flex justify-between align-middle">
             <BreadcrumbWithCustomSeparator />
-            <Topbar />
+            <Topbar data={data} />
           </div>
           <Heading>{formattedHeading}</Heading>
-          <Heading className="text-md text-muted-foreground">Hello</Heading>
+          <Heading className="text-md text-muted-foreground">
+            Hello, {data?.data?.firstName}&nbsp;{data?.data?.lastName}
+          </Heading>
 
           <AuthProvider>{children} </AuthProvider>
         </div>

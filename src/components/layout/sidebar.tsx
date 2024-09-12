@@ -12,12 +12,15 @@ import storage from '@/utils/storage';
 
 type SidebarProps = {
   className?: string;
+  data: any;
 };
 
-export default function Sidebar({ className }: SidebarProps) {
+export default function Sidebar({ className, data }: SidebarProps) {
   const router = useRouter();
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
+  console.log('data', data.data.role);
+  const menuItems = data?.data?.role === 'super_admin' ? navItems?.admin : [];
 
   const handleToggle = () => {
     setStatus(true);
@@ -49,7 +52,7 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
-            <DashboardNav items={navItems} />
+            <DashboardNav items={menuItems} />
           </div>
         </div>
       </div>

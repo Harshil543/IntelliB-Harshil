@@ -5,9 +5,9 @@ import { useForm } from '@tanstack/react-form';
 import TextInput from '@components/fields/TextInput';
 import { Button } from '@components/ui/button';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { updateUser } from '@/services/user.service';
+import { getUser, updateUser } from '@/services/user.service';
 import SelectInput from '@components/fields/SelectInput';
 
 interface ProfileFormProps {
@@ -25,6 +25,11 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const { data } = useQuery({
+    queryKey: ['user'],
+    queryFn: getUser
+  });
+
   const mutation = useMutation({
     mutationFn: async (data: {
       salutation: string;
@@ -33,12 +38,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
       email: string;
       mobileNumber: string;
     }) => {
-      if (initialValues?.id) {
-        return await updateUser({
-          payload: data,
-          id: initialValues.id
-        });
-      }
+      return updateUser({
+        payload: data
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
@@ -51,11 +53,11 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
 
   const form = useForm({
     defaultValues: initialValues || {
-      salutation: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      mobileNumber: ''
+      salutation: data?.data?.salutation,
+      firstName: data?.data?.firstName,
+      lastName: data?.data?.lastName,
+      email: data?.data?.email,
+      mobileNumber: data?.data?.mobileNumber
     },
     onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
@@ -84,10 +86,9 @@ export default function ProfileForm({ initialValues }: ProfileFormProps) {
                 label="Salutation"
                 field={field}
                 options={[
-                  { value: 'Mr', label: 'Mr' },
-                  { value: 'Mrs', label: 'Mrs' },
-                  { value: 'Ms', label: 'Ms' },
-                  { value: 'Dr', label: 'Dr' }
+                  { value: 'mr', label: 'Mr' },
+                  { value: 'mrs', label: 'Mrs' },
+                  { value: 'ms', label: 'Ms' }
                 ]}
               />
             )}
