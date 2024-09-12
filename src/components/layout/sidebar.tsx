@@ -8,6 +8,7 @@ import { navItems } from '@/constants/navdata.constants';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@/assets/images/logo.png';
+import storage from '@/utils/storage';
 
 type SidebarProps = {
   className?: string;
@@ -24,7 +25,8 @@ export default function Sidebar({ className }: SidebarProps) {
     setTimeout(() => setStatus(false), 500);
   };
   const handleLogout = () => {
-    router.push('/signin');
+    storage.clearToken();
+    router.push('/login');
   };
   return (
     <nav

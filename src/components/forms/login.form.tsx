@@ -22,8 +22,8 @@ export const LoginForm = () => {
   const mutation = useMutation({
     mutationFn: async (data: LoginFormValues) => {
       return await loginUser({
-        email: data.email,
-        password: data.password
+        email: data?.value?.email,
+        password: data?.value?.password
       });
     },
     onSuccess: () => {
@@ -84,8 +84,6 @@ export const LoginForm = () => {
             // Password validation: minimum length and complexity
             if (value.length < 8)
               return 'Password must be at least 8 characters long';
-            if (!/[A-Z]/.test(value))
-              return 'Password must contain at least one uppercase letter';
             if (!/[a-z]/.test(value))
               return 'Password must contain at least one lowercase letter';
             if (!/[0-9]/.test(value))

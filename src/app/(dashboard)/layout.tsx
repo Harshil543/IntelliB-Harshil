@@ -5,20 +5,14 @@ import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
 import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 import Sidebar from '@/components/layout/sidebar';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import Topbar from '@/components/layout/Topbar';
-import axios from 'axios';
 import { useSidebar } from '@/hooks/useSidebar';
+import AuthProvider from '@/providers/auth.provider';
 
 interface DashboardLayoutProps {
   children: ReactNode;
-}
-
-interface UserData {
-  firstName: string;
-  lastName: string;
-  // Add any other fields you expect from the API response
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
@@ -37,22 +31,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
     .replace(/-/g, ' ')
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
-  const [data, setData] = useState<UserData | undefined>(undefined);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await axios.get<UserData>(
-          `${process.env.NEXT_PUBLIC_API_URL}/user`
-        );
-        setData(response.data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    getUser();
-  }, []);
-
   return (
     <>
       <div className="flex flex-col md:flex-row">
@@ -70,11 +48,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <Topbar />
           </div>
           <Heading>{formattedHeading}</Heading>
-          <Heading className="text-md text-muted-foreground">
-            Hello {`${data?.firstName} ${data?.lastName}`}
-          </Heading>
+          <Heading className="text-md text-muted-foreground">Hello</Heading>
 
-          {children}
+          <AuthProvider>{children} </AuthProvider>
         </div>
       </div>
       <Toaster position="top-right" />

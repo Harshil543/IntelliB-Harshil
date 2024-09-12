@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import TanstackProvider from '@/providers/tanstack.provider';
+import AuthProvider from '@/providers/auth.provider';
 
 export const metadata: Metadata = {
   title: 'IntelliB',
@@ -35,7 +36,9 @@ export default function RootLayout({
         <link rel="manifest" href="/site.webmanifest"></link>
       </head>
       <body className="bg-secondary">
-        <TanstackProvider>{children}</TanstackProvider>
+        <AuthProvider>
+          <TanstackProvider>{children}</TanstackProvider>
+        </AuthProvider>
       </body>
     </html>
   );
