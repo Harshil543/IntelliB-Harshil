@@ -5,12 +5,16 @@ import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { createCompany, updateCompany } from '@/services/company.service';
-import toast from 'react-hot-toast';
 import PhoneInputField from '../fields/PhoneInput';
 import { Country, State, City } from 'country-state-city';
 import SelectInput from '@components/fields/SelectInput';
+
+interface OptionType {
+  value: string;
+  label: string;
+}
 
 interface CompanyFormValues {
   id?: number;
@@ -27,7 +31,6 @@ interface CompanyFormValues {
   websiteUrl: string;
   gstNumber: string;
   cinNumber: string;
-  status?: string;
 }
 
 interface CompanyFormProps {
@@ -36,9 +39,13 @@ interface CompanyFormProps {
 
 export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const pathname = usePathname();
   const isViewCompany = pathname.includes('view-company');
+  const [selectedCountry, setSelectedCountry] = useState<OptionType | null>(
+    null
+  );
+
+  const [selectedState, setSelectedState] = useState<OptionType | null>(null);
 
   const [countries, setCountries] = useState<
     { value: string; label: string }[]
@@ -56,19 +63,24 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
 
   const mutation = useMutation({
     mutationFn: async (data: CompanyFormValues) => {
+      const updatedData = {
+        ...data.value,
+        country: selectedCountry?.label || '',
+        state: selectedState?.label || ''
+      };
+
       if (initialValues?.id) {
-        return await updateCompany(initialValues.id, data);
+        return await updateCompany(initialValues.id, updatedData);
       } else {
-        return await createCompany(data);
+        return await createCompany(updatedData);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['company'] });
-      router.push('/company/');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+      form.reset();
+      router.push('/company');
     },
     onError: (error) => {
-      toast.error(`Error: ${(error as Error).message}`);
+      console.error('Error submitting form:', error);
     }
   });
 
@@ -87,7 +99,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       websiteUrl: '',
       gstNumber: '',
       cinNumber: '',
-      status: 'Active'
+      companyLogo: ''
     },
     onSubmit: async (value: any) => {
       await mutation.mutateAsync(value);
@@ -97,42 +109,94 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const handleCountryChange = (
     selectedOption: { value: string; label: string } | null
   ) => {
-    const countryCode = selectedOption ? selectedOption.value : '';
+    setSelectedCountry(selectedOption);
+    form.setFieldValue('country', selectedOption?.label || '');
 
-    const stateList = State.getStatesOfCountry(countryCode).map(
-      ({ isoCode, name }) => ({
-        value: isoCode,
-        label: name
-      })
-    );
-    setStates(stateList);
-    form.setFieldValue('state', '');
-    form.setFieldValue('city', '');
-    setCities([]);
+    if (selectedOption) {
+      const stateList = State.getStatesOfCountry(selectedOption.value).map(
+        ({ isoCode, name }) => ({
+          value: isoCode,
+          label: name
+        })
+      );
+      setStates(stateList);
+      setSelectedState(null);
+      form.setFieldValue('state', '');
+      setCities([]);
+    }
   };
 
   const handleStateChange = (
     selectedOption: { value: string; label: string } | null
   ) => {
-    const stateCode = selectedOption ? selectedOption.value : '';
+    setSelectedState(selectedOption);
+    form.setFieldValue('state', selectedOption?.label || '');
 
-    const cityList = City.getCitiesOfState(
-      form.getFieldValue('country'),
-      stateCode
-    ).map(({ name }) => ({
-      value: name,
-      label: name
-    }));
-    setCities(cityList);
-    form.setFieldValue('city', '');
+    if (selectedOption) {
+      const cityList = City.getCitiesOfState(
+        selectedCountry?.value || '',
+        selectedOption.value
+      ).map(({ name }) => ({
+        value: name,
+        label: name
+      }));
+      setCities(cityList);
+      form.setFieldValue('city', '');
+    }
   };
 
   const handleCityChange = (
     selectedOption: { value: string; label: string } | null
   ) => {
-    const cityName = selectedOption ? selectedOption.value : '';
-    form.setFieldValue('city', cityName);
+    form.setFieldValue('city', selectedOption?.label || '');
   };
+
+  useEffect(() => {
+    if (initialValues) {
+      // Set the selected country
+      const countryOption = countries.find(
+        (country) => country.label === initialValues.country
+      );
+      if (countryOption) {
+        setSelectedCountry(countryOption);
+
+        // Fetch states based on the selected country
+        const stateList = State.getStatesOfCountry(countryOption.value).map(
+          ({ isoCode, name }) => ({
+            value: isoCode,
+            label: name
+          })
+        );
+        setStates(stateList);
+
+        // Set the selected state
+        const stateOption = stateList.find(
+          (state) => state.label === initialValues.state
+        );
+        if (stateOption) {
+          setSelectedState(stateOption);
+
+          // Fetch cities based on the selected state
+          const cityList = City.getCitiesOfState(
+            countryOption.value,
+            stateOption.value
+          ).map(({ name }) => ({
+            value: name,
+            label: name
+          }));
+          setCities(cityList);
+        }
+      }
+    }
+  }, [initialValues, countries]);
+
+  useEffect(() => {
+    if (initialValues) {
+      form.setFieldValue('country', initialValues.country);
+      form.setFieldValue('state', initialValues.state);
+      form.setFieldValue('city', initialValues.city);
+    }
+  }, [initialValues]);
 
   return (
     <form

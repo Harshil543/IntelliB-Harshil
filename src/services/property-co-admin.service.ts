@@ -1,4 +1,5 @@
 import apiClient from '@/config/api.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
 interface PropertyCoAdminPayload {
   firstName: string;
@@ -12,24 +13,20 @@ interface PropertyCoAdminPayload {
 
 export const getPropertyCoAdmin = async () => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.property-co-admin}/property-co-admin`);
-    const response = await apiClient.get(`/property-co-admin/`);
-    return response.data;
+    const response = await apiClient.get(`${BASE_URLS.propertyCoAdmin}`);
+    return response?.data?.data?.items;
   } catch (error) {
-    console.error('Error fetching property co-admin:', error);
     throw error;
   }
 };
 
 export const getpropertyCoAdminById = async (propertCoAdminId: number) => {
   try {
-    // const response = await apiClient.get(`${BASE_URLS?.property-co-admin}/property-co-admin/${propertyCoAdminId}`);
     const response = await apiClient.get(
-      `/property-co-admin/${propertCoAdminId}`
+      `${BASE_URLS.propertyCoAdmin}/${propertCoAdminId}`
     );
-    return response.data;
+    return response?.data?.data;
   } catch (error) {
-    console.error('Error fetching by id property co-admin:', error);
     throw error;
   }
 };
@@ -40,11 +37,12 @@ export const createPropertyCoAdmin = async ({
   payload: PropertyCoAdminPayload;
 }) => {
   try {
-    // const response = await apiClient.post(`${BASE_URLS?.property-co-admin}/property-co-admin`, payload);
-    const response = await apiClient.post(`/property-co-admin/`, payload);
+    const response = await apiClient.post(
+      `${BASE_URLS.propertyCoAdmin}`,
+      payload
+    );
     return response.data;
   } catch (error) {
-    console.error('Error creating property co-admin:', error);
     throw error;
   }
 };
@@ -57,11 +55,12 @@ export const updatePropertyCoAdmin = async ({
   id: number;
 }) => {
   try {
-    // const response = await apiClient.put(`${BASE_URLS?.property-co-admin}/property-co-admin/${id}`, payload);
-    const response = await apiClient.put(`/property-co-admin/${id}`, payload);
+    const response = await apiClient.put(
+      `${BASE_URLS.propertyCoAdmin}/${id}`,
+      payload
+    );
     return response.data;
   } catch (error) {
-    console.error('Error creating property co-admin:', error);
     throw error;
   }
 };

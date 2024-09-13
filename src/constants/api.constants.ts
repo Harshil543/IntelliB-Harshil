@@ -1,6 +1,7 @@
 export const BASE_URLS = {
-  user: 'api/user',
-  company: 'api/company',
+  auth: 'auth/v1',
+  user: 'user/v1',
+  company: 'admin/company/v1',
   propertyUser: 'api/property-user',
-  propertyCoAdmin: 'api/property-co-admin'
+  propertyCoAdmin: 'property-co-admin/v1'
 };

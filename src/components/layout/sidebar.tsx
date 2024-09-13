@@ -8,24 +8,40 @@ import { navItems } from '@/constants/navdata.constants';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import logo from '@/assets/images/logo.png';
+import storage from '@/utils/storage';
 
 type SidebarProps = {
   className?: string;
+  data: any;
 };
 
-export default function Sidebar({ className }: SidebarProps) {
+export default function Sidebar({ className, data }: SidebarProps) {
   const router = useRouter();
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
+
+  const getMenuItems = () => {
+    switch (data?.data?.role) {
+      case 'super_admin':
+        return navItems?.super_admin;
+      case 'system_admin':
+        return navItems?.system_admin;
+      default:
+        return [];
+    }
+  };
 
   const handleToggle = () => {
     setStatus(true);
     toggle();
     setTimeout(() => setStatus(false), 500);
   };
+
   const handleLogout = () => {
-    router.push('/signin');
+    storage.clearToken();
+    router.push('/login');
   };
+
   return (
     <nav
       className={cn(
@@ -47,7 +63,7 @@ export default function Sidebar({ className }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
-            <DashboardNav items={navItems} />
+            <DashboardNav items={getMenuItems()} />
           </div>
         </div>
       </div>

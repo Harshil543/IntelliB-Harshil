@@ -60,7 +60,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'companyName',
     header: 'Company Name',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('companyName') ?? 'N/A'}</div>
+      <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
     )
   },
   {
@@ -77,12 +77,12 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       const addressLine1 = row.original.addressLine1;
       const city = row.original.city;
       const state = row.original.state;
-      const country = row.original.country;
+      // const country = row.original.country;
       const pincode = row.original.pincode;
 
       return (
-        <div className="lowercase">
-          {`${addressLine1}, ${city} ${state} ${country} ${pincode}`}
+        <div className="capitalize">
+          {`${addressLine1}, ${city} ${state} ${pincode}`}
         </div>
       );
     }
@@ -94,7 +94,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       const countryCode = row.original.countryCode;
       const mobileNumber = row.original.mobileNumber;
       return (
-        <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
+        <div className="capitalize">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },
@@ -103,7 +103,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
