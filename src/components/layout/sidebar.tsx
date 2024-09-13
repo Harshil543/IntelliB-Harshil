@@ -19,7 +19,7 @@ export default function Sidebar({ className, data }: SidebarProps) {
   const router = useRouter();
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
-  console.log('data', data.data.role);
+
   const menuItems = data?.data?.role === 'super_admin' ? navItems?.admin : [];
 
   const handleToggle = () => {

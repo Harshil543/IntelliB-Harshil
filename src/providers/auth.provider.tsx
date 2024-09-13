@@ -1,4 +1,5 @@
 'use client';
+import Loader from '@/components/CommonComponents/Loader';
 import storage from '@/utils/storage';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -30,14 +31,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!isLoading && typeof window !== 'undefined') {
       if (!token) {
         router.push('/login');
-      } else {
-        router.push('/');
       }
     }
   }, [isLoading, token, router]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return <>{children}</>;
