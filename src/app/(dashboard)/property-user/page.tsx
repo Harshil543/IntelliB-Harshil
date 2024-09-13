@@ -1,5 +1,4 @@
 'use client';
-
 import { DataTable } from '@/components/fields/Table';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -22,7 +21,7 @@ export default function PropertyCoAdminPage() {
       <DataTable
         columns={propertyUserColumns}
         data={[]}
-        path="/property-co-admin/register-property-co-admin/"
+        path="/property-user/register-property-user/"
       />
     );
   }
@@ -32,7 +31,7 @@ export default function PropertyCoAdminPage() {
       <DataTable
         columns={propertyUserColumns}
         data={data}
-        path="/property-co-admin/register-property-co-admin/"
+        path="/property-user/register-property-user/"
       />
     </div>
   );

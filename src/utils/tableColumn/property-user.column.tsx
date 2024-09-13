@@ -5,6 +5,7 @@ import PropertyUserActionsCell from '@/utils/cellsAction/property.user.action.ce
 
 interface PropertyUserColumns {
   id: number;
+  salutation: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -49,9 +50,12 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'firstName',
     header: 'Name',
     cell: ({ row }) => {
-      const firstName = row.getValue('firstName');
-      const lastName = row.getValue('lastName');
-      return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
+      const salutation = row?.original?.salutation;
+      const firstName = row?.original?.firstName;
+      const lastName = row?.original?.lastName;
+      return (
+        <div className="capitalize">{`${salutation} ${firstName} ${lastName}`}</div>
+      );
     }
   },
   {
@@ -65,8 +69,8 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'mobileNumber',
     header: 'Contact',
     cell: ({ row }) => {
-      const countryCode = row.getValue('countryCode');
-      const mobileNumber = row.getValue('mobileNumber');
+      const countryCode = row.original.countryCode;
+      const mobileNumber = row.original.mobileNumber;
       return (
         <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
       );
@@ -84,7 +88,7 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
