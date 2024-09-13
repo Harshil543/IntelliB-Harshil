@@ -1,7 +1,7 @@
 import { NavItem } from '@/types';
 
 export const navItems: { [key: string]: NavItem[] } = {
-  admin: [
+  super_admin: [
     {
       title: 'Dashboard',
       href: '/',
@@ -16,41 +16,7 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'user',
       children: undefined
     }
-    // {
-    //   title: 'Property Co-Admin',
-    //   href: '/property-co-admin/',
-    //   icon: 'profile',
-    //   label: 'property-co-admin',
-    //   children: undefined
-    // },
-    // {
-    //   title: 'Property User',
-    //   href: '/property-user/',
-    //   icon: 'profile',
-    //   label: 'property-user',
-    //   children: undefined
-    // },
-    // {
-    //   title: 'Tenant Admin',
-    //   href: '/tenant-admin/',
-    //   icon: 'profile',
-    //   label: 'tenant-admin',
-    //   children: undefined
-    // },
-    // {
-    //   title: 'Tenant Co-Admin',
-    //   href: '/tenant-co-admin/',
-    //   icon: 'profile',
-    //   label: 'tenant-co-admin',
-    //   children: undefined
-    // },
-    // {
-    //   title: 'Tenant User',
-    //   href: '/tenant-user/',
-    //   icon: 'profile',
-    //   label: 'tenant-user',
-    //   children: undefined
-    // }
+
     // {
     //   title: 'Invoice',
     //   href: '/invoice/',
@@ -136,5 +102,49 @@ export const navItems: { [key: string]: NavItem[] } = {
     //     }
     //   ]
     // }
+  ],
+  system_admin: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'dashboard',
+      label: 'Dashboard',
+      children: undefined
+    },
+    {
+      title: 'Property Co-Admin',
+      href: '/property-co-admin/',
+      icon: 'profile',
+      label: 'property-co-admin',
+      children: undefined
+    },
+    {
+      title: 'Property User',
+      href: '/property-user/',
+      icon: 'profile',
+      label: 'property-user',
+      children: undefined
+    },
+    {
+      title: 'Tenant Admin',
+      href: '/tenant-admin/',
+      icon: 'profile',
+      label: 'tenant-admin',
+      children: undefined
+    },
+    {
+      title: 'Tenant Co-Admin',
+      href: '/tenant-co-admin/',
+      icon: 'profile',
+      label: 'tenant-co-admin',
+      children: undefined
+    },
+    {
+      title: 'Tenant User',
+      href: '/tenant-user/',
+      icon: 'profile',
+      label: 'tenant-user',
+      children: undefined
+    }
   ]
 };

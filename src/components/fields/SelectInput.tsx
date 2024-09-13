@@ -59,14 +59,15 @@ const SelectInput: React.FC<SelectInputProps> = ({
   label,
   field,
   options,
-  value,
+
   placeholder = `Select ${label}`,
   disabled,
   onChange
 }) => {
   const selectedOption = options.find(
-    (option) => option.value === field.state.value
+    (option) => option.label === field.state.value
   );
+  console.log('options', options);
 
   const handleChange = (option: Option | null) => {
     field.handleChange(option ? option.value : '');
@@ -85,7 +86,6 @@ const SelectInput: React.FC<SelectInputProps> = ({
         onChange={handleChange}
         onBlur={() => field.handleBlur()}
         isSearchable
-        inputValue={value}
         isDisabled={disabled}
         getOptionLabel={(option: Option) => option.label}
         getOptionValue={(option: Option) => option.value}

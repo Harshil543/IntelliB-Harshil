@@ -20,17 +20,28 @@ export default function Sidebar({ className, data }: SidebarProps) {
   const { isMinimized, toggle } = useSidebar();
   const [status, setStatus] = useState(false);
 
-  const menuItems = data?.data?.role === 'super_admin' ? navItems?.admin : [];
+  const getMenuItems = () => {
+    switch (data?.data?.role) {
+      case 'super_admin':
+        return navItems?.super_admin;
+      case 'system_admin':
+        return navItems?.system_admin;
+      default:
+        return [];
+    }
+  };
 
   const handleToggle = () => {
     setStatus(true);
     toggle();
     setTimeout(() => setStatus(false), 500);
   };
+
   const handleLogout = () => {
     storage.clearToken();
     router.push('/login');
   };
+
   return (
     <nav
       className={cn(
@@ -52,7 +63,7 @@ export default function Sidebar({ className, data }: SidebarProps) {
         <div className="py-2 pl-3">
           <div className="mt-3 space-y-1">
             <Image src={logo} height={90} alt="Logo" />
-            <DashboardNav items={menuItems} />
+            <DashboardNav items={getMenuItems()} />
           </div>
         </div>
       </div>
