@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
-import { MobileSidebar } from '@/components/layout/mobile-sidebar';
 import Sidebar from '@/components/layout/sidebar';
 import React, { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
@@ -12,6 +11,7 @@ import { useSidebar } from '@/hooks/useSidebar';
 import AuthProvider from '@/providers/auth.provider';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '@/services/user.service';
+import MobileSidebar from '@/components/layout/mobile-sidebar';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -45,7 +45,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <Sidebar data={data} />
         </div>
         <div className="block px-10 pt-10 md:hidden">
-          <MobileSidebar />
+          <MobileSidebar data={data} />
         </div>
         <div
           className={`h-full w-full p-10 ${isMinimized ? 'md:ml-16' : 'md:ml-72'} `}

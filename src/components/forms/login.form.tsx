@@ -20,7 +20,7 @@ export const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const mutation = useMutation({
-    mutationFn: async (data: LoginFormValues) => {
+    mutationFn: async (data: any) => {
       return await loginUser({
         email: data?.value?.email,
         password: data?.value?.password

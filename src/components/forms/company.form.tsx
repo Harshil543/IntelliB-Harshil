@@ -62,7 +62,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   }, []);
 
   const mutation = useMutation({
-    mutationFn: async (data: CompanyFormValues) => {
+    mutationFn: async (data: any) => {
       const updatedData = {
         ...data.value,
         country: selectedCountry?.label || '',
@@ -196,7 +196,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
       form.setFieldValue('state', initialValues.state);
       form.setFieldValue('city', initialValues.city);
     }
-  }, [initialValues]);
+  }, [initialValues, form]);
 
   return (
     <form

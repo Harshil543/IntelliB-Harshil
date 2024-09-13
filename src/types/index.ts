@@ -1,5 +1,3 @@
-import { Icons } from '@/components/icons';
-
 export interface IAuthContext {
   login: (data: any) => Promise<void>;
   isAuth: boolean;

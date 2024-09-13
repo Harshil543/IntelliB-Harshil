@@ -5,6 +5,7 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { NavItem } from '@/types';
 import { useSidebar } from '@/hooks/useSidebar';
+import { Icon } from '@iconify/react';
 import {
   Tooltip,
   TooltipContent,
@@ -43,7 +44,7 @@ export function DashboardNav({
     <nav className="grid items-start gap-2 pt-10">
       <TooltipProvider>
         {items.map((item, index) => {
-          const Icon = item.icon ? Icons[item.icon] : Icons.arrowRight; // Use default icon if none provided
+          // const itemicon = item.icon ? item.icon : Icons.arrowRight;
           const isSubmenuOpen = openSubmenus[item.label as string];
 
           return (
@@ -66,7 +67,8 @@ export function DashboardNav({
                       }
                     }}
                   >
-                    <Icon className={`ml-3 size-5`} />
+                    <Icon icon={item?.icon} className={`ml-3 size-5`} />
+                    {/* <Icon className={`ml-3 size-5`} icon={itemicon} /> */}
                     {isMobileNav || (!isMinimized && !isMobileNav) ? (
                       <span className="mr-5 truncate">{item.title}</span>
                     ) : (
