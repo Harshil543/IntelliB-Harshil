@@ -12,6 +12,7 @@ interface PropertyCoAdminColumns {
   mobileNumber: string;
   role: string;
   designation: string;
+  salutation: string;
   status: string;
 }
 
@@ -45,7 +46,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
   },
   {
     accessorKey: 'id',
-    header: 'id',
+    header: 'Id',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
@@ -54,9 +55,12 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'firstName',
     header: 'Name',
     cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
-      return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
+      const salutation = row?.original?.salutation;
+      const firstName = row?.original?.firstName;
+      const lastName = row?.original?.lastName;
+      return (
+        <div className="capitalize">{`${salutation} ${firstName} ${lastName}`}</div>
+      );
     }
   },
 
@@ -92,7 +96,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>

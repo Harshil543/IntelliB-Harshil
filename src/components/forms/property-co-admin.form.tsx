@@ -11,10 +11,12 @@ import {
   createPropertyCoAdmin,
   updatePropertyCoAdmin
 } from '@/services/property-co-admin.service';
+import SelectInput from '../fields/SelectInput';
 
 interface PropertyCoAdminFormProps {
   initialValues?: {
     id?: number;
+    salutation: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -37,11 +39,11 @@ export default function PropertyCoAdminForm({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
         return await updatePropertyCoAdmin({
-          payload: data,
+          payload: data?.value,
           id: initialValues.id
         });
       } else {
-        return await createPropertyCoAdmin({ payload: data });
+        return await createPropertyCoAdmin({ payload: data?.value });
       }
     },
     onSuccess: () => {
@@ -56,14 +58,13 @@ export default function PropertyCoAdminForm({
 
   const form = useForm({
     defaultValues: initialValues || {
-      id: '',
+      salutation: '',
       firstName: '',
       lastName: '',
       email: '',
       countryCode: '',
       mobileNumber: '',
-      designation: '',
-      status: 'Active'
+      designation: ''
     },
     onSubmit: async (values) => {
       await mutation.mutateAsync(values);
@@ -79,6 +80,26 @@ export default function PropertyCoAdminForm({
         }}
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
       >
+        <form.Field
+          name="salutation"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Salutation is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              disabled={isViewPropertyCoAdmin}
+              label="Salutation"
+              field={field}
+              options={[
+                { value: 'mr', label: 'mr' },
+                { value: 'mrs', label: 'mrs' },
+                { value: 'ms', label: 'ms' }
+              ]}
+            />
+          )}
+        </form.Field>
         <form.Field
           name="firstName"
           validators={{

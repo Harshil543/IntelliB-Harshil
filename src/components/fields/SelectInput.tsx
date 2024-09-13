@@ -3,18 +3,17 @@ import Select, { StylesConfig } from 'react-select';
 import { Label } from '@/components/ui/label';
 
 interface Option {
-  value: string; // Ensure value is a string
+  value: string;
   label: string;
 }
 
 interface SelectInputProps {
   label: string;
-  value: string;
   field: any;
   options: Option[];
   placeholder?: string;
   disabled: boolean;
-  onChange?: (selectedOption: Option | null) => void; // Add onChange prop
+  onChange?: (selectedOption: Option | null) => void;
 }
 
 const customStyles: StylesConfig<Option, false> = {
@@ -33,7 +32,8 @@ const customStyles: StylesConfig<Option, false> = {
   }),
   singleValue: (provided) => ({
     ...provided,
-    color: '#000'
+    color: '#000',
+    textTransform: 'capitalize'
   }),
   menu: (provided) => ({
     ...provided,
@@ -46,12 +46,13 @@ const customStyles: StylesConfig<Option, false> = {
   }),
   menuList: (provided) => ({
     ...provided,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
+    textTransform: 'capitalize'
   }),
-  // Add the placeholder style
+
   placeholder: (provided) => ({
     ...provided,
-    color: 'var(--muted-foreground)' // Use CSS variable for muted color
+    color: 'var(--muted-foreground)'
   })
 };
 
@@ -59,7 +60,6 @@ const SelectInput: React.FC<SelectInputProps> = ({
   label,
   field,
   options,
-
   placeholder = `Select ${label}`,
   disabled,
   onChange
@@ -67,7 +67,6 @@ const SelectInput: React.FC<SelectInputProps> = ({
   const selectedOption = options.find(
     (option) => option.label === field.state.value
   );
-  console.log('options', options);
 
   const handleChange = (option: Option | null) => {
     field.handleChange(option ? option.value : '');
