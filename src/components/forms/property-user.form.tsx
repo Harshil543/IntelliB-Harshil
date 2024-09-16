@@ -11,10 +11,12 @@ import {
   updatePropertyUser
 } from '@/services/property-user.service';
 import PhoneInputField from '../fields/PhoneInput';
+import SelectInput from '../fields/SelectInput';
 
 // Define a type for form values
 interface PropertyUserValues {
   id?: number;
+  salutation: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -35,11 +37,14 @@ export default function PropertyUserForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: PropertyUserValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        return await updatePropertyUser(initialValues.id, data);
+        return await updatePropertyUser({
+          payload: data?.value,
+          id: initialValues.id
+        });
       } else {
-        return await createPropertyUser(data);
+        return await createPropertyUser({ payload: data?.value });
       }
     },
     onSuccess: () => {
@@ -56,14 +61,14 @@ export default function PropertyUserForm({
 
   const form = useForm({
     defaultValues: initialValues || {
-      id: '',
+      salutation: '',
       firstName: '',
       lastName: '',
       email: '',
       countryCode: '',
       mobileNumber: '',
       designation: '',
-      status: 'Active'
+      profilePicture: ''
     },
     onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
@@ -79,6 +84,26 @@ export default function PropertyUserForm({
         }}
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
       >
+        <form.Field
+          name="salutation"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Salutation is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              disabled={isViewPropertyUser}
+              label="Salutation"
+              field={field}
+              options={[
+                { value: 'mr', label: 'mr' },
+                { value: 'mrs', label: 'mrs' },
+                { value: 'ms', label: 'ms' }
+              ]}
+            />
+          )}
+        </form.Field>
         <form.Field
           name="firstName"
           validators={{

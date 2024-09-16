@@ -3,11 +3,11 @@
 import * as React from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getPropertyUserById } from '@/services/property-user.service';
 import PropertyUserForm from '@/components/forms/property-user.form';
+import { getPropertyUserById } from '@/services/property-user.service';
 import Loader from '@/components/CommonComponents/Loader';
 
-export default function PropertyUserVie() {
+export default function PropertyUser() {
   const { id } = useParams();
   const { data, status } = useQuery({
     queryKey: ['property-user', id],
