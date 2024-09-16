@@ -22,7 +22,7 @@ export default function TenantPage() {
       <DataTable
         columns={tenantColumn}
         data={[]}
-        path="/tenants/register-tenant"
+        path="/tenant/register-tenant"
       />
     );
   }
@@ -32,7 +32,7 @@ export default function TenantPage() {
       <DataTable
         columns={tenantColumn}
         data={data}
-        path="/tenants/register-tenant"
+        path="/tenant/register-tenant"
       />
     </div>
   );
