@@ -48,6 +48,7 @@ interface TenantFormValues {
   gstNumber: string;
   cinNumber: string;
   address: string;
+  salutation: string;
   firstName: string;
   lastName: string;
   designation: string;
@@ -96,6 +97,7 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
       gstNumber: '',
       cinNumber: '',
       address: '',
+      salutation: '',
       firstName: '',
       lastName: '',
       designation: '',
@@ -196,6 +198,26 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
         </form.Field>
         <Heading className="mt-5">Tenant Personal Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <form.Field
+            name="salutation"
+            validators={{
+              onChange: ({ value }) =>
+                !value ? 'Salutation is required' : undefined
+            }}
+          >
+            {(field) => (
+              <SelectInput
+                disabled={isViewTenant}
+                label="Salutation"
+                field={field}
+                options={[
+                  { value: 'mr', label: 'mr' },
+                  { value: 'mrs', label: 'mrs' },
+                  { value: 'ms', label: 'ms' }
+                ]}
+              />
+            )}
+          </form.Field>
           <form.Field
             name="firstName"
             validators={{
