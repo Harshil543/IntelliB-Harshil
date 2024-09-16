@@ -12,18 +12,23 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
+  console.log('token', token);
 
   useEffect(() => {
     const getToken = () => {
       const fetchedToken = storage.getToken();
-      if (!fetchedToken) {
-        router.push('/login');
-      }
+
       setToken(fetchedToken || null);
       setIsLoading(false);
     };
-    if (typeof window !== 'undefined') {
-      getToken();
+    getToken();
+  }, [token, router]);
+
+  useEffect(() => {
+    if (token === null) {
+      router.push('/login');
+    } else {
+      router.push('/');
     }
   }, [token, router]);
 
