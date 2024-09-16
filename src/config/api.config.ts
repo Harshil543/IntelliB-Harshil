@@ -3,7 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BILLING_SERVICE_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_USER_SERVICE_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -16,7 +16,6 @@ const handleUnauthorized = () => {
 apiClient.interceptors.request.use(
   (config) => {
     const token = storage.getToken();
-
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
