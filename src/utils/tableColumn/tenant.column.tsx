@@ -9,6 +9,7 @@ interface tenantData {
   gstNumber: string;
   cinNumber: string;
   address: string;
+  salutation: string;
   firstName: string;
   lastName: string;
   designation: string;
@@ -60,27 +61,31 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     )
   },
   {
-    accessorKey: 'companyName',
+    accessorKey: 'firstName',
     header: 'Tenant Name',
+    cell: ({ row }) => {
+      const salutation = row.original.salutation;
+      const firstName = row.original.firstName;
+      const lastName = row.original.lastName;
+
+      return (
+        <div className="capitalize">{`${salutation} ${firstName} ${lastName} `}</div>
+      );
+    }
+  },
+  {
+    accessorKey: 'companyName',
+    header: 'Admin Name',
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'firstName',
-    header: 'Admin Name',
-    cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
 
-      return <div className="capitalize">{`${firstName} ${lastName} `}</div>;
-    }
-  },
   {
     accessorKey: 'leasedUnit',
     header: 'Leasable Unit',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('leasedUnit') ?? 'N/A'}</div>
+      <div className="capitalize">{row.getValue('leasedUnit') ?? 'N/A'}</div>
     )
   },
 
@@ -89,7 +94,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     header: 'Leasable Start Date',
     cell: ({ row }) => {
       return (
-        <div className="lowercase">
+        <div className="capitalize">
           {row.getValue('leasedStartDate') ?? 'N/A'}
         </div>
       );
@@ -100,7 +105,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>

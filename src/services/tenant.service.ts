@@ -1,10 +1,12 @@
 import apiClient from '@/config/api.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
 interface TenantDataPayload {
   companyName: string;
   gstNumber: string;
   cinNumber: string;
   address: string;
+  salutation: string;
   firstName: string;
   lastName: string;
   designation: string;
@@ -26,8 +28,8 @@ interface TenantBillingDataPayload {
 
 export const getTenant = async () => {
   try {
-    const response = await apiClient.get('/tenant/');
-    return response.data;
+    const response = await apiClient.get(`${BASE_URLS?.tenant}`);
+    return response?.data?.data?.items;
   } catch (error) {
     console.error('Error fetching tenant:', error);
     throw error;
