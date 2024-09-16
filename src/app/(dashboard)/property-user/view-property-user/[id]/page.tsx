@@ -5,13 +5,18 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getPropertyUserById } from '@/services/property-user.service';
 import PropertyUserForm from '@/components/forms/property-user.form';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function PropertyUserVie() {
   const { id } = useParams();
-  const { data } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ['property-user', id],
     queryFn: () => getPropertyUserById(Number(id))
   });
+
+  if (status === 'pending') {
+    return <Loader />;
+  }
 
   return (
     <div>

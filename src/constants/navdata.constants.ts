@@ -118,33 +118,33 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'property-co-admin',
       children: undefined
     },
+    // {
+    //   title: 'Property User',
+    //   href: '/property-user/',
+    //   icon: 'profile',
+    //   label: 'property-user',
+    //   children: undefined
+    // },
     {
-      title: 'Property User',
-      href: '/property-user/',
+      title: 'Tenant',
+      href: '/tenant/',
       icon: 'profile',
-      label: 'property-user',
-      children: undefined
-    },
-    {
-      title: 'Tenant Admin',
-      href: '/tenant-admin/',
-      icon: 'profile',
-      label: 'tenant-admin',
-      children: undefined
-    },
-    {
-      title: 'Tenant Co-Admin',
-      href: '/tenant-co-admin/',
-      icon: 'profile',
-      label: 'tenant-co-admin',
-      children: undefined
-    },
-    {
-      title: 'Tenant User',
-      href: '/tenant-user/',
-      icon: 'profile',
-      label: 'tenant-user',
+      label: 'tenant',
       children: undefined
     }
+    // {
+    //   title: 'Tenant Co-Admin',
+    //   href: '/tenant-co-admin/',
+    //   icon: 'profile',
+    //   label: 'tenant-co-admin',
+    //   children: undefined
+    // },
+    // {
+    //   title: 'Tenant User',
+    //   href: '/tenant-user/',
+    //   icon: 'profile',
+    //   label: 'tenant-user',
+    //   children: undefined
+    // }
   ]
 };

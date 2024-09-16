@@ -37,6 +37,8 @@ export const getPropertyUserById = async (
 ): Promise<PropertyUserResponse> => {
   try {
     const response = await apiClient.get(`/property-user/${propertyUserId}`);
+    console.log('response', response?.data);
+
     return response.data;
   } catch (error) {
     console.error('Error fetching by id property-user:', error);

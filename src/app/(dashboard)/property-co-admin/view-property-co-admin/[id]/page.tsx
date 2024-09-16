@@ -5,13 +5,18 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getpropertyCoAdminById } from '@/services/property-co-admin.service';
 import PropertyCoAdminForm from '@/components/forms/property-co-admin.form';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function PropertyCoAdminView() {
   const { id } = useParams();
-  const { data } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ['property-co-admin', id],
     queryFn: () => getpropertyCoAdminById(Number(id))
   });
+
+  if (status === 'pending') {
+    return <Loader />;
+  }
 
   return (
     <div>
