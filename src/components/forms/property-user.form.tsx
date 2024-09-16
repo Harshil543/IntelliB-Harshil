@@ -23,7 +23,6 @@ interface PropertyUserValues {
   countryCode: string;
   mobileNumber: string;
   designation: string;
-  status: string;
 }
 
 interface PropertyUserFormProps {

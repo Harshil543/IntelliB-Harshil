@@ -8,12 +8,11 @@ import Loader from '@/components/CommonComponents/Loader';
 
 export default function CompanyUpdate() {
   const { id } = useParams();
-  const { data, isLoading } = useQuery({
+  const { data, status } = useQuery({
     queryKey: ['company', id],
     queryFn: () => getCompanyById(Number(id))
   });
-
-  if (isLoading) {
+  if (status === 'pending') {
     return <Loader />;
   }
 

@@ -35,10 +35,12 @@ export const getPropertyUserById = async (
   propertyUserId: number
 ): Promise<PropertyUserResponse> => {
   try {
+
     const response = await apiClient.get(
       `${BASE_URLS.propertyUser}/${propertyUserId}`
     );
     return response.data?.data;
+
   } catch (error) {
     throw error;
   }
