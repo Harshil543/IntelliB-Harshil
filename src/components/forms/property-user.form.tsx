@@ -35,7 +35,7 @@ export default function PropertyUserForm({
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (data: PropertyUserValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
         return await updatePropertyUser(initialValues.id, data);
       } else {
