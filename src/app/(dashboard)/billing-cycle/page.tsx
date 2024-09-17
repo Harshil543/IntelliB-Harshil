@@ -1,9 +1,9 @@
 'use client';
-import { DataTable } from '@/components/fields/Table';
+// import { DataTable } from '@/components/fields/Table';
 import BillingCyleForm from '@/components/forms/billing-cycle.form';
 import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import billingCycleColumn from '@/utils/tableColumn/billing-cycle.column';
+// import billingCycleColumn from '@/utils/tableColumn/billing-cycle.column';
 import React from 'react';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
@@ -51,7 +51,7 @@ const BillingCycle = () => {
         </div>
       </div>
       <BillingCyleForm />
-      <DataTable columns={billingCycleColumn} data={[]} path="" />
+      {/* <DataTable columns={billingCycleColumn} data={[]} path="" /> */}
     </>
   );
 };

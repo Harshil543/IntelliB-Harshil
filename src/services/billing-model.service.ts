@@ -10,7 +10,7 @@ export const createFixedBillingModel = async (
 ) => {
   try {
     const response = await apiClient.post('/fixed-billing-model', payload);
-    return response.data;
+    return response?.data;
   } catch (error) {
     throw error;
   }

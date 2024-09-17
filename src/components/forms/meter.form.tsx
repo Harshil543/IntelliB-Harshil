@@ -5,13 +5,14 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import toast from 'react-hot-toast';
-import CardWrapper from '../layout/CardWrapper';
-import Heading from '../fields/Heading';
-import TextInput from '../fields/TextInput';
-import DatePickerInput from '../fields/DatePickerInput';
-import SelectInput from '../fields/SelectInput';
-import { Button } from '../ui/button';
-import { getLeasableUnit } from '@/services/leasable-unit.service';
+import CardWrapper from '@components/layout/CardWrapper';
+import Heading from '@components/fields/Heading';
+import TextInput from '@components/fields/TextInput';
+import DatePickerInput from '@components/fields/DatePickerInput';
+import SelectInput from '@components/fields/SelectInput';
+import { Button } from '@components/ui/button';
+import { getAllLeasableUnit } from '@/services/leasable-unit.service';
+import Loader from '@components/CommonComponents/Loader';
 
 interface MeterFormValues {
   id?: number;
@@ -35,7 +36,7 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
 
   const { data: leasableUnits, isLoading } = useQuery({
     queryKey: ['leasable-unit'],
-    queryFn: getLeasableUnit
+    queryFn: getAllLeasableUnit
   });
 
   const mutation = useMutation({
@@ -69,6 +70,9 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
     }
   });
 
+  if (isLoading) {
+    return <Loader />;
+  }
   return (
     <form
       onSubmit={(e) => {

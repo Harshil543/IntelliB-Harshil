@@ -26,10 +26,12 @@ interface TenantBillingDataPayload {
   limit: string;
 }
 
-export const getTenant = async () => {
+export const getTenant = async (page: number, searchQuery: string) => {
   try {
-    const response = await apiClient.get(`${BASE_URLS?.tenant}`);
-    return response?.data?.data?.items;
+    const response = await apiClient.get(
+      `${BASE_URLS?.tenant}?page=${page}&limit=10&search=${searchQuery}`
+    );
+    return response?.data?.data;
   } catch (error) {
     console.error('Error fetching tenant:', error);
     throw error;

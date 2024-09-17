@@ -10,6 +10,7 @@ import Loader from '@/components/CommonComponents/Loader';
 export default function ComapnyPage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ['company', page, searchQuery],
     queryFn: () => getCompany(page, searchQuery),

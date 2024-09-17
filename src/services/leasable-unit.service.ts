@@ -8,12 +8,21 @@ interface LeasableUnitPayload {
   status: string;
 }
 
-export const getLeasableUnit = async () => {
+export const getLeasableUnit = async (page: number, searchQuery: string) => {
+  try {
+    console.log('page', page, 'searchQuery', searchQuery);
+    const response = await apiClient.get(`/leasable-unit/`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllLeasableUnit = async () => {
   try {
     const response = await apiClient.get(`/leasable-unit/`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching leasable-unit:', error);
     throw error;
   }
 };
@@ -23,7 +32,6 @@ export const getLeasableUnitById = async (leasableUnitId: number) => {
     const response = await apiClient.get(`/leasable-unit/${leasableUnitId}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching by id leasable-unit:', error);
     throw error;
   }
 };
@@ -33,7 +41,6 @@ export const createLeasableUnit = async (payload: LeasableUnitPayload) => {
     const response = await apiClient.post(`/leasable-unit/`, payload);
     return response.data;
   } catch (error) {
-    console.error('Error creating leasable-unit:', error);
     throw error;
   }
 };
@@ -46,7 +53,6 @@ export const updateLeasableUnit = async (
     const response = await apiClient.put(`/leasable-unit/${id}`, payload);
     return response.data;
   } catch (error) {
-    console.error('Error updating leasable-unit:', error);
     throw error;
   }
 };

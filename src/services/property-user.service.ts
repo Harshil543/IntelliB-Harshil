@@ -22,10 +22,12 @@ interface PropertyUserResponse {
   designation: string;
 }
 
-export const getPropertyUser = async () => {
+export const getPropertyUser = async (page: number, searchQuery: string) => {
   try {
-    const response = await apiClient.get(`${BASE_URLS?.propertyUser}`);
-    return response?.data?.data?.items;
+    const response = await apiClient.get(
+      `${BASE_URLS?.propertyUser}?page=${page}&limit=10&search=${searchQuery}`
+    );
+    return response?.data?.data;
   } catch (error) {
     throw error;
   }

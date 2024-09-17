@@ -8,8 +8,9 @@ interface MeterPayload {
   leasableUnitId: number | string;
 }
 
-export const getMeter = async () => {
+export const getMeter = async (page: number, searchQuery: string) => {
   try {
+    console.log('page', page, 'searchqueyry', searchQuery);
     const response = await apiClient.get('/meter/');
     return response.data;
   } catch (error) {
