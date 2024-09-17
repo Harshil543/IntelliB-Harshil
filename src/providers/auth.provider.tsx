@@ -1,5 +1,5 @@
 'use client';
-import Loader from '@/components/CommonComponents/Loader';
+
 import storage from '@/utils/storage';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
-  console.log('token', token);
 
   useEffect(() => {
     const getToken = () => {
@@ -39,10 +38,6 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     }
   }, [isLoading, token, router]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return <>{children}</>;
 };

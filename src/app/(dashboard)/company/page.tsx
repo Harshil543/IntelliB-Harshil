@@ -1,39 +1,45 @@
 'use client';
 
 import { DataTable } from '@/components/fields/Table';
-import React from 'react';
-
+import React, { useState } from 'react';
 import companyColumns from '@/utils/tableColumn/company.column';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCompany } from '@/services/company.service';
 import Loader from '@/components/CommonComponents/Loader';
 
 export default function ComapnyPage() {
-  const { status, data } = useQuery({
-    queryKey: ['company'],
-    queryFn: getCompany
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['company', page, searchQuery],
+    queryFn: () => getCompany(page, searchQuery),
+    placeholderData: keepPreviousData
   });
 
-  if (status === 'pending') {
-    return <Loader />;
-  }
+  const handlePrevious = () => {
+    setPage((prev) => prev - 1);
+  };
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
 
-  if (status === 'error') {
-    return (
-      <DataTable
-        columns={companyColumns}
-        data={[]}
-        path="/company/register-company"
-      />
-    );
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
     <div>
       <DataTable
         columns={companyColumns}
-        data={data}
+        data={isError ? [] : data?.items}
+        pagination={data?.pagination}
         path="/company/register-company"
+        handleNext={handleNext}
+        handlePrevious={handlePrevious}
+        onSearch={handleSearch}
       />
     </div>
   );
