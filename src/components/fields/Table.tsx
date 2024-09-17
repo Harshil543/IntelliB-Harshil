@@ -33,20 +33,30 @@ import { Parser } from 'json2csv';
 // import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 
+type Pagination = {
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+};
+
 type DataTableProps<T> = {
   columns: ColumnDef<T>[];
   data: T[];
   path: string;
+  pagination: Pagination;
   handleNext: () => void;
   handlePrevious: () => void;
+  onSearch: (query: string) => void;
 };
 
 export function DataTable<T>({
   columns,
   data,
+  pagination,
   path,
   handleNext,
-  handlePrevious
+  handlePrevious,
+  onSearch
 }: DataTableProps<T>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -57,6 +67,7 @@ export function DataTable<T>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [searchQuery, setSearchQuery] = React.useState<string>('');
 
   const table = useReactTable({
     data,
@@ -85,6 +96,11 @@ export function DataTable<T>({
 
   const handleNavigate = (path: string) => {
     router.push(path);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    onSearch(e.target.value); // Call the onSearch prop
   };
 
   const exportCSV = () => {
@@ -170,8 +186,11 @@ export function DataTable<T>({
       <div className="flex items-center gap-2 py-4 sm:flex-wrap md:flex-nowrap">
         <Input
           placeholder="Search..."
-          className="mr-2 w-full rounded-full border-border bg-background"
+          className="w-full rounded-3xl border-border bg-background"
+          value={searchQuery}
+          onChange={handleSearchChange}
         />
+
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -268,11 +287,10 @@ export function DataTable<T>({
       <div className="flex items-center justify-between py-4">
         <div className="text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {pagination?.totalItems} row(s) selected.
         </div>
         <div className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
+          Page {pagination?.currentPage} of {pagination?.totalPages}
         </div>
         <div className="space-x-2">
           <Button
