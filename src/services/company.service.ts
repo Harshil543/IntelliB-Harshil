@@ -23,9 +23,11 @@ interface StatusPayload {
   status: string;
 }
 
-export const getCompany = async () => {
+export const getCompany = async (page: number) => {
   try {
-    const response = await apiClient.get(`${BASE_URLS?.company}`);
+    const response = await apiClient.get(
+      `${BASE_URLS?.company}?page=${page}&limit=10`
+    );
     return response?.data?.data?.items;
   } catch (error) {
     throw error;

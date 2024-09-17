@@ -37,9 +37,17 @@ type DataTableProps<T> = {
   columns: ColumnDef<T>[];
   data: T[];
   path: string;
+  handleNext: () => void;
+  handlePrevious: () => void;
 };
 
-export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
+export function DataTable<T>({
+  columns,
+  data,
+  path,
+  handleNext,
+  handlePrevious
+}: DataTableProps<T>) {
   const router = useRouter();
   const pathname = usePathname();
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -270,16 +278,16 @@ export function DataTable<T>({ columns, data, path }: DataTableProps<T>) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={handlePrevious}
+            // disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={handleNext}
+            // disabled={!table.getCanNextPage()}
           >
             Next
           </Button>
