@@ -2,16 +2,16 @@
 
 import { DataTable } from '@/components/fields/Table';
 import React, { useState } from 'react';
-import Loader from '@/components/CommonComponents/Loader';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import meterColumn from '@/utils/tableColumn/meter.column';
 import { getMeter } from '@/services/meter.service';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function Meter() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const { isLoading, isError, data } = useQuery({
+  const { status, isError, data } = useQuery({
     queryKey: ['meter', page, searchQuery],
     queryFn: () => getMeter(page, searchQuery),
     placeholderData: keepPreviousData
@@ -20,14 +20,16 @@ export default function Meter() {
   const handlePrevious = () => {
     setPage((prev) => prev - 1);
   };
+
   const handleNext = () => {
     setPage((prev) => prev + 1);
   };
+
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
 
-  if (isLoading) {
+  if (status === 'pending') {
     return <Loader />;
   }
 
@@ -35,8 +37,8 @@ export default function Meter() {
     <div>
       <DataTable
         columns={meterColumn}
-        path="/leasable-unit/register-leasable-unit"
-        data={isError ? [] : data?.items}
+        path="/meter/register-meter"
+        data={isError ? [] : []}
         pagination={data?.pagination}
         handleNext={handleNext}
         handlePrevious={handlePrevious}

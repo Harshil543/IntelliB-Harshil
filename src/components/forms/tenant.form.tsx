@@ -1,7 +1,7 @@
 // components/TenantForm.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CardWrapper from '@components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
@@ -17,98 +17,162 @@ import {
   createTenantBillingData,
   createTenantData,
   updateLeasableUnitData,
-  updateTenantBillingData,
-  updateTenantData
+  updateTenantBillingData
 } from '@/services/tenant.service';
+import PhoneInputField from '../fields/PhoneInput';
+import { City, Country, State } from 'country-state-city';
+
+interface OptionType {
+  value: string;
+  label: string;
+}
 
 interface TenantFormProps {
   initialValues?: {
-    id?: number;
-    companyName: string;
-    gstNumber: string;
-    cinNumber: string;
-    address: string;
+    company: {
+      companyName: string;
+      addressLine1: string;
+      addressLine2: string;
+      city: string;
+      state: string;
+      country: string;
+      pincode: string;
+      email: string;
+      countryCode: string;
+      mobileNumber: string;
+      websiteUrl: string;
+      gstNumber: string;
+      cinNumber: string;
+    };
+    id: number;
+    salutation: string;
     firstName: string;
     lastName: string;
     designation: string;
     mobileNumber: string;
+    countryCode: string;
     email: string;
-    leasedUnit: string;
-    leasedStartDate: string;
-    leasedEndDate: string;
-    bilingMethod: string;
-    bilingType: string;
-    bilingCycle: string;
-    limit: string;
+    // leasedUnit: string;
+    // leasedStartDate: string;
+    // leasedEndDate: string;
+    // bilingMethod: string;
+    // bilingType: string;
+    // bilingCycle: string;
+    // limit: string;
   };
-}
-
-interface TenantFormValues {
-  companyName: string;
-  gstNumber: string;
-  cinNumber: string;
-  address: string;
-  salutation: string;
-  firstName: string;
-  lastName: string;
-  designation: string;
-  mobileNumber: string;
-  email: string;
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
 }
 
 export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const pathname = usePathname();
-
   const isViewTenant = pathname.includes('view-tenant');
 
+  const [selectedCountry, setSelectedCountry] = useState<OptionType | null>(
+    null
+  );
+  // const [selectedState, setSelectedState] = useState<OptionType | null>(null);
+
+  const [countries, setCountries] = useState<OptionType[]>([]);
+  const [states, setStates] = useState<OptionType[]>([]);
+  const [cities, setCities] = useState<OptionType[]>([]);
+
+  useEffect(() => {
+    const countryList = Country.getAllCountries().map(({ isoCode, name }) => ({
+      value: isoCode,
+      label: name
+    }));
+    setCountries(countryList);
+  }, []);
+
   const mutation = useMutation({
-    mutationFn: async (data: TenantFormValues) => {
+    mutationFn: async (data: any) => {
+      const updatedData = {
+        ...data.value
+        // company: {
+        //   ...data.value.company,
+        //   country: selectedCountry?.label || '',
+        //   state: selectedState?.label || ''
+        // }
+      };
+
+      // Uncomment below to handle API calls:
       if (initialValues?.id) {
-        return updateTenantData({
-          id: initialValues.id,
-          payload: data
-        });
+        // return await updateTenantData(initialValues?.id, updatedData?.value);
       } else {
-        return createTenantData(data);
+        return await createTenantData(updatedData?.value);
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tenant'] });
-      router.push('/tenants/');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
-    },
     onError: (error) => {
-      toast.error(`Error: ${error.message}`);
+      console.error('Error submitting form:', error);
     }
   });
 
   const form = useForm({
     defaultValues: initialValues || {
-      companyName: '',
-      gstNumber: '',
-      cinNumber: '',
-      address: '',
+      company: {
+        companyName: '',
+        addressLine1: '',
+        addressLine2: '',
+        city: '',
+        state: '',
+        country: '',
+        pincode: '',
+        email: '',
+        countryCode: '',
+        mobileNumber: '',
+        websiteUrl: '',
+        gstNumber: '',
+        cinNumber: ''
+      },
       salutation: '',
       firstName: '',
       lastName: '',
       designation: '',
       mobileNumber: '',
-      email: '',
-      status: 'Active'
+      countryCode: '',
+      email: ''
     },
-    onSubmit: async (values: any) => {
-      await mutation.mutateAsync(values);
-    }
+    onSubmit: async (value: any) => await mutation.mutateAsync({ value })
   });
+
+  const handleCountryChange = (selectedOption: OptionType | null) => {
+    setSelectedCountry(selectedOption);
+    form.setFieldValue('company.country', selectedOption?.label || '');
+
+    if (selectedOption) {
+      const stateList = State.getStatesOfCountry(selectedOption.value).map(
+        ({ isoCode, name }) => ({
+          value: isoCode,
+          label: name
+        })
+      );
+      setStates(stateList);
+
+      form.setFieldValue('company.state', '');
+      setCities([]);
+    }
+  };
+
+  const handleStateChange = (selectedOption: OptionType | null) => {
+    // setSelectedState(selectedOption);
+    form.setFieldValue('company.state', selectedOption?.label || '');
+
+    if (selectedOption) {
+      const cityList = City.getCitiesOfState(
+        selectedCountry?.value || '',
+        selectedOption.value
+      ).map(({ name }) => ({
+        value: name,
+        label: name
+      }));
+      setCities(cityList);
+      form.setFieldValue('company.city', '');
+    }
+  };
+
+  const handleCityChange = (selectedOption: OptionType | null) => {
+    form.setFieldValue('company.city', selectedOption?.label || '');
+  };
 
   return (
     <form
@@ -118,84 +182,174 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
       }}
     >
       <CardWrapper>
-        <Heading>Tenant Company Data</Heading>
+        <Heading className="mt-5">Tenant Company Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
-            name="companyName"
+            name="company.companyName"
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'Company name is required';
-                if (value.length < 3)
-                  return 'Company name must be at least 3 characters';
                 return undefined;
               }
             }}
           >
             {(field) => (
               <TextInput
+                disabled={isViewTenant}
                 label="Company Name"
                 field={field}
-                disabled={isViewTenant}
               />
             )}
           </form.Field>
 
           <form.Field
-            name="gstNumber"
+            name="company.email"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'GST Number is required';
-                const gstRegex =
-                  /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
-                if (!gstRegex.test(value))
-                  return 'Invalid GST Number (should be 15 characters long)';
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) return 'Invalid email address';
                 return undefined;
               }
             }}
           >
             {(field) => (
               <TextInput
+                disabled={isViewTenant}
+                type="email"
+                label="Email"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.mobileNumber">
+            {(field) => (
+              <PhoneInputField
+                disabled={isViewTenant}
+                label="Mobile Number"
+                field={{
+                  value: form.getFieldValue('company.mobileNumber'),
+                  countryCode: form.getFieldValue('company.countryCode'),
+                  setValue: (value: string) =>
+                    form.setFieldValue('company.mobileNumber', value),
+                  setCountryCode: (code: string) =>
+                    form.setFieldValue('company.countryCode', code),
+                  errorMessage: field.state.meta.errors.length
+                    ? field.state.meta.errors.join(', ')
+                    : undefined
+                }}
+              />
+            )}
+          </form.Field>
+
+          <form.Field
+            name="company.addressLine1"
+            validators={{
+              onChange: ({ value }) =>
+                !value ? 'Address Line 1 is required' : undefined
+            }}
+          >
+            {(field) => (
+              <TextInput
+                disabled={isViewTenant}
+                label="Address Line 1"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.addressLine2">
+            {(field) => (
+              <TextInput
+                disabled={isViewTenant}
+                label="Address Line 2"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.country">
+            {(field) => (
+              <SelectInput
+                disabled={isViewTenant}
+                label="Country"
+                field={field}
+                options={countries}
+                placeholder="Select Country"
+                onChange={handleCountryChange}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.state">
+            {(field) => (
+              <SelectInput
+                disabled={isViewTenant}
+                label="State"
+                field={field}
+                options={states}
+                placeholder="Select State"
+                onChange={handleStateChange}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.city">
+            {(field) => (
+              <SelectInput
+                disabled={isViewTenant}
+                label="City"
+                field={field}
+                options={cities}
+                placeholder="Select City"
+                onChange={handleCityChange}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.pincode">
+            {(field) => (
+              <TextInput
+                disabled={isViewTenant}
+                type="text"
+                label="Pincode"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.websiteUrl">
+            {(field) => (
+              <TextInput
+                disabled={isViewTenant}
+                label="Website URL"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="company.gstNumber">
+            {(field) => (
+              <TextInput
+                disabled={isViewTenant}
                 label="GST Number"
                 field={field}
-                disabled={isViewTenant}
               />
             )}
           </form.Field>
 
-          <form.Field
-            name="cinNumber"
-            validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'CIN Number is required';
-                const cinRegex =
-                  /^[LU][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/;
-                if (!cinRegex.test(value))
-                  return 'Invalid CIN Number (should be 21 characters long and in the correct format)';
-                return undefined;
-              }
-            }}
-          >
+          <form.Field name="company.cinNumber">
             {(field) => (
               <TextInput
-                type="text"
+                disabled={isViewTenant}
                 label="CIN Number"
                 field={field}
-                disabled={isViewTenant}
               />
             )}
           </form.Field>
         </div>
-        <form.Field
-          name="address"
-          validators={{
-            onChange: ({ value }) =>
-              !value ? 'Address is required' : undefined
-          }}
-        >
-          {(field) => (
-            <TextInput label="Address" field={field} disabled={isViewTenant} />
-          )}
-        </form.Field>
+      </CardWrapper>
+      <CardWrapper>
         <Heading className="mt-5">Tenant Personal Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
@@ -223,8 +377,6 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'First Name is required';
-                if (value.length < 3)
-                  return 'First Name must be at least 3 characters';
                 return undefined;
               }
             }}
@@ -242,8 +394,7 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'Last Name is required';
-                if (value.length < 3)
-                  return 'Last Name must be at least 3 characters';
+
                 return undefined;
               }
             }}
@@ -262,8 +413,7 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'Designation is required';
-                if (value.length < 3)
-                  return 'Designation must be at least 3 characters';
+
                 return undefined;
               }
             }}
@@ -282,18 +432,25 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
             validators={{
               onChange: ({ value }) => {
                 if (!value) return 'Mobile Number is required';
-                const mobileNumberRegex = /^[0-9]{10}$/;
-                if (!mobileNumberRegex.test(value))
-                  return 'Mobile Number must be a 10-digit number';
                 return undefined;
               }
             }}
           >
             {(field) => (
-              <TextInput
-                label="Mobile Number"
-                field={field}
+              <PhoneInputField
                 disabled={isViewTenant}
+                label="Mobile Number"
+                field={{
+                  value: form.getFieldValue('mobileNumber'),
+                  countryCode: form.getFieldValue('countryCode'),
+                  setValue: (value: string) =>
+                    form.setFieldValue('mobileNumber', value),
+                  setCountryCode: (code: string) =>
+                    form.setFieldValue('countryCode', code),
+                  errorMessage: field.state.meta.errors.length
+                    ? field.state.meta.errors.join(', ')
+                    : undefined
+                }}
               />
             )}
           </form.Field>
@@ -313,31 +470,27 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
             )}
           </form.Field>
         </div>
-        <div className="col-span-full mt-10 flex justify-start space-x-4">
-          <Button
-            type="button"
-            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
-            onClick={() => router.back()}
-          >
-            Cancel
-          </Button>
-
-          {!isViewTenant && (
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-            >
-              {([canSubmit]) => (
-                <Button
-                  type="submit"
-                  disabled={!canSubmit || mutation.isPending}
-                >
-                  {mutation.isPending ? 'Submitting...' : 'Submit'}
-                </Button>
-              )}
-            </form.Subscribe>
-          )}
-        </div>
       </CardWrapper>
+      <div className="col-span-full mt-10 flex justify-start space-x-4">
+        <Button
+          type="button"
+          className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
+          onClick={() => router.back()}
+        >
+          Cancel
+        </Button>
+        {!isViewTenant && (
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Submit'}
+              </Button>
+            )}
+          </form.Subscribe>
+        )}
+      </div>
     </form>
   );
 };
@@ -350,7 +503,7 @@ export const TenantLeasableForm = ({ initialValues }: TenantFormProps) => {
   const isViewTenant = pathname.includes('view-tenant');
 
   const mutation = useMutation({
-    mutationFn: async (data: TenantFormValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
         return updateLeasableUnitData({
           id: initialValues.id,
@@ -472,7 +625,7 @@ export const TenantBillingForm = ({ initialValues }: TenantFormProps) => {
   const isViewTenant = pathname.includes('view-tenant');
 
   const mutation = useMutation({
-    mutationFn: async (data: TenantFormValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
         return updateTenantBillingData({
           id: initialValues.id,
@@ -604,3 +757,30 @@ export const TenantBillingForm = ({ initialValues }: TenantFormProps) => {
     </CardWrapper>
   );
 };
+
+{
+  /* <div className="col-span-full mt-10 flex justify-start space-x-4">
+  <Button
+    type="button"
+    className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
+    onClick={() => router.back()}
+  >
+    Cancel
+  </Button>
+
+  {!isViewTenant && (
+    <form.Subscribe
+      selector={(state) => [state.canSubmit, state.isSubmitting]}
+    >
+      {([canSubmit]) => (
+        <Button
+          type="submit"
+          disabled={!canSubmit || mutation.isPending}
+        >
+          {mutation.isPending ? 'Submitting...' : 'Submit'}
+        </Button>
+      )}
+    </form.Subscribe>
+  )}
+</div>  */
+}

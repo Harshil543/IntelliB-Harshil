@@ -51,7 +51,7 @@ export const getTenantDataById = async (tenantId: number) => {
 
 export const createTenantData = async (payload: TenantDataPayload) => {
   try {
-    const response = await apiClient.post('/tenant/', payload);
+    const response = await apiClient.post(`${BASE_URLS?.tenant}`, payload);
     return response.data;
   } catch (error) {
     console.error('Error creating tenant:', error);

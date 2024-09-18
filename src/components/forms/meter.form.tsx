@@ -34,8 +34,8 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
 
   const isViewMeter = pathname.includes('view-meter');
 
-  const { data: leasableUnits, isLoading } = useQuery({
-    queryKey: ['leasable-unit'],
+  const { isLoading } = useQuery({
+    queryKey: ['meter'],
     queryFn: getAllLeasableUnit
   });
 
@@ -150,12 +150,13 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
                 label="Leasable Unit"
                 field={field}
                 options={
-                  isLoading
-                    ? [{ value: '', label: 'Loading...' }]
-                    : leasableUnits?.map((unit: any) => ({
-                        value: unit.id,
-                        label: unit.name
-                      })) || []
+                  // isLoading
+                  //   ? [{ value: '', label: 'Loading...' }]
+                  //   : leasableUnits?.map((unit: any) => ({
+                  //       value: unit.id,
+                  //       label: unit.name
+                  //     })) || []
+                  []
                 }
                 disabled={isLoading || isViewMeter}
               />
