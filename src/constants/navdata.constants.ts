@@ -16,7 +16,29 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'user',
       children: undefined
     }
-
+  ],
+  system_admin: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'dashboard',
+      label: 'Dashboard',
+      children: undefined
+    },
+    {
+      title: 'Property Co-Admin',
+      href: '/property-co-admin/',
+      icon: 'profile',
+      label: 'property-co-admin',
+      children: undefined
+    },
+    // {
+    //   title: 'Property User',
+    //   href: '/property-user/',
+    //   icon: 'profile',
+    //   label: 'property-user',
+    //   children: undefined
+    // },
     // {
     //   title: 'Invoice',
     //   href: '/invoice/',
@@ -24,20 +46,7 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   label: 'invoice',
     //   children: undefined
     // },
-    // {
-    //   title: 'Leasable Unit',
-    //   href: '/leasable-unit/',
-    //   icon: 'profile',
-    //   label: 'leasable-unit',
-    //   children: undefined
-    // },
-    // {
-    //   title: 'Meter',
-    //   href: '/meter/',
-    //   icon: 'profile',
-    //   label: 'meter',
-    //   children: undefined
-    // },
+
     // {
     //   title: 'Billing Model',
     //   href: '/billing-model/',
@@ -101,35 +110,26 @@ export const navItems: { [key: string]: NavItem[] } = {
     //       label: 'sms-notification-setting'
     //     }
     //   ]
-    // }
-  ],
-  system_admin: [
-    {
-      title: 'Dashboard',
-      href: '/',
-      icon: 'dashboard',
-      label: 'Dashboard',
-      children: undefined
-    },
-    {
-      title: 'Property Co-Admin',
-      href: '/property-co-admin/',
-      icon: 'profile',
-      label: 'property-co-admin',
-      children: undefined
-    },
-    // {
-    //   title: 'Property User',
-    //   href: '/property-user/',
-    //   icon: 'profile',
-    //   label: 'property-user',
-    //   children: undefined
     // },
     {
       title: 'Tenant',
       href: '/tenant/',
       icon: 'profile',
       label: 'tenant',
+      children: undefined
+    },
+    {
+      title: 'Leasable Unit',
+      href: '/leasable-unit/',
+      icon: 'profile',
+      label: 'leasable-unit',
+      children: undefined
+    },
+    {
+      title: 'Meter',
+      href: '/meter/',
+      icon: 'profile',
+      label: 'meter',
       children: undefined
     }
     // {

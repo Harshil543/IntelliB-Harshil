@@ -4,25 +4,29 @@ import { Checkbox } from '@/components/ui/checkbox';
 import TenantActionsCell from '../cellsAction/teanant.action.cell';
 
 interface tenantData {
-  id?: number;
-  tenantName: string;
-  gstNumber: string;
-  cinNumber: string;
-  address: string;
+  company: {
+    companyName: string;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    country: string;
+    pincode: string;
+    email: string;
+    countryCode: string;
+    mobileNumber: string;
+    websiteUrl: string;
+    gstNumber: string;
+    cinNumber: string;
+  };
+  id: number;
   salutation: string;
   firstName: string;
   lastName: string;
   designation: string;
   mobileNumber: string;
+  countryCode: string;
   email: string;
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
-  status: string;
 }
 
 const tenantColumn: ColumnDef<tenantData>[] = [
@@ -75,10 +79,12 @@ const tenantColumn: ColumnDef<tenantData>[] = [
   },
   {
     accessorKey: 'companyName',
-    header: 'Admin Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
-    )
+    header: 'Company Name',
+    cell: ({ row }) => {
+      const companyName = row?.original?.company?.companyName;
+
+      return <div className="capitalize">{`${companyName}`}</div>;
+    }
   },
 
   {
