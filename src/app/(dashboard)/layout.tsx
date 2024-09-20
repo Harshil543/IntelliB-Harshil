@@ -48,7 +48,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <MobileSidebar data={data} />
         </div>
         <div
-          className={`h-full w-full p-10 ${isMinimized ? 'md:ml-16' : 'md:ml-72'} `}
+          className={`h-full w-full p-5 md:p-10 ${isMinimized ? 'md:ml-16' : 'md:ml-72'} `}
         >
           <div className="flex justify-between align-middle">
             <BreadcrumbWithCustomSeparator />

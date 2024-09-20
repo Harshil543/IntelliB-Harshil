@@ -29,8 +29,8 @@ import {
 } from '@/components/ui/table';
 import { usePathname, useRouter } from 'next/navigation';
 import { Parser } from 'json2csv';
-// import jsPDF from 'jspdf';
-// import autoTable from 'jspdf-autotable';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 type Pagination = {
@@ -136,33 +136,32 @@ export function DataTable<T>({
   };
 
   const exportPDF = () => {
-    // const selectedRows = table
-    //   .getRowModel()
-    //   .rows.filter((row) => row.getIsSelected());
-    // const rows = selectedRows.length
-    //   ? selectedRows.map((row) => row.original)
-    //   : data;
-    // const doc = new jsPDF();
-    // doc.text('Table Data Export', 20, 10);
-    // const filteredColumns = columns.filter((column) => column.id !== 'select');
-    // const tableColumn = filteredColumns.map((col) => col.header as string);
-    // const tableRows = rows.map((row) =>
-    //   filteredColumns.map((col) => {
-    //     const accessor = col.accessorKey as keyof T;
-    //     return row[accessor] || '';
-    //   })
-    // );
-    // // Render table using autoTable
-    // autoTable(doc, {
-    //   head: [tableColumn],
-    //   body: tableRows,
-    //   startY: 20,
-    //   theme: 'striped',
-    //   styles: { halign: 'center' },
-    //   margin: { top: 20 }
-    // });
-    // // Save the document as a PDF
-    // doc.save(`${pathname.split('/')[1]}.pdf`);
+    const selectedRows = table
+      .getRowModel()
+      .rows.filter((row) => row.getIsSelected());
+    const rows = selectedRows.length
+      ? selectedRows.map((row) => row.original)
+      : data;
+    const doc = new jsPDF();
+    doc.text(`${pathname.split('/')[1]} data`, 20, 10);
+    const filteredColumns = columns.filter((column) => column.id !== 'select');
+    const tableColumn = filteredColumns.map((col) => col.header as string);
+    const tableRows = rows.map((row: any) =>
+      filteredColumns.map((col: any) => {
+        const accessor = col.accessorKey;
+        return row[accessor] || '';
+      })
+    );
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+      theme: 'striped',
+      styles: { halign: 'center' },
+      margin: { top: 20 }
+    });
+    doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
   const handleDownloadTemplate = () => {
@@ -186,7 +185,7 @@ export function DataTable<T>({
 
   return (
     <div className="w-full">
-      <div className="flex items-center gap-2 py-4 sm:flex-wrap md:flex-nowrap">
+      <div className="flex flex-wrap items-center gap-2 py-4 sm:flex-wrap md:flex-nowrap">
         <Input
           placeholder="Search..."
           className="w-full rounded-3xl border-border bg-background"
@@ -287,7 +286,7 @@ export function DataTable<T>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-wrap items-center justify-between py-4 md:flex-nowrap">
         <div className="text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{' '}
           {pagination?.totalItems} row(s) selected.

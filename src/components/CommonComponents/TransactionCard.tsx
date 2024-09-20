@@ -21,7 +21,7 @@ interface TransactionCardProps {
 const TransactionCard: React.FC<TransactionCardProps> = ({ item }) => {
   return (
     <Card key={item.id} className="my-4 px-4">
-      <div className="flex items-center justify-between align-middle">
+      <div className="flex flex-wrap items-center justify-between align-middle">
         <div className="flex items-center justify-center gap-5 align-middle">
           <Image
             src={transactionImage}
@@ -43,10 +43,10 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ item }) => {
         <div>
           <Icon icon={eyeIcon} className="cursor-pointer text-2xl" />
         </div>
-        <div>
-          <CardContent className="text-sm font-medium text-muted-foreground">
-            Due in {item.dueDate} Days
-          </CardContent>
+        <div className="text-sm font-medium text-muted-foreground">
+          {/* <CardContent className="text-sm font-medium text-muted-foreground"> */}
+          Due in {item.dueDate} Days
+          {/* </CardContent> */}
         </div>
       </div>
     </Card>
