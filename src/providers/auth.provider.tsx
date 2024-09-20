@@ -1,8 +1,8 @@
 'use client';
 
-import storage from '@/utils/storage';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import storage from '@/utils/storage';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -10,34 +10,31 @@ interface AuthProviderProps {
 
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
-  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const getToken = () => {
       const fetchedToken = storage.getToken();
 
-      setToken(fetchedToken || null);
+      if (fetchedToken) {
+        if (pathname === '/login/') {
+          router.replace('/');
+        }
+      } else {
+        if (pathname !== '/login/') {
+          router.replace('/login/');
+        }
+      }
       setIsLoading(false);
     };
+
     getToken();
-  }, [token, router]);
+  }, [pathname, router]);
 
-  useEffect(() => {
-    if (token === null) {
-      router.push('/login');
-    } else {
-      router.push('/');
-    }
-  }, [token, router]);
-
-  useEffect(() => {
-    if (!isLoading && typeof window !== 'undefined') {
-      if (!token) {
-        router.push('/login');
-      }
-    }
-  }, [isLoading, token, router]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return <>{children}</>;
 };
