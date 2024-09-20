@@ -5,15 +5,15 @@ export const navItems: { [key: string]: NavItem[] } = {
     {
       title: 'Dashboard',
       href: '/',
-      icon: 'dashboard',
+      icon: 'view-dashboard',
       label: 'Dashboard',
       children: undefined
     },
     {
       title: 'Company',
       href: '/company/',
-      icon: 'user',
-      label: 'user',
+      icon: 'company',
+      label: 'company',
       children: undefined
     }
   ],
@@ -21,14 +21,14 @@ export const navItems: { [key: string]: NavItem[] } = {
     {
       title: 'Dashboard',
       href: '/',
-      icon: 'dashboard',
+      icon: 'view-dashboard',
       label: 'Dashboard',
       children: undefined
     },
     {
       title: 'Property Co-Admin',
       href: '/property-co-admin/',
-      icon: 'profile',
+      icon: 'user-group',
       label: 'property-co-admin',
       children: undefined
     },
@@ -114,21 +114,21 @@ export const navItems: { [key: string]: NavItem[] } = {
     {
       title: 'Tenant',
       href: '/tenant/',
-      icon: 'profile',
+      icon: 'users-group-outline',
       label: 'tenant',
       children: undefined
     },
     {
       title: 'Leasable Unit',
       href: '/leasable-unit/',
-      icon: 'profile',
+      icon: 'alpha-l-circle-outline',
       label: 'leasable-unit',
       children: undefined
     },
     {
       title: 'Meter',
       href: '/meter/',
-      icon: 'profile',
+      icon: 'barometer',
       label: 'meter',
       children: undefined
     }

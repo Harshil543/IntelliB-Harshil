@@ -13,7 +13,6 @@ import {
   useReactTable
 } from '@tanstack/react-table';
 import { Button } from '@/components/ui/button';
-// import autoTable from 'jspdf-autotable';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,6 +30,7 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { Parser } from 'json2csv';
 // import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 type Pagination = {
@@ -100,7 +100,7 @@ export function DataTable<T>({
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
-    onSearch(e.target.value); // Call the onSearch prop
+    onSearch(e.target.value);
   };
 
   const exportCSV = () => {
@@ -139,27 +139,33 @@ export function DataTable<T>({
     // const selectedRows = table
     //   .getRowModel()
     //   .rows.filter((row) => row.getIsSelected());
-    // const rows = selectedRows.map((row) => row.original);
+    // const rows = selectedRows.length
+    //   ? selectedRows.map((row) => row.original)
+    //   : data;
     // const doc = new jsPDF();
-    // doc.text('Table Data', 20, 20);
+    // doc.text('Table Data Export', 20, 10);
     // const filteredColumns = columns.filter((column) => column.id !== 'select');
     // const tableColumn = filteredColumns.map((col) => col.header as string);
     // const tableRows = rows.map((row) =>
     //   filteredColumns.map((col) => {
-    //     // Using `col.accessorKey` assuming it's a string key in the row object
     //     const accessor = col.accessorKey as keyof T;
-    //     return row[accessor];
+    //     return row[accessor] || '';
     //   })
     // );
+    // // Render table using autoTable
     // autoTable(doc, {
     //   head: [tableColumn],
-    //   body: tableRows
+    //   body: tableRows,
+    //   startY: 20,
+    //   theme: 'striped',
+    //   styles: { halign: 'center' },
+    //   margin: { top: 20 }
     // });
+    // // Save the document as a PDF
     // doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
   const handleDownloadTemplate = () => {
-    // Filter out columns that you don't want in the template
     const filteredColumns = table
       .getAllColumns()
       .filter(
@@ -167,17 +173,14 @@ export function DataTable<T>({
           !['select', 'serialNumber', 'id', 'actions'].includes(column.id)
       );
 
-    // Get the headers from the filtered columns
     const headers = filteredColumns.map(
       (column) => column.columnDef.header as string
     );
 
-    // Create a worksheet with only the filtered headers
     const worksheet = XLSX.utils.aoa_to_sheet([headers]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
 
-    // Export the workbook as an XLSX file
     XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   };
 
