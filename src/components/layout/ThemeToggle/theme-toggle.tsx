@@ -9,8 +9,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-type CompProps = {};
-export default function ThemeToggle({}: CompProps) {
+
+const ThemeToggle: React.FC = () => {
   const { setTheme } = useTheme();
   return (
     <DropdownMenu>
@@ -34,4 +34,6 @@ export default function ThemeToggle({}: CompProps) {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
+
+export default ThemeToggle;

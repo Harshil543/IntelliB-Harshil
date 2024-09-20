@@ -1,0 +1,180 @@
+import usersIcon from '@iconify/icons-mdi/user';
+import calenderIcon from '@iconify/icons-mdi/calendar';
+import moneyIcon from '@iconify/icons-mdi/attach-money';
+
+export const dashboardItems = [
+  {
+    id: 1,
+    title: 'Tenants',
+    count: 30,
+    icon: usersIcon
+  },
+  {
+    id: 2,
+    title: 'Invoice Pending',
+    count: 'Rs. 200,000',
+    icon: moneyIcon
+  },
+  {
+    id: 3,
+    title: 'Total Bills',
+    count: 'Rs. 200,000',
+    icon: moneyIcon
+  },
+  {
+    id: 4,
+    title: 'Monthly Revenue',
+    count: 30,
+    icon: calenderIcon
+  }
+];
+
+export const paymentHistory = [
+  {
+    id: 1,
+    title: 'Tenant 1',
+    billNo: 'xyz10132466',
+    amount: 2000,
+    dueDate: 7
+  },
+  {
+    id: 2,
+    title: 'Tenant 2',
+    billNo: 'xyz10132466',
+    amount: 2000,
+    dueDate: 7
+  },
+  {
+    id: 3,
+    title: 'Tenant 3',
+    billNo: 'xyz10132466',
+    amount: 2000,
+    dueDate: 7
+  },
+  {
+    id: 4,
+    title: 'Tenant 4',
+    billNo: 'xyz10132466',
+    amount: 2000,
+    dueDate: 7
+  },
+  {
+    id: 5,
+    title: 'Tenant 5',
+    billNo: 'xyz10132466',
+    amount: 2000,
+    dueDate: 7
+  }
+];
+
+// export const pieChartData = {
+//   labels: [],
+//   datasets: [
+//     {
+//       data: [63, 25],
+//       backgroundColor: ['#4318FF', '#6AD2FF']
+//     }
+//   ]
+// };
+
+export const pieChartDataYearly = {
+  labels: ['Payment Done', 'Payment Pending'],
+  datasets: [
+    {
+      data: [63, 25],
+      backgroundColor: ['#4318FF', '#6AD2FF']
+    }
+  ]
+};
+
+export const pieChartDataMonthly = {
+  labels: ['Payment Done', 'Payment Pending'],
+  datasets: [
+    {
+      data: [50, 40],
+      backgroundColor: ['#4318FF', '#6AD2FF']
+    }
+  ]
+};
+
+export const pieChartDataQuarterly = {
+  labels: ['Payment Done', 'Payment Pending'],
+  datasets: [
+    {
+      data: [70, 30],
+      backgroundColor: ['#4318FF', '#6AD2FF']
+    }
+  ]
+};
+
+// Sample data for Line Chart
+
+export const lineChartDataYearly = {
+  labels: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec'
+  ],
+  datasets: [
+    {
+      label: 'Income',
+      data: [
+        50000, 60000, 80000, 75000, 90000, 85000, 95000, 100000, 105000, 110000,
+        115000, 120000
+      ],
+      borderColor: '#4318FF',
+      backgroundColor: '#4318FF'
+    },
+    {
+      label: 'Expenses',
+      data: [2000, 2500, 1500, 3000, 2500, 3000, 3500],
+      borderColor: '#6AD2FF',
+      backgroundColor: '#6AD2FF'
+    }
+  ]
+};
+
+export const lineChartDataMonthly = {
+  labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+  datasets: [
+    {
+      label: 'Income',
+      data: [12000, 15000, 17000, 20000],
+      borderColor: '#4318FF',
+      backgroundColor: '#4318FF'
+    },
+    {
+      label: 'Expenses',
+      data: [2000, 2500, 1500, 3000, 2500, 3000, 3500],
+      borderColor: '#6AD2FF',
+      backgroundColor: '#6AD2FF'
+    }
+  ]
+};
+
+export const lineChartDataQuarterly = {
+  labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+  datasets: [
+    {
+      label: 'Income',
+      data: [45000, 60000, 75000, 90000],
+      borderColor: '#4318FF',
+      backgroundColor: '#4318FF'
+    },
+    {
+      label: 'Expenses',
+      data: [2000, 2500, 1500, 3000, 2500, 3000, 3500],
+      borderColor: '#6AD2FF',
+      backgroundColor: '#6AD2FF'
+    }
+  ]
+};

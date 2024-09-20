@@ -1,19 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
-import { deleteCompany } from '@/services/company.service';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { Checkbox } from '@/components/ui/checkbox';
+import CompanyActionCell from '../cellsAction/company.action.cell';
 
 interface CompanyData {
   id: number;
@@ -35,6 +23,33 @@ interface CompanyData {
 
 const companyColumns: ColumnDef<CompanyData>[] = [
   {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
+  },
+  {
     accessorKey: 'id',
     header: 'Id',
     cell: ({ row }) => (
@@ -45,7 +60,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'companyName',
     header: 'Company Name',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('companyName') ?? 'N/A'}</div>
+      <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
     )
   },
   {
@@ -62,12 +77,12 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       const addressLine1 = row.original.addressLine1;
       const city = row.original.city;
       const state = row.original.state;
-      const country = row.original.country;
+      // const country = row.original.country;
       const pincode = row.original.pincode;
 
       return (
-        <div className="lowercase">
-          {`${addressLine1}, ${city} ${state} ${country} ${pincode}`}
+        <div className="capitalize">
+          {`${addressLine1}, ${city} ${state} ${pincode}`}
         </div>
       );
     }
@@ -79,7 +94,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       const countryCode = row.original.countryCode;
       const mobileNumber = row.original.mobileNumber;
       return (
-        <div className="lowercase">{`+${countryCode} ${mobileNumber}`}</div>
+        <div className="capitalize">{`+${countryCode} ${mobileNumber}`}</div>
       );
     }
   },
@@ -88,7 +103,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
@@ -98,56 +113,10 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const companyId = row.getValue('id') as number;
-      const queryClient = useQueryClient();
-      const router = useRouter();
+      const id = row.getValue('id') as number;
+      const status = row.getValue('status') as string;
 
-      const delteMutation = useMutation({
-        mutationFn: deleteCompany
-      });
-
-      const handleUpdate = (id: number) => {
-        router.push(`/company/update-company/${id}`);
-      };
-
-      const handleDelete = async (id: number) => {
-        try {
-          delteMutation.mutate(id, {
-            onSuccess: () => {
-              queryClient.invalidateQueries({ queryKey: ['company'] });
-              toast.success(`Deleted successfully`);
-            }
-          });
-        } catch (error) {
-          console.error('Error deleting company:', error);
-        }
-      };
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0" variant="none">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(companyId)}>
-              Update
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(companyId)}>
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      return <CompanyActionCell id={id} status={status} />;
     }
   }
 ];

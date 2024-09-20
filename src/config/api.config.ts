@@ -1,20 +1,16 @@
 import storage from '@/utils/storage';
 import axios from 'axios';
-import { useRouter } from 'next/router'; 
-import toast from 'react-hot-toast'
+import toast from 'react-hot-toast';
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_USER_SERVICE_API_URL,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
-
 const handleUnauthorized = () => {
-//   const router = useRouter(); 
-  storage.clearToken(); 
-//   router.push('/login'); 
+  storage.clearToken();
 };
 
 apiClient.interceptors.request.use(
@@ -23,6 +19,7 @@ apiClient.interceptors.request.use(
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
+
     return config;
   },
   (error) => {
@@ -36,24 +33,25 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (error.response && error.response.status === 401) {
-      handleUnauthorized(); 
+      handleUnauthorized();
     }
     return Promise.reject(error);
   }
 );
 
-
 axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      toast.error(error.response.data.message, {
-        position: 'top-right',
-      });
-      if (error.response.status === 401) {
-        handleUnauthorized(); 
-        }
-      return Promise.reject((error.response && error.response.data) || 'Something went wrong');
+  (response) => response,
+  (error) => {
+    toast.error(error.response.data.message, {
+      position: 'top-right'
+    });
+    if (error.response.status === 401) {
+      handleUnauthorized();
     }
-  );
+    return Promise.reject(
+      (error.response && error.response.data) || 'Something went wrong'
+    );
+  }
+);
 
 export default apiClient;

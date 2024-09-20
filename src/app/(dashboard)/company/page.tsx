@@ -1,36 +1,46 @@
 'use client';
 
-import { BreadcrumbWithCustomSeparator } from '@/components/CommonComponents/BreadCrumb';
-import { DataTable } from '@/components/CommonComponents/Table';
-import React from 'react';
-import Heading from '@/components/CommonComponents/Heading';
+import { DataTable } from '@/components/fields/Table';
+import React, { useState } from 'react';
 import companyColumns from '@/utils/tableColumn/company.column';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCompany } from '@/services/company.service';
-import { useRouter } from 'next/navigation';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function ComapnyPage() {
-  const { status, data, error } = useQuery({
-    queryKey: ['company'],
-    queryFn: getCompany
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['company', page, searchQuery],
+    queryFn: () => getCompany(page, searchQuery),
+    placeholderData: keepPreviousData
   });
 
-  if (status === 'pending') {
-    return <span>Loading...</span>;
-  }
+  const handlePrevious = () => {
+    setPage((prev) => prev - 1);
+  };
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
 
-  if (status === 'error') {
-    return <span>Error: {error.message}</span>;
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
     <div>
-      <BreadcrumbWithCustomSeparator />
-      <Heading children="Company" />
       <DataTable
         columns={companyColumns}
-        data={data}
+        data={isError ? [] : data?.items}
+        pagination={data?.pagination}
         path="/company/register-company"
+        handleNext={handleNext}
+        handlePrevious={handlePrevious}
+        onSearch={handleSearch}
       />
     </div>
   );

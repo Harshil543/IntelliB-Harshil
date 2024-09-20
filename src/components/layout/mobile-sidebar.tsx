@@ -6,10 +6,24 @@ import { MenuIcon } from 'lucide-react';
 import { useState } from 'react';
 import { DashboardNav } from './DashboardNav';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+type SidebarProps = {
+  className?: string;
+  data: any;
+};
 
-export function MobileSidebar({ className }: SidebarProps) {
+export default function MobileSidebar({ className, data }: SidebarProps) {
   const [open, setOpen] = useState(false);
+
+  const getMenuItems = () => {
+    switch (data?.data?.role) {
+      case 'super_admin':
+        return navItems?.super_admin;
+      case 'system_admin':
+        return navItems?.system_admin;
+      default:
+        return [];
+    }
+  };
   return (
     <>
       <Sheet open={open} onOpenChange={setOpen}>
@@ -17,14 +31,14 @@ export function MobileSidebar({ className }: SidebarProps) {
           <MenuIcon />
         </SheetTrigger>
         <SheetContent side="left" className="!px-0">
-          <div className="space-y-4 py-4">
+          <div className={`space-y-4 py-4 ${className}`}>
             <div className="px-3 py-2">
               <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
                 Overview
               </h2>
               <div className="space-y-1">
                 <DashboardNav
-                  items={navItems}
+                  items={getMenuItems()}
                   isMobileNav={true}
                   setOpen={setOpen}
                 />

@@ -1,61 +1,85 @@
-import apiClient from "@/config/api.config";
-import { BASE_URLS } from "@/constants/api.constants";
+import apiClient from '@/config/api.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
-export const getPropertyCoAdmin = async () => {
-    try {
-        // const response = await apiClient.get(`${BASE_URLS?.property-co-admin}/property-co-admin`);
-        const response = await apiClient.get(`/property-co-admin/`);    
-        return response.data; 
-    } catch (error) {
-        console.error('Error fetching property co-admin:', error);
-        throw error; 
-    }
+interface PropertyCoAdminPayload {
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  designation: string;
+  status: string;
+}
+
+export const getPropertyCoAdmin = async (page: number, searchQuery: string) => {
+  try {
+    const response = await apiClient.get(
+      `${BASE_URLS.propertyCoAdmin}?page=${page}&limit=10&search=${searchQuery}`
+    );
+    return response?.data?.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const getpropertyCoAdminById = async (propertCoAdminId: number) => {
-    try {
-        // const response = await apiClient.get(`${BASE_URLS?.property-co-admin}/property-co-admin/${propertyCoAdminId}`);
-        const response = await apiClient.get(`/property-co-admin/${propertCoAdminId}`);
-        return response.data;
-      } catch (error) {
-        console.error('Error fetching by id property co-admin:', error);
-        throw error;
-      }
+  try {
+    const response = await apiClient.get(
+      `${BASE_URLS.propertyCoAdmin}/${propertCoAdminId}`
+    );
+    return response?.data?.data;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const createPropertyCoAdmin = async ({ payload }: { payload: any }) => {
-    try {
-        // const response = await apiClient.post(`${BASE_URLS?.property-co-admin}/property-co-admin`, payload);
-        const response = await apiClient.post(`/property-co-admin/`, payload);
-        return response.data;
-    } catch (error) {
-        console.error('Error creating property co-admin:', error);
-        throw error; 
-    }
-  };
-  
-export const updatePropertyCoAdmin = async ({ id, payload }: { payload: any, id: number }) => {
-    try {
-        // const response = await apiClient.put(`${BASE_URLS?.property-co-admin}/property-co-admin/${id}`, payload);
-        const response = await apiClient.put(`/property-co-admin/${id}`, payload);
-        return response.data;
-        
-    } catch (error) {
-        console.error('Error creating property co-admin:', error);
-        throw error; 
-    }
-  };
-
-export const deletePropertyCoAdmin = async (propertyCoAdminId: number) => {
-    try {
-      // const response = await apiClient.delete(`${BASE_URLS?.property-co-admin}/property-co-admin/${propertyCoAdminId}`);
-      const response = await apiClient.delete(`/property-co-admin/${propertyCoAdminId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error deleting property co-admin:', error);
-      throw error;
-    }
+export const createPropertyCoAdmin = async ({
+  payload
+}: {
+  payload: PropertyCoAdminPayload;
+}) => {
+  try {
+    const response = await apiClient.post(
+      `${BASE_URLS.propertyCoAdmin}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
 };
-  
 
+export const updatePropertyCoAdmin = async ({
+  id,
+  payload
+}: {
+  payload: PropertyCoAdminPayload;
+  id: number;
+}) => {
+  try {
+    const response = await apiClient.put(
+      `${BASE_URLS.propertyCoAdmin}/${id}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
+export const statusPropertyCoAdmin = async ({
+  payload
+}: {
+  payload: PropertyCoAdminPayload;
+  id: number;
+}) => {
+  try {
+    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
+    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
+    // return response.data;
+    console.log('property Co-Admin status', payload);
+  } catch (error) {
+    console.error('Error deleting property Co-Admin:', error);
+    throw error;
+  }
+};

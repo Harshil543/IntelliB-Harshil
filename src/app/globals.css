@@ -55,7 +55,7 @@ body {
     --secondary: #000000; /* textPrimaryColor */
     --secondary-foreground: #fff; /* light */
     --muted: #000000; /* textPrimaryColor */
-    --muted-foreground: #a3aed0; /* textSecondaryColor */
+    --muted-foreground: #878b93; /* textSecondaryColor */
     --accent: #000000; /* textPrimaryColor */
     --accent-foreground: #fff; /* light */
     --destructive: rgba(217, 21, 21, 1); /* danger */

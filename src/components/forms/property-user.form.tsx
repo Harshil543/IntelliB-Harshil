@@ -1,8 +1,8 @@
 import React from 'react';
-import CardWrapper from '@/components/CommonComponents/CardWrapper';
+import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
-import { useRouter } from 'next/navigation';
+import TextInput from '@/components/fields/TextInput';
+import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -10,25 +10,30 @@ import {
   createPropertyUser,
   updatePropertyUser
 } from '@/services/property-user.service';
-import PhoneInputField from '../CommonComponents/PhoneInput';
+import PhoneInputField from '../fields/PhoneInput';
+import SelectInput from '../fields/SelectInput';
+
+// Define a type for form values
+interface PropertyUserValues {
+  id?: number;
+  salutation: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  countryCode: string;
+  mobileNumber: string;
+  designation: string;
+}
 
 interface PropertyUserFormProps {
-  initialValues?: {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    countryCode: string;
-    mobileNumber: string;
-    designation: string;
-    status: string;
-  };
+  initialValues?: PropertyUserValues;
 }
 
 export default function PropertyUserForm({
   initialValues
 }: PropertyUserFormProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -39,7 +44,7 @@ export default function PropertyUserForm({
           id: initialValues.id
         });
       } else {
-        return await createPropertyUser({ payload: data.value });
+        return await createPropertyUser({ payload: data?.value });
       }
     },
     onSuccess: () => {
@@ -52,18 +57,20 @@ export default function PropertyUserForm({
     }
   });
 
+  const isViewPropertyUser = pathname.includes('view-property-user');
+
   const form = useForm({
     defaultValues: initialValues || {
-      id: '',
+      salutation: '',
       firstName: '',
       lastName: '',
       email: '',
       countryCode: '',
       mobileNumber: '',
       designation: '',
-      status: 'Active'
+      profilePicture: ''
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
   });
@@ -78,6 +85,26 @@ export default function PropertyUserForm({
         className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
       >
         <form.Field
+          name="salutation"
+          validators={{
+            onChange: ({ value }) =>
+              !value ? 'Salutation is required' : undefined
+          }}
+        >
+          {(field) => (
+            <SelectInput
+              disabled={isViewPropertyUser}
+              label="Salutation"
+              field={field}
+              options={[
+                { value: 'mr', label: 'mr' },
+                { value: 'mrs', label: 'mrs' },
+                { value: 'ms', label: 'ms' }
+              ]}
+            />
+          )}
+        </form.Field>
+        <form.Field
           name="firstName"
           validators={{
             onChange: ({ value }) => {
@@ -89,8 +116,16 @@ export default function PropertyUserForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="First Name" field={field} />}
-        />
+        >
+          {(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="First Name"
+              field={field}
+            />
+          )}
+        </form.Field>
+
         <form.Field
           name="lastName"
           validators={{
@@ -103,8 +138,16 @@ export default function PropertyUserForm({
               return undefined;
             }
           }}
-          children={(field) => <TextInput label="Last Name" field={field} />}
-        />
+        >
+          {(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="Last Name"
+              field={field}
+            />
+          )}
+        </form.Field>
+
         <form.Field
           name="email"
           validators={{
@@ -115,22 +158,30 @@ export default function PropertyUserForm({
               return undefined;
             }
           }}
-          children={(field) => (
-            <TextInput type="email" label="Email" field={field} />
+        >
+          {(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              type="email"
+              label="Email"
+              field={field}
+            />
           )}
-        />
+        </form.Field>
+
         <form.Field
           name="mobileNumber"
           validators={{
             onChange: ({ value }) => {
               if (!value) return 'Mobile Number is required';
-
               return undefined;
             }
           }}
-          children={(field) => (
+        >
+          {(field) => (
             <PhoneInputField
               label="Mobile Number"
+              disabled={isViewPropertyUser}
               field={{
                 value: form.getFieldValue('mobileNumber'),
                 countryCode: form.getFieldValue('countryCode'),
@@ -146,31 +197,46 @@ export default function PropertyUserForm({
               }}
             />
           )}
-        />
+        </form.Field>
+
         <form.Field
           name="designation"
           validators={{
             onChange: ({ value }) =>
               !value ? 'Designation is required' : undefined
           }}
-          children={(field) => <TextInput label="Designation" field={field} />}
-        />
+        >
+          {(field) => (
+            <TextInput
+              disabled={isViewPropertyUser}
+              label="Designation"
+              field={field}
+            />
+          )}
+        </form.Field>
+
         <div className="col-span-full mt-10 flex space-x-4">
           <Button
             type="button"
-            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-background"
+            className="text-dark w-fit bg-secondary hover:bg-opacity-80 hover:text-black"
             onClick={() => router.back()}
           >
             Cancel
           </Button>
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-            children={([canSubmit, isSubmitting]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
-            )}
-          />
+          {!isViewPropertyUser && (
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
+                </Button>
+              )}
+            </form.Subscribe>
+          )}
         </div>
         {mutation.isError && (
           <div className="col-span-full text-red-500">

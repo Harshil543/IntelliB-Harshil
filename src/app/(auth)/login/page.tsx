@@ -1,102 +1,27 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import TextInput from '@/components/CommonComponents/TextInput';
-import { useForm } from '@tanstack/react-form';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import logo from '@assets/images/logo.png';
+import AuthWrapper from '@/components/layout/AuthWrapper';
+import { LoginForm } from '@/components/forms/login.form';
 
 const Login = () => {
-  const router = useRouter();
-  const form = useForm({
-    defaultValues: {
-      email: '',
-      password: ''
-    },
-    onSubmit: async ({ value }) => {
-      console.log('Form Submitted', value);
-      router.push('/');
-    }
-  });
-
   return (
-    <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col p-10 text-background dark:border-r lg:flex">
-        <div className="absolute inset-0 bg-zinc-900" />
-        <div className="relative z-20 flex items-center text-lg font-medium">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="mr-2 h-6 w-6"
-          >
-            <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-          </svg>
-          Logo
-        </div>
-        <div className="relative z-20 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-lg">
-              &ldquo;This library has saved me countless hours of work and
-              helped me deliver stunning designs to my clients faster than ever
-              before.&rdquo;
-            </p>
-            <footer className="text-sm">Sofia Davis</footer>
-          </blockquote>
-        </div>
-      </div>
-      <div className="flex h-full items-center p-4 lg:p-8">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
-          <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Login</h1>
-            <p className="text-sm">Enter your email below to login</p>
+    <AuthWrapper>
+      <div className="flex h-full w-full justify-center bg-background p-4 align-middle lg:p-8">
+        <div className="sm:w[90%] mt-[10%] flex flex-col justify-start space-y-2 align-middle lg:w-[50%]">
+          <div className="mb-10 flex flex-col items-center space-y-2">
+            <Image src={logo} className="w-40" alt="IntelliB logo" />
+            <h1 className="text-2xl font-semibold tracking-tight">
+              Welcome Back
+            </h1>
+            <p className="text-sm">For business, band or celebrity.</p>
           </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              form.handleSubmit();
-            }}
-            className="grid grid-cols-1 gap-4"
-          >
-            <form.Field
-              name="email"
-              validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Email is required' : undefined
-              }}
-              children={(field) => (
-                <TextInput type="email" label="Email" field={field} />
-              )}
-            />
-            <form.Field
-              name="password"
-              validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Password is required' : undefined
-              }}
-              children={(field) => (
-                <TextInput type="password" label="Password" field={field} />
-              )}
-            />
-
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
-                </Button>
-              )}
-            />
-          </form>
+          <LoginForm />
         </div>
       </div>
-    </div>
+    </AuthWrapper>
   );
 };
 

@@ -1,19 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { deletePropertyCoAdmin } from '@/services/property-co-admin.service';
+import { Checkbox } from '@/components/ui/checkbox';
+import PropertyCoAdminActionCell from '../cellsAction/property.coadmin.action.cell';
 
 interface PropertyCoAdminColumns {
   id: number;
@@ -24,13 +12,41 @@ interface PropertyCoAdminColumns {
   mobileNumber: string;
   role: string;
   designation: string;
+  salutation: string;
   status: string;
 }
 
 const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
   {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false
+  },
+  {
+    accessorKey: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
+  },
+  {
     accessorKey: 'id',
-    header: 'id',
+    header: 'Id',
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
@@ -39,9 +55,12 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'firstName',
     header: 'Name',
     cell: ({ row }) => {
-      const firstName = row.original.firstName;
-      const lastName = row.original.lastName;
-      return <div className="capitalize">{`${firstName} ${lastName}`}</div>;
+      const salutation = row?.original?.salutation;
+      const firstName = row?.original?.firstName;
+      const lastName = row?.original?.lastName;
+      return (
+        <div className="capitalize">{`${salutation} ${firstName} ${lastName}`}</div>
+      );
     }
   },
 
@@ -77,7 +96,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
@@ -87,57 +106,13 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyUserId = row.getValue('id') as number;
-      const queryClient = useQueryClient();
-      const router = useRouter();
-
-      const delteMutation = useMutation({
-        mutationFn: deletePropertyCoAdmin
-      });
-
-      const handleUpdate = (id: number) => {
-        router.push(`/property-co-admin/update-property-co-admin/${id}`);
-      };
-
-      const handleDelete = async (id: number) => {
-        try {
-          delteMutation.mutate(id, {
-            onSuccess: () => {
-              queryClient.invalidateQueries({
-                queryKey: ['property-co-admin']
-              });
-              toast.success(`Deleted successfully`);
-            }
-          });
-        } catch (error) {
-          console.error('Error deleting property user:', error);
-        }
-      };
-
+      const propertyCoAdminId = row.getValue('id') as number;
+      const currentStatus = row.getValue('status') as string;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="h-8 w-8 p-0" variant="none">
-              <span className="sr-only">Open menu</span>
-              <DotsHorizontalIcon className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
-              Update
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleDelete(propertyUserId)}>
-              Delete
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              {row.getValue('status') === 'Active' ? 'De-Activate' : 'Activate'}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <PropertyCoAdminActionCell
+          propertyCoAdminId={propertyCoAdminId}
+          currentStatus={currentStatus}
+        />
       );
     }
   }
