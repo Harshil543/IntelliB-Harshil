@@ -17,18 +17,18 @@ import { statusPropertyCoAdmin } from '@/services/property-co-admin.service';
 
 interface PropertyCoAdminActionCellProps {
   propertyCoAdminId: number;
-  currentStatus: string;
+  status: string;
 }
 
 const PropertyCoAdminActionCell: React.FC<PropertyCoAdminActionCellProps> = ({
   propertyCoAdminId,
-  currentStatus
+  status
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: statusPropertyCoAdmin
+    mutationFn: (id: number) => statusPropertyCoAdmin(id)
   });
 
   const handleView = (id: number) => {
@@ -39,20 +39,14 @@ const PropertyCoAdminActionCell: React.FC<PropertyCoAdminActionCellProps> = ({
     router.push(`/property-co-admin/update-property-co-admin/${id}`);
   };
 
-  const handleStatus = async (id: number, status: string) => {
-    const newStatus = status === 'Active' ? 'Inactive' : 'Active';
-    const payload = {
-      payload: {
-        id,
-        status: newStatus
-      },
-      id
-    };
-
+  const handleStatus = async (id: number) => {
     try {
-      await statusMutation.mutateAsync(payload as any);
-      queryClient.invalidateQueries({ queryKey: ['property-co-admin'] });
-      toast.success(`Status updated successfully`);
+      statusMutation.mutate(id, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['property-co-admin'] });
+          toast.success(`Status updated successfully`);
+        }
+      });
     } catch (error) {
       console.error('Error updating property co-admin status:', error);
     }
@@ -77,9 +71,10 @@ const PropertyCoAdminActionCell: React.FC<PropertyCoAdminActionCellProps> = ({
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          onClick={() => handleStatus(propertyCoAdminId, currentStatus)}
+          onClick={() => handleStatus(propertyCoAdminId)}
+          className="cursor-pointer"
         >
-          {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
+          {status === 'active' ? 'In-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

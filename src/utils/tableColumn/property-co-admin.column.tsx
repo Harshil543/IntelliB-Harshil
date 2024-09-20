@@ -111,7 +111,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
       return (
         <PropertyCoAdminActionCell
           propertyCoAdminId={propertyCoAdminId}
-          currentStatus={currentStatus}
+          status={currentStatus}
         />
       );
     }
