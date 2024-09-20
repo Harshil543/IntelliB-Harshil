@@ -111,7 +111,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
+        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
@@ -124,9 +124,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
       const tenantId = row.getValue('id') as number;
       const currentStatus = row.getValue('status') as string;
 
-      return (
-        <TenantActionsCell tenantId={tenantId} currentStatus={currentStatus} />
-      );
+      return <TenantActionsCell tenantId={tenantId} status={currentStatus} />;
     }
   }
 ];

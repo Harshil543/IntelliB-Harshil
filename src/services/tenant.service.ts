@@ -153,20 +153,12 @@ export const updateTenantBillingData = async ({
   }
 };
 
-export const statusTenant = async ({
-  payload
-}: {
-  id: number;
-  payload: { status: string }; // Update this type based on your actual payload
-}) => {
+export const statusTenant = async (id: number) => {
   try {
-    // Example usage of payload
-    console.log('tenant status', payload);
-    // Uncomment and update the API call if needed
-    // const response = await apiClient.patch(`/tenant/${id}/status`, payload);
-    // return response.data;
+    const response = await apiClient.patch(`${BASE_URLS?.tenant}/${id}`);
+    return response?.data?.data;
   } catch (error) {
-    console.error('Error changing tenant status:', error);
+    console.error('Error status company:', error);
     throw error;
   }
 };

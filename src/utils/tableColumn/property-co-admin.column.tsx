@@ -96,7 +96,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'} capitalize`}
+        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
@@ -111,7 +111,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
       return (
         <PropertyCoAdminActionCell
           propertyCoAdminId={propertyCoAdminId}
-          currentStatus={currentStatus}
+          status={currentStatus}
         />
       );
     }

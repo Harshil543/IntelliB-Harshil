@@ -67,19 +67,15 @@ export const updatePropertyCoAdmin = async ({
   }
 };
 
-export const statusPropertyCoAdmin = async ({
-  payload
-}: {
-  payload: PropertyCoAdminPayload;
-  id: number;
-}) => {
+export const statusPropertyCoAdmin = async (id: number) => {
   try {
-    // const response = await apiClient.delete(`${BASE_URLS?.property-user}/property-user/${propertyUserId}`);
-    // const response = await apiClient.delete(`/property-user/${propertyUserId}`);
-    // return response.data;
-    console.log('property Co-Admin status', payload);
+    const response = await apiClient.patch(
+      `${BASE_URLS?.propertyCoAdmin}/${id}`
+    );
+
+    return response?.data?.data;
   } catch (error) {
-    console.error('Error deleting property Co-Admin:', error);
+    console.error('Error status company:', error);
     throw error;
   }
 };
