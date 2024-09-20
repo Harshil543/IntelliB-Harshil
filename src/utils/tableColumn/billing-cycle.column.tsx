@@ -73,7 +73,7 @@ const billingCycleColumn: ColumnDef<LeasableUnitData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'Active' ? '' : 'bg-red-300'}`}
+        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
