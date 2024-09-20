@@ -124,9 +124,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
       const tenantId = row.getValue('id') as number;
       const currentStatus = row.getValue('status') as string;
 
-      return (
-        <TenantActionsCell tenantId={tenantId} currentStatus={currentStatus} />
-      );
+      return <TenantActionsCell tenantId={tenantId} status={currentStatus} />;
     }
   }
 ];

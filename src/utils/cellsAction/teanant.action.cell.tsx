@@ -17,18 +17,18 @@ import { statusTenant } from '@/services/tenant.service';
 
 interface TenantActionsCellProps {
   tenantId: number;
-  currentStatus: string;
+  status: string;
 }
 
 const TenantActionsCell: React.FC<TenantActionsCellProps> = ({
   tenantId,
-  currentStatus
+  status
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: statusTenant
+    mutationFn: (id: number) => statusTenant(id)
   });
 
   const handleView = (id: number) => {
@@ -39,24 +39,16 @@ const TenantActionsCell: React.FC<TenantActionsCellProps> = ({
     router.push(`/tenants/update-tenant/${id}`);
   };
 
-  const handleStatus = async (id: number, status: string) => {
-    const payload = {
-      payload: {
-        id,
-        status: status === 'Active' ? 'Inactive' : 'Active'
-      },
-      id
-    };
-
+  const handleStatus = async (id: number) => {
     try {
-      statusMutation.mutate(payload, {
+      statusMutation.mutate(id, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['tenant'] });
           toast.success(`Status updated successfully`);
         }
       });
     } catch (error) {
-      console.error('Error updating tenant status:', error);
+      console.error('Error updating property co-admin status:', error);
     }
   };
 
@@ -80,8 +72,11 @@ const TenantActionsCell: React.FC<TenantActionsCellProps> = ({
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleStatus(tenantId, currentStatus)}>
-          {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
+        <DropdownMenuItem
+          onClick={() => handleStatus(tenantId)}
+          className="cursor-pointer"
+        >
+          {status === 'active' ? 'In-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
