@@ -3,6 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import storage from '@/utils/storage';
+import Loader from '@/components/CommonComponents/Loader';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -33,7 +34,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, [pathname, router]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return <>{children}</>;
