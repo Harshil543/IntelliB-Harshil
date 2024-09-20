@@ -164,7 +164,7 @@ const IncomeExpenseAnalysis = () => {
           isSearchable={false}
         />
       </CardHeader>
-      <CardContent className="flex flex-row gap-4 p-4">
+      <CardContent className="flex flex-row flex-wrap gap-4 p-4 md:flex-nowrap">
         <div className="w-72">
           <CardTitle className="text-lg font-bold">Rs. 200,000</CardTitle>
           <CardTitle className="text-sm font-medium text-muted-foreground">
