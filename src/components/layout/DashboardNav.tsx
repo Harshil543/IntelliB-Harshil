@@ -52,9 +52,9 @@ export function DashboardNav({
                 <TooltipTrigger asChild>
                   <div
                     className={cn(
-                      'flex cursor-pointer items-center gap-2 overflow-hidden py-2 text-sm font-medium hover:border-r-2 hover:border-black hover:text-black',
+                      'flex cursor-pointer items-center gap-2 overflow-hidden py-2 text-sm font-medium hover:border-r-2 hover:border-black hover:bg-secondary hover:text-black',
                       path === item.href
-                        ? 'border-r-2 border-black text-black'
+                        ? 'border-r-2 border-black bg-secondary text-black'
                         : 'transparent'
                     )}
                     onClick={() => {
@@ -66,7 +66,7 @@ export function DashboardNav({
                       }
                     }}
                   >
-                    <Icon className={`ml-3 size-5`} icon={item?.icon} />
+                    <Icon icon={`mdi:${item?.icon}`} className="h-6 w-6" />
 
                     {isMobileNav || (!isMinimized && !isMobileNav) ? (
                       <span className="mr-5 truncate">{item?.title}</span>

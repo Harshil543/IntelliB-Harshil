@@ -10,17 +10,18 @@ import toast from 'react-hot-toast';
 import Heading from '../fields/Heading';
 
 import {
-  createLeasableUnit,
-  updateLeasableUnit
+  createLeasableUnit
+  // updateLeasableUnit
 } from '@/services/leasable-unit.service';
-import MultiSelectInput from '../fields/MultiSelectInput';
+// import MultiSelectInput from '../fields/MultiSelectInput';
 import SelectInput from '../fields/SelectInput';
 
 interface LeasableUnitFormValues {
   id?: number;
-  name: string;
-  floorAndWing: string;
-  smartMeterId: string[];
+  unitNumber: string;
+  unitType: string;
+  floor: number;
+  squareFootage: number;
   status: string;
 }
 
@@ -38,11 +39,12 @@ export default function LeasableUnitForm({
   const isViewLeasableUnit = pathname.includes('view-leasable-unit');
 
   const mutation = useMutation({
-    mutationFn: async (data: LeasableUnitFormValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        return await updateLeasableUnit(initialValues.id, data);
+        console.log('iniatial id leasable unit', initialValues?.id);
+        // return await updateLeasableUnit({data?.value, initialValues?.id});
       } else {
-        return await createLeasableUnit(data);
+        return await createLeasableUnit(data?.value);
       }
     },
     onSuccess: () => {
@@ -56,12 +58,7 @@ export default function LeasableUnitForm({
   });
 
   const form = useForm<LeasableUnitFormValues>({
-    defaultValues: initialValues || {
-      name: '',
-      floorAndWing: '',
-      smartMeterId: [],
-      status: 'Active'
-    },
+    defaultValues: initialValues,
     onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
@@ -78,31 +75,49 @@ export default function LeasableUnitForm({
         <Heading>Leasable Unit Data</Heading>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
-            name="name"
+            name="unitNumber"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Name is required';
+                if (!value) return 'Unit Number is required';
                 if (value.length < 3)
-                  return 'Leasable Unit name must be at least 3 characters';
+                  return 'Unit Number must be at least 3 characters';
                 return undefined;
               }
             }}
           >
             {(field) => (
               <TextInput
-                label="Name"
+                label="Unit Number"
                 field={field}
                 disabled={isViewLeasableUnit}
               />
             )}
           </form.Field>
           <form.Field
-            name="floorAndWing"
+            name="unitType"
+            validators={{
+              onChange: ({ value }) =>
+                !value ? 'Unit Type is required' : undefined
+            }}
+          >
+            {(field) => (
+              <SelectInput
+                label="Unit Type"
+                field={field}
+                options={[
+                  { value: 'Apartment', label: 'apartment' },
+                  { value: 'Office', label: 'office' },
+                  { value: 'Retail', label: 'retail' }
+                ]}
+                disabled={isViewLeasableUnit}
+              />
+            )}
+          </form.Field>
+          {/* <form.Field
+            name="floor"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Floor/Wing is required';
-                if (value.length < 3)
-                  return 'Floor And Wing must be at least 3 characters';
+                if (!value) return 'Floor is required';
                 return undefined;
               }
             }}
@@ -114,8 +129,8 @@ export default function LeasableUnitForm({
                 disabled={isViewLeasableUnit}
               />
             )}
-          </form.Field>
-          <form.Field
+          </form.Field> */}
+          {/* <form.Field
             name="smartMeterId"
             validators={{
               onChange: ({ value }) =>
@@ -135,6 +150,49 @@ export default function LeasableUnitForm({
                 placeholder="Select Smart Meter"
               />
             )}
+          </form.Field> */}
+          <form.Field
+            name="floor"
+            validators={{
+              onChange: ({ value }) => {
+                const parsedValue = Number(value);
+                if (!value) return 'Floor is required';
+                if (isNaN(parsedValue)) return 'Floor must be a number';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput
+                label="Floor/Wing"
+                field={field}
+                type="number"
+                disabled={isViewLeasableUnit}
+                // onChange={(e) => field.onChange(Number(e.target.value))}
+              />
+            )}
+          </form.Field>
+          <form.Field
+            name="squareFootage"
+            validators={{
+              onChange: ({ value }) => {
+                const parsedValue = Number(value);
+                if (!value) return 'Square Footage is required';
+                if (isNaN(parsedValue))
+                  return 'Square Footage must be a number';
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput
+                label="Square Footage"
+                field={field}
+                type="number"
+                disabled={isViewLeasableUnit}
+                // onChange={(e) => field.onChange(Number(e.target.value))}
+              />
+            )}
           </form.Field>
           <form.Field
             name="status"
@@ -148,8 +206,9 @@ export default function LeasableUnitForm({
                 label="Status"
                 field={field}
                 options={[
-                  { value: 'Active', label: 'List' },
-                  { value: 'Inactive', label: 'Delist' }
+                  { value: 'Available', label: 'available' },
+                  { value: 'Leased', label: 'leased' },
+                  { value: 'Maintenance', label: 'maintenance' }
                 ]}
                 disabled={isViewLeasableUnit}
               />

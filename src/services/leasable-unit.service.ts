@@ -1,4 +1,5 @@
 import apiClient from '@/config/api.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
 // Define an interface for the payload
 interface LeasableUnitPayload {
@@ -10,8 +11,9 @@ interface LeasableUnitPayload {
 
 export const getLeasableUnit = async (page: number, searchQuery: string) => {
   try {
-    console.log('page', page, 'searchQuery', searchQuery);
-    const response = await apiClient.get(`/leasable-unit/`);
+    const response = await apiClient.get(
+      `${BASE_URLS.leasableUnit}?page=${page}&limit=10&search=${searchQuery}`
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -20,7 +22,7 @@ export const getLeasableUnit = async (page: number, searchQuery: string) => {
 
 export const getAllLeasableUnit = async () => {
   try {
-    const response = await apiClient.get(`/leasable-unit/`);
+    const response = await apiClient.get(`${BASE_URLS.leasableUnit}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -29,7 +31,9 @@ export const getAllLeasableUnit = async () => {
 
 export const getLeasableUnitById = async (leasableUnitId: number) => {
   try {
-    const response = await apiClient.get(`/leasable-unit/${leasableUnitId}`);
+    const response = await apiClient.get(
+      `${BASE_URLS.leasableUnit}/${leasableUnitId}`
+    );
     return response.data;
   } catch (error) {
     throw error;
@@ -38,19 +42,29 @@ export const getLeasableUnitById = async (leasableUnitId: number) => {
 
 export const createLeasableUnit = async (payload: LeasableUnitPayload) => {
   try {
-    const response = await apiClient.post(`/leasable-unit/`, payload);
+    console.log('payload Leasable Unit', payload);
+
+    const response = await apiClient.post(`${BASE_URLS.leasableUnit}`, payload);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const updateLeasableUnit = async (
-  id: number,
-  payload: LeasableUnitPayload
-) => {
+export const updateLeasableUnit = async ({
+  id,
+  payload
+}: {
+  id: number;
+  payload: LeasableUnitPayload;
+}) => {
   try {
-    const response = await apiClient.put(`/leasable-unit/${id}`, payload);
+    console.log('leasable unit', payload, 'id', id);
+
+    const response = await apiClient.put(
+      `${BASE_URLS.leasableUnit}/${id}`,
+      payload
+    );
     return response.data;
   } catch (error) {
     throw error;

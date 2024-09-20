@@ -38,7 +38,8 @@ export default function LeasableUnit() {
       <DataTable
         columns={leasableUnitColumn}
         path="/leasable-unit/register-leasable-unit"
-        data={isError ? [] : data?.items}
+        // data={isError ? [] : data?.items}
+        data={isError ? [] : []}
         pagination={data?.pagination}
         handleNext={handleNext}
         handlePrevious={handlePrevious}

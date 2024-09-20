@@ -19,8 +19,8 @@ interface MeterFormValues {
   meterType: string;
   meterNumber: string;
   installationDate: Date | null;
-  status: string;
   leasableUnitId: number | string;
+  status: string;
 }
 
 interface MeterFormProps {
@@ -136,7 +136,7 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
               />
             )}
           </form.Field>
-          <form.Field
+          {/* <form.Field
             name="leasableUnitId"
             validators={{
               onChange: ({ value }) => {
@@ -159,6 +159,26 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
                   []
                 }
                 disabled={isLoading || isViewMeter}
+              />
+            )}
+          </form.Field> */}
+          <form.Field
+            name="status"
+            validators={{
+              onChange: ({ value }) =>
+                !value ? 'Status is required' : undefined
+            }}
+          >
+            {(field) => (
+              <SelectInput
+                label="Status"
+                field={field}
+                options={[
+                  { value: 'Active', label: 'active' },
+                  { value: 'Inactive', label: 'inactive' },
+                  { value: 'Maintenance', label: 'maintenance' }
+                ]}
+                disabled={isViewMeter}
               />
             )}
           </form.Field>
