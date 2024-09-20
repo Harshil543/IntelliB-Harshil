@@ -28,8 +28,7 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
   const router = useRouter();
 
   const statusMutation = useMutation({
-    mutationFn: (payload: { id: number; status: string }) =>
-      statusCompany(payload.id, payload)
+    mutationFn: (id: number) => statusCompany(id)
   });
 
   const handleView = (id: number) => {
@@ -40,17 +39,9 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
     router.push(`/company/update-company/${id}`);
   };
 
-  const handleStatus = async (id: number, status: string) => {
-    const payload = {
-      payload: {
-        id,
-        status: status === 'Active' ? 'Inactive' : 'Active'
-      },
-      id
-    };
-
+  const handleStatus = async (id: number) => {
     try {
-      statusMutation.mutate(payload as any, {
+      statusMutation.mutate(id, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['company'] });
           toast.success(`Status updated successfully`);
@@ -79,8 +70,11 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleStatus(id, status)}>
-          {status === 'Active' ? 'Deactivate' : 'Activate'}
+        <DropdownMenuItem
+          onClick={() => handleStatus(id)}
+          className="cursor-pointer"
+        >
+          {status === 'active' ? 'In-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

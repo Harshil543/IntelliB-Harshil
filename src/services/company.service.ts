@@ -19,10 +19,6 @@ interface CompanyPayload {
   status?: string;
 }
 
-interface StatusPayload {
-  status: string;
-}
-
 export const getCompany = async (page: number, searchQuery: string) => {
   try {
     const response = await apiClient.get(
@@ -68,10 +64,11 @@ export const updateCompany = async (
   }
 };
 
-export const statusCompany = async (id: number, payload: StatusPayload) => {
+export const statusCompany = async (id: number) => {
   try {
-    console.log('company status', payload);
-    // Implement the status update logic here if needed
+    const response = await apiClient.patch(`${BASE_URLS?.company}/${id}`);
+
+    return response?.data?.data;
   } catch (error) {
     console.error('Error status company:', error);
     throw error;
