@@ -28,8 +28,9 @@ export const getPropertyUser = async (page: number, searchQuery: string) => {
       `${BASE_URLS?.propertyUser}?page=${page}&limit=10&search=${searchQuery}`
     );
     return response?.data?.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -41,8 +42,9 @@ export const getPropertyUserById = async (
       `${BASE_URLS.propertyUser}/${propertyUserId}`
     );
     return response.data?.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -54,8 +56,9 @@ export const createPropertyUser = async ({
   try {
     const response = await apiClient.post(`${BASE_URLS.propertyUser}`, payload);
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -72,9 +75,9 @@ export const updatePropertyUser = async ({
       payload
     );
     return response.data;
-  } catch (error) {
-    console.error('Error updating property-user:', error);
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -83,8 +86,8 @@ export const statusPropertyUser = async (
 ): Promise<void> => {
   try {
     console.log('property user status', payload);
-  } catch (error) {
-    console.error('Error processing property-user status:', error);
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };

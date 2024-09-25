@@ -7,13 +7,17 @@ import meterColumn from '@/utils/tableColumn/meter.column';
 import { getMeter } from '@/services/meter.service';
 import Loader from '@/components/CommonComponents/Loader';
 
-export default function Meter() {
+interface MeterFormProps {
+  addButton?: React.ReactNode;
+  leasableUnitId: number;
+}
+const Meter: React.FC<MeterFormProps> = ({ addButton, leasableUnitId }) => {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const { status, isError, data } = useQuery({
     queryKey: ['meter', page, searchQuery],
-    queryFn: () => getMeter(page, searchQuery),
+    queryFn: () => getMeter(page, searchQuery, leasableUnitId),
     placeholderData: keepPreviousData
   });
 
@@ -38,12 +42,15 @@ export default function Meter() {
       <DataTable
         columns={meterColumn}
         path="/meter/register-meter"
-        data={isError ? [] : []}
+        data={isError ? [] : data?.items}
         pagination={data?.pagination}
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        addButton={addButton}
       />
     </div>
   );
-}
+};
+
+export default Meter;

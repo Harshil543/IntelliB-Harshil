@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
 import MeterActionCell from '../cellsAction/meter.action.cell';
+import { format } from 'date-fns';
 
 interface MeterData {
   id: number;
@@ -51,7 +52,7 @@ const meterColumn: ColumnDef<MeterData>[] = [
     accessorKey: 'meterType',
     header: 'Meter Type',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('meterType') ?? 'N/A'}</div>
+      <div className="capitalize">{row.getValue('meterType') ?? 'N/A'}</div>
     )
   },
   {
@@ -64,12 +65,18 @@ const meterColumn: ColumnDef<MeterData>[] = [
   {
     accessorKey: 'installationDate',
     header: 'Installation Date',
-    cell: ({ row }) => (
-      <div className="lowercase">
-        {row.getValue('installationDate') ?? 'N/A'}
-      </div>
-    )
+    cell: ({ row }) => {
+      const installationDate = row.getValue('installationDate');
+
+      // Check if the installationDate is valid
+      const formattedDate = installationDate
+        ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
+        : 'N/A';
+
+      return <div className="lowercase">{formattedDate}</div>;
+    }
   },
+
   {
     accessorKey: 'leasableUnitId',
     header: 'Leasable Unit Id',

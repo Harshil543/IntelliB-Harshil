@@ -43,6 +43,7 @@ type DataTableProps<T> = {
   columns: ColumnDef<T>[];
   data: T[];
   path: string;
+  addButton?: React.ReactNode;
   pagination: Pagination;
   handleNext: () => void;
   handlePrevious: () => void;
@@ -53,6 +54,7 @@ export function DataTable<T>({
   columns,
   data,
   pagination,
+  addButton,
   path,
   handleNext,
   handlePrevious,
@@ -192,7 +194,6 @@ export function DataTable<T>({
           value={searchQuery}
           onChange={handleSearchChange}
         />
-
         <div className="flex items-center space-x-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -236,7 +237,12 @@ export function DataTable<T>({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <Button onClick={() => handleNavigate(path)}>Add</Button>
+
+        {addButton ? (
+          addButton
+        ) : (
+          <Button onClick={() => handleNavigate(path)}>Add</Button>
+        )}
       </div>
       <div className="rounded-lg border bg-background">
         <Table>

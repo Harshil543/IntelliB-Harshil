@@ -31,7 +31,7 @@ export const LoginForm = () => {
       router.push('/');
     },
     onError: (error) => {
-      toast.error(`Error: ${(error as Error).message}`);
+      toast.error(`Error: ${error.message}`);
     }
   });
 

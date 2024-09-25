@@ -1,8 +1,5 @@
 // src/components/MeterActionCell.tsx
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import React, { useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { statusMeter } from '@/services/meter.service';
+import { MeterFormModal } from '@/components/CommonComponents/meter.modal';
 
 interface MeterActionCellProps {
   id: number;
@@ -24,58 +21,39 @@ interface MeterActionCellProps {
   leasableUnitId: number;
 }
 
-const MeterActionCell: React.FC<MeterActionCellProps> = ({ id, status }) => {
-  const queryClient = useQueryClient();
-  const router = useRouter();
-
-  const statusMutation = useMutation({
-    mutationFn: statusMeter
-  });
-
-  const handleView = () => {
-    router.push(`/meter/view-meter/${id}`);
-  };
+const MeterActionCell: React.FC<MeterActionCellProps> = ({ id }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleUpdate = () => {
-    router.push(`/meter/update-meter/${id}`);
-  };
-  const handleStatus = async (id: number, status: string) => {
-    const payload = {
-      payload: {
-        id,
-        status: status === 'Active' ? 'Inactive' : 'Active'
-      },
-      id
-    };
-
-    try {
-      await statusMutation.mutateAsync(payload as any);
-      queryClient.invalidateQueries({ queryKey: ['meter'] });
-      toast.success(`Status updated successfully`);
-    } catch (error) {
-      console.error('Error updating meter status:', error);
-    }
+    setIsOpen(true);
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="h-8 w-8 p-0" variant="none">
-          <span className="sr-only">Open menu</span>
-          <DotsHorizontalIcon className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleView}>View</DropdownMenuItem>
-        <DropdownMenuItem onClick={handleUpdate}>Update</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleStatus(id, status)}>
-          {status === 'Active' ? 'De-Activate' : 'Activate'}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="h-8 w-8 p-0" variant="none">
+            <span className="sr-only">Open menu</span>
+            <DotsHorizontalIcon className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleUpdate}>Update</DropdownMenuItem>
+          <DropdownMenuSeparator />
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {isOpen ? (
+        <MeterFormModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          leasableUnitId={5}
+          id={id}
+        />
+      ) : null}
+    </>
   );
 };
 

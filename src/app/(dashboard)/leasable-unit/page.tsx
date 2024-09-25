@@ -2,9 +2,7 @@
 
 import { DataTable } from '@/components/fields/Table';
 import React, { useState } from 'react';
-
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import { getLeasableUnit } from '@/services/leasable-unit.service';
 import leasableUnitColumn from '@/utils/tableColumn/leasable-unit.column';
 import Loader from '@/components/CommonComponents/Loader';
@@ -38,8 +36,7 @@ export default function LeasableUnit() {
       <DataTable
         columns={leasableUnitColumn}
         path="/leasable-unit/register-leasable-unit"
-        // data={isError ? [] : data?.items}
-        data={isError ? [] : []}
+        data={isError ? [] : data?.items}
         pagination={data?.pagination}
         handleNext={handleNext}
         handlePrevious={handlePrevious}

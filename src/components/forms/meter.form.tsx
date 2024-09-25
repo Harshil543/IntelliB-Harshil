@@ -2,11 +2,9 @@
 import { createMeter, updateMeter } from '@/services/meter.service';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import toast from 'react-hot-toast';
-import CardWrapper from '@components/layout/CardWrapper';
-import Heading from '@components/fields/Heading';
 import TextInput from '@components/fields/TextInput';
 import DatePickerInput from '@components/fields/DatePickerInput';
 import SelectInput from '@components/fields/SelectInput';
@@ -19,16 +17,22 @@ interface MeterFormValues {
   meterType: string;
   meterNumber: string;
   installationDate: Date | null;
-  leasableUnitId: number | string;
+  leasableUnitId: number | null;
   status: string;
 }
 
 interface MeterFormProps {
   initialValues?: MeterFormValues;
+  closeButton?: React.ReactNode;
+  leasableUnitId: number | null;
+  onClose: Function;
 }
-
-export default function MeterForm({ initialValues }: MeterFormProps) {
-  const router = useRouter();
+export default function MeterForm({
+  initialValues,
+  closeButton,
+  leasableUnitId,
+  onClose
+}: MeterFormProps) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
 
@@ -40,16 +44,22 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: MeterFormValues) => {
+    mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        return await updateMeter(initialValues.id, data);
+        return await updateMeter(initialValues.id, data?.value);
       } else {
-        return await createMeter(data);
+        if (leasableUnitId === null) {
+          throw new Error('Leasable Unit ID is required.');
+        }
+        return await createMeter({
+          payload: data?.value,
+          id: leasableUnitId
+        });
       }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['meter'] });
-      router.push('/meter/');
+      onClose();
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
@@ -58,13 +68,7 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
   });
 
   const form = useForm<MeterFormValues>({
-    defaultValues: initialValues || {
-      meterType: '',
-      meterNumber: '',
-      installationDate: null,
-      status: 'Active',
-      leasableUnitId: '' as unknown as number
-    },
+    defaultValues: initialValues,
     onSubmit: async (values: any) => {
       await mutation.mutateAsync(values);
     }
@@ -80,23 +84,26 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
         form.handleSubmit();
       }}
     >
-      <CardWrapper>
-        <Heading>Meter Data</Heading>
+      <>
+        {/* <Heading>Meter Data</Heading> */}
 
-        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1">
           <form.Field
             name="meterType"
             validators={{
-              onChange: ({ value }) => {
-                if (!value) return 'Meter Type is required';
-                return undefined;
-              }
+              onChange: ({ value }) =>
+                !value ? 'Meter Type is required' : undefined
             }}
           >
             {(field) => (
-              <TextInput
+              <SelectInput
                 label="Meter Type"
                 field={field}
+                options={[
+                  { value: 'electricity', label: 'electricity' },
+                  { value: 'water', label: 'water' },
+                  { value: 'GAS', label: 'GAS' }
+                ]}
                 disabled={isViewMeter}
               />
             )}
@@ -174,9 +181,9 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
                 label="Status"
                 field={field}
                 options={[
-                  { value: 'Active', label: 'active' },
-                  { value: 'Inactive', label: 'inactive' },
-                  { value: 'Maintenance', label: 'maintenance' }
+                  { value: 'active', label: 'active' },
+                  { value: 'inactive', label: 'inactive' },
+                  { value: 'maintenance', label: 'maintenance' }
                 ]}
                 disabled={isViewMeter}
               />
@@ -184,13 +191,7 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
           </form.Field>
         </div>
         <div className="col-span-full mt-10 flex justify-start space-x-4">
-          <Button
-            type="button"
-            className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
-            onClick={() => router.back()}
-          >
-            Cancel
-          </Button>
+          {closeButton}
 
           {!isViewMeter && (
             <form.Subscribe
@@ -207,7 +208,7 @@ export default function MeterForm({ initialValues }: MeterFormProps) {
             </form.Subscribe>
           )}
         </div>
-      </CardWrapper>
+      </>
     </form>
   );
 }

@@ -47,33 +47,34 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     )
   },
   {
-    accessorKey: 'name',
-    header: 'Name',
+    accessorKey: 'unitNumber',
+    header: 'Unit Number',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('name') ?? 'N/A'}</div>
+      <div className="lowercase">{row.getValue('unitNumber') ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'floorAndWing',
+    accessorKey: 'unitType',
+    header: 'Unit Type',
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue('unitType') ?? 'N/A'}</div>
+    )
+  },
+  {
+    accessorKey: 'floor',
     header: 'Floor/Wing',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('floorAndWing') ?? 'N/A'}</div>
+      <div className="lowercase">{row.getValue('floor') ?? 'N/A'}</div>
     )
   },
+
   {
-    accessorKey: 'smartMeterId',
-    header: 'Smart Meter Id',
-    cell: ({ row }) => {
-      const smartMeterIds = row.original.smartMeterId;
-
-      const formattedSmartMeterIds = Array.isArray(smartMeterIds)
-        ? smartMeterIds.join(', ')
-        : smartMeterIds;
-
-      return <div className="lowercase">{formattedSmartMeterIds}</div>;
-    }
+    accessorKey: 'squareFootage',
+    header: 'Square Footage',
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue('squareFootage') ?? 'N/A'}</div>
+    )
   },
-
   {
     accessorKey: 'status',
     header: 'Status',

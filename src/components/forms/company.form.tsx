@@ -10,6 +10,7 @@ import { createCompany, updateCompany } from '@/services/company.service';
 import PhoneInputField from '../fields/PhoneInput';
 import { Country, State, City } from 'country-state-city';
 import SelectInput from '@components/fields/SelectInput';
+import toast from 'react-hot-toast';
 
 interface OptionType {
   value: string;
@@ -78,9 +79,10 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     onSuccess: () => {
       form.reset();
       router.push('/company');
+      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {
-      console.error('Error submitting form:', error);
+      toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
@@ -280,13 +282,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
 
       <CardWrapper>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <form.Field
-            name="addressLine1"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Address Line 1 is required' : undefined
-            }}
-          >
+          <form.Field name="addressLine1">
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
@@ -296,13 +292,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             )}
           </form.Field>
 
-          <form.Field
-            name="addressLine2"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'Address Line 2 is required' : undefined
-            }}
-          >
+          <form.Field name="addressLine2">
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
@@ -372,7 +362,6 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             name="pincode"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Pincode is required';
                 if (!/^\d+$/.test(value)) return 'Pincode must be numeric';
                 if (value.length !== 6) return 'Pincode must be 6 digits long';
                 return undefined;
@@ -397,7 +386,6 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             name="websiteUrl"
             validators={{
               onChange: ({ value }) => {
-                if (!value) return 'Website URL is required';
                 try {
                   new URL(value);
                 } catch {
@@ -416,13 +404,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             )}
           </form.Field>
 
-          <form.Field
-            name="gstNumber"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'GST Number is required' : undefined
-            }}
-          >
+          <form.Field name="gstNumber">
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
@@ -432,13 +414,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             )}
           </form.Field>
 
-          <form.Field
-            name="cinNumber"
-            validators={{
-              onChange: ({ value }) =>
-                !value ? 'CIN Number is required' : undefined
-            }}
-          >
+          <form.Field name="cinNumber">
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
@@ -450,7 +426,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
         </div>
       </CardWrapper>
 
-      <div className="col-span-full mt-10 flex justify-end space-x-4">
+      <div className="col-span-full mt-10 flex justify-start space-x-4">
         <Button
           type="button"
           className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"

@@ -515,7 +515,7 @@ export const TenantLeasableForm = ({ initialValues }: TenantFormProps) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tenant'] });
-      router.push('/tenants/');
+      router.push('/tenant/');
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
     },
     onError: (error) => {

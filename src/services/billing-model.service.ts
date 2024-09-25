@@ -11,8 +11,9 @@ export const createFixedBillingModel = async (
   try {
     const response = await apiClient.post('/fixed-billing-model', payload);
     return response?.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -23,7 +24,8 @@ export const updateFixedBillingModel = async (
   try {
     const response = await apiClient.put(`/fixed-billing-model/${id}`, payload);
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };

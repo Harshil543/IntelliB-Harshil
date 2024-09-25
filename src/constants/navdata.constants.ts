@@ -124,14 +124,8 @@ export const navItems: { [key: string]: NavItem[] } = {
       icon: 'alpha-l-circle-outline',
       label: 'leasable-unit',
       children: undefined
-    },
-    {
-      title: 'Meter',
-      href: '/meter/',
-      icon: 'barometer',
-      label: 'meter',
-      children: undefined
     }
+
     // {
     //   title: 'Tenant Co-Admin',
     //   href: '/tenant-co-admin/',

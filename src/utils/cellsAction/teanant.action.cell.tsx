@@ -32,11 +32,11 @@ const TenantActionsCell: React.FC<TenantActionsCellProps> = ({
   });
 
   const handleView = (id: number) => {
-    router.push(`/tenants/view-tenant/${id}`);
+    router.push(`/tenant/view-tenant/${id}`);
   };
 
   const handleUpdate = (id: number) => {
-    router.push(`/tenants/update-tenant/${id}`);
+    router.push(`/tenant/update-tenant/${id}`);
   };
 
   const handleStatus = async (id: number) => {

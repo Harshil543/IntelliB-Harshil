@@ -16,8 +16,10 @@ export const loginUser = async (payload: {
     }
 
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.message || 'Login failed. Please try again.';
+    throw new Error(message);
   }
 };
 

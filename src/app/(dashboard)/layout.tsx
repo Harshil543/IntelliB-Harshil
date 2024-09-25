@@ -5,7 +5,6 @@ import { BreadcrumbWithCustomSeparator } from '@/components/fields/BreadCrumb';
 import Heading from '@/components/fields/Heading';
 import Sidebar from '@/components/layout/sidebar';
 import React, { ReactNode } from 'react';
-import { Toaster } from 'react-hot-toast';
 import Topbar from '@/components/layout/Topbar';
 import { useSidebar } from '@/hooks/useSidebar';
 import AuthProvider from '@/providers/auth.provider';
@@ -62,7 +61,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <AuthProvider>{children} </AuthProvider>
         </div>
       </div>
-      <Toaster position="top-right" />
     </>
   );
 };

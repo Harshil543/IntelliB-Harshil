@@ -10,8 +10,9 @@ export const getUser = async () => {
   try {
     const response = await apiClient.get(`${BASE_URLS?.user}/profile/`);
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -22,9 +23,9 @@ export const updateUser = async ({ payload }: { payload: any }) => {
       payload.value
     );
     return response.data;
-  } catch (error) {
-    console.error('Error updating user:', error);
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -41,8 +42,8 @@ export const changePassword = async ({
       payload
     );
     return response.data;
-  } catch (error) {
-    console.error('Error changing password:', error);
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };

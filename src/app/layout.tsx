@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import TanstackProvider from '@/providers/tanstack.provider';
 import AuthProvider from '@/providers/auth.provider';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'IntelliB',
@@ -39,6 +40,7 @@ export default function RootLayout({
         <AuthProvider>
           <TanstackProvider>{children}</TanstackProvider>
         </AuthProvider>
+        <Toaster position="top-right" />
       </body>
     </html>
   );

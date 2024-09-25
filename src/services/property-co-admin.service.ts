@@ -17,8 +17,9 @@ export const getPropertyCoAdmin = async (page: number, searchQuery: string) => {
       `${BASE_URLS.propertyCoAdmin}?page=${page}&limit=10&search=${searchQuery}`
     );
     return response?.data?.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -28,8 +29,9 @@ export const getpropertyCoAdminById = async (propertCoAdminId: number) => {
       `${BASE_URLS.propertyCoAdmin}/${propertCoAdminId}`
     );
     return response?.data?.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -44,8 +46,9 @@ export const createPropertyCoAdmin = async ({
       payload
     );
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -62,8 +65,9 @@ export const updatePropertyCoAdmin = async ({
       payload
     );
     return response.data;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };
 
@@ -74,8 +78,8 @@ export const statusPropertyCoAdmin = async (id: number) => {
     );
 
     return response?.data?.data;
-  } catch (error) {
-    console.error('Error status company:', error);
-    throw error;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
   }
 };

@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import storage from '@/utils/storage';
-import Loader from '@/components/CommonComponents/Loader';
+// import Loader from '@/components/CommonComponents/Loader';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -12,7 +12,6 @@ interface AuthProviderProps {
 const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getToken = () => {
@@ -27,15 +26,10 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           router.replace('/login/');
         }
       }
-      setIsLoading(false);
     };
 
     getToken();
   }, [pathname, router]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return <>{children}</>;
 };
