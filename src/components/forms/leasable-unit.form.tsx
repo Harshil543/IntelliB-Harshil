@@ -26,7 +26,7 @@ interface LeasableUnitFormValues {
 
 interface LeasableUnitFormProps {
   initialValues?: LeasableUnitFormValues;
-  setLeasableUnitId: React.Dispatch<React.SetStateAction<number | null>>;
+  setLeasableUnitId?: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 export default function LeasableUnitForm({
@@ -53,9 +53,8 @@ export default function LeasableUnitForm({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
-
-      if (!initialValues?.id) {
-        setLeasableUnitId(data.id); // Use the correct property for the ID
+      if (!initialValues?.id && setLeasableUnitId) {
+        setLeasableUnitId(data.id);
       }
     },
     onError: (error) => {

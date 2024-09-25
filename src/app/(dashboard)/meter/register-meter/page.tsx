@@ -1,8 +1,7 @@
-import MeterForm from '@/components/forms/meter.form';
 import React from 'react';
 
 const RegisterMeter = () => {
-  return <MeterForm />;
+  return <h1>Register</h1>;
 };
 
 export default RegisterMeter;
