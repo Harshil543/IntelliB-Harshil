@@ -10,7 +10,7 @@ interface TextInputProps {
   field: any;
   type?: any;
   placeholder?: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const TextInput: React.FC<TextInputProps> = ({

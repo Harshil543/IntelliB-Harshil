@@ -51,7 +51,7 @@ interface DatePickerInputProps {
   label: string;
   field: any;
   placeholder?: string;
-  disabled: boolean;
+  disabled?: boolean;
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({

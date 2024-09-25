@@ -21,6 +21,7 @@ import {
 } from '@/services/tenant.service';
 import PhoneInputField from '../fields/PhoneInput';
 import { City, Country, State } from 'country-state-city';
+import LeasaForm from './lease.form';
 
 interface OptionType {
   value: string;
@@ -471,6 +472,7 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
           </form.Field>
         </div>
       </CardWrapper>
+
       <div className="col-span-full mt-10 flex justify-start space-x-4">
         <Button
           type="button"
@@ -491,6 +493,10 @@ export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
           </form.Subscribe>
         )}
       </div>
+      <CardWrapper>
+        <Heading className="mt-5">Lease Data</Heading>
+        <LeasaForm />
+      </CardWrapper>
     </form>
   );
 };

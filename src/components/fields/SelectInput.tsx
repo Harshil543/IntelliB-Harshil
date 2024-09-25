@@ -12,7 +12,7 @@ interface SelectInputProps {
   field: any;
   options: Option[];
   placeholder?: string;
-  disabled: boolean;
+  disabled?: boolean;
   onChange?: (selectedOption: Option | null) => void;
 }
 

@@ -77,16 +77,3 @@ export const updateLeasableUnit = async ({
     throw new Error(message);
   }
 };
-
-export const statusLeasableUnit = async (
-  id: number,
-  payload: LeasableUnitPayload
-) => {
-  try {
-    // Implement status update logic if needed
-    console.log('leasable-unit status', payload);
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};

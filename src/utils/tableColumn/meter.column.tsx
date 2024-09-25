@@ -89,7 +89,7 @@ const meterColumn: ColumnDef<MeterData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : row.getValue('status') === 'maintenance' ? 'bg-yellow-300' : 'bg-red-300'} capitalize`}
       >
         {row.getValue('status') ?? 'N/A'}
       </Badge>
