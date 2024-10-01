@@ -1,5 +1,4 @@
 import apiBillingClient from '@/config/api.billing.config';
-import apiClient from '@/config/api.config';
 import { BASE_URLS } from '@/constants/api.constants';
 
 // Define an interface for the payload
@@ -24,8 +23,8 @@ export const getLeasableUnit = async (page: number, searchQuery: string) => {
 
 export const getAllLeasableUnit = async () => {
   try {
-    const response = await apiClient.get(`${BASE_URLS.leasableUnit}`);
-    return response.data;
+    const response = await apiBillingClient.get(`${BASE_URLS.leasableUnit}`);
+    return response?.data?.data?.items;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);

@@ -15,7 +15,10 @@ export default function TenantView() {
 
   return (
     <div>
-      <TenantDataForm initialValues={data} />
+      <TenantDataForm
+        initialValues={data}
+        companyIdByUpdate={data?.company?.id}
+      />
     </div>
   );
 }

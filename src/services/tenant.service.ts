@@ -13,18 +13,6 @@ interface TenantDataPayload {
   mobileNumber: string;
   email: string;
 }
-interface TenantLeasableUnitDataPayload {
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
-}
-
-interface TenantBillingDataPayload {
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
-}
 
 export const getTenant = async (page: number, searchQuery: string) => {
   try {
@@ -38,11 +26,10 @@ export const getTenant = async (page: number, searchQuery: string) => {
   }
 };
 
-// Tenant Company/Personal Data
 export const getTenantDataById = async (tenantId: number) => {
   try {
-    const response = await apiClient.get(`/tenant/${tenantId}`);
-    return response.data;
+    const response = await apiClient.get(`${BASE_URLS?.tenant}/${tenantId}`);
+    return response?.data?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
@@ -52,7 +39,9 @@ export const getTenantDataById = async (tenantId: number) => {
 export const createTenantData = async (payload: TenantDataPayload) => {
   try {
     const response = await apiClient.post(`${BASE_URLS?.tenant}`, payload);
-    return response.data;
+    console.log('response?.data?.data', response?.data?.data);
+
+    return response?.data?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
@@ -67,85 +56,7 @@ export const updateTenantData = async ({
   payload: TenantDataPayload;
 }) => {
   try {
-    const response = await apiClient.put(`/tenant/${id}`, payload);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-// Tenant Leasable Unit Data
-export const getLeasableUnitDataById = async (tenantId: number) => {
-  try {
-    const response = await apiClient.get(`/tenant/${tenantId}`);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-export const createLeasableUnitData = async (
-  payload: TenantLeasableUnitDataPayload
-) => {
-  try {
-    const response = await apiClient.post('/tenant/', payload);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-export const updateLeasableUnitData = async ({
-  id,
-  payload
-}: {
-  id: number;
-  payload: TenantLeasableUnitDataPayload;
-}) => {
-  try {
-    const response = await apiClient.put(`/tenant/${id}`, payload);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-// Tenant Billing Data
-export const getTenantBillingDataById = async (tenantId: number) => {
-  try {
-    const response = await apiClient.get(`/tenant/${tenantId}`);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-export const createTenantBillingData = async (
-  payload: TenantBillingDataPayload
-) => {
-  try {
-    const response = await apiClient.post('/tenant/', payload);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
-export const updateTenantBillingData = async ({
-  id,
-  payload
-}: {
-  id: number;
-  payload: TenantBillingDataPayload;
-}) => {
-  try {
-    const response = await apiClient.put(`/tenant/${id}`, payload);
+    const response = await apiClient.put(`${BASE_URLS?.tenant}/${id}`, payload);
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message;

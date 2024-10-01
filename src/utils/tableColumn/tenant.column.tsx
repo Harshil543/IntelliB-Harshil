@@ -88,25 +88,6 @@ const tenantColumn: ColumnDef<tenantData>[] = [
   },
 
   {
-    accessorKey: 'leasedUnit',
-    header: 'Leasable Unit',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('leasedUnit') ?? 'N/A'}</div>
-    )
-  },
-
-  {
-    accessorKey: 'leasedStartDate',
-    header: 'Leasable Start Date',
-    cell: ({ row }) => {
-      return (
-        <div className="capitalize">
-          {row.getValue('leasedStartDate') ?? 'N/A'}
-        </div>
-      );
-    }
-  },
-  {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => (
