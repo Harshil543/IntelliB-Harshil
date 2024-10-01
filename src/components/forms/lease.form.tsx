@@ -9,9 +9,10 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { getAllLeasableUnit } from '@/services/leasable-unit.service';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { createLease } from '@/services/lease.service';
 
 interface LeasaFormProps {
-  companyId?: number;
+  companyId: number;
   isViewTenant?: boolean;
 }
 
@@ -38,7 +39,6 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
   const form = useForm({
     defaultValues,
     onSubmit: async (value) => {
-      console.log('Form submitted:', value);
       await mutation.mutateAsync({
         ...value,
         companyId,
@@ -52,17 +52,12 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
       if (selectedLeasableUnit === undefined) {
         throw new Error('Leasable unit must be selected');
       }
-      console.log('Creating lease with:', {
+
+      return await createLease({
         companyId,
         leasableUnitId,
-        payload: data
+        payload: data?.value
       });
-      // Call your createLease function here
-      // return await createLease({
-      //   companyId,
-      //   leasableUnitId,
-      //   payload: data,
-      // });
     },
     onSuccess: () => {
       toast.success(`Added successfully`);
@@ -141,9 +136,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
           name="rentAmount"
           validators={{
             onChange: ({ value }) => {
-              const parsedValue = Number(value);
               if (!value) return 'Rent Amount is required';
-              if (isNaN(parsedValue)) return 'Rent Amount must be a number';
               return undefined;
             }
           }}
@@ -152,7 +145,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
             <TextInput
               label="Rent Amount"
               field={field}
-              type="number"
+              type="text"
               disabled={isViewTenant}
             />
           )}

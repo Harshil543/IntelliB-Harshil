@@ -1,7 +1,7 @@
 'use client';
 
 import { FormApi, useForm } from '@tanstack/react-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import CardWrapper from '../layout/CardWrapper';
@@ -11,8 +11,8 @@ import { Button } from '../ui/button';
 
 import { useState } from 'react';
 import {
-  createBillingRate,
-  getBillingRate
+  createBillingRate
+  // getBillingRate
 } from '@/services/billing-model.service';
 
 interface FlatRateBillingFormValue {
@@ -37,12 +37,11 @@ export const FlatRateBillingModel = ({
 }: FlatRateFixedBillingFormProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const type = 'FLAT_RATE';
-  const { data } = useQuery({
-    queryKey: ['billing-model', type],
-    queryFn: () => getBillingRate(type)
-  });
-  console.log('data', data);
+  // const type = 'FLAT_RATE';
+  // const { data } = useQuery({
+  //   queryKey: ['billing-model', type],
+  //   queryFn: () => getBillingRate(type)
+  // });
 
   // Initialize slab state with one slab
   const [slabs, setSlabs] = useState([
@@ -101,7 +100,7 @@ export const FlatRateBillingModel = ({
           form.handleSubmit();
         }}
       >
-        <div className="mb-7 flex justify-between">
+        <div className="mb-7 flex items-center justify-start align-middle">
           <Heading className="text-lg">Flat Rate</Heading>
           {slabs.map((slab, index) => (
             <tr key={index}>
@@ -110,6 +109,7 @@ export const FlatRateBillingModel = ({
                   {(field) => (
                     <TextInput
                       label=""
+                      placeholder="0.00"
                       type="number"
                       field={field}
                       disabled={slab.disabled}
@@ -120,17 +120,17 @@ export const FlatRateBillingModel = ({
             </tr>
           ))}
           <Button type="button" onClick={handleAddSlab}>
-            Add Slab
+            Add More
           </Button>
         </div>
 
-        {data?.billingModeItems?.map((item: any) => {
+        {/* {data?.billingModeItems?.map((item: any) => {
           return (
             <tr key={item?.id}>
               <td className="h-10 text-center">{item?.rate}</td>
             </tr>
           );
-        })}
+        })} */}
 
         <div className="col-span-full mt-10 flex justify-start space-x-4">
           <form.Subscribe

@@ -1,7 +1,7 @@
 'use client';
 
 import { FormApi, useForm } from '@tanstack/react-form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import CardWrapper from '../layout/CardWrapper';
@@ -10,8 +10,8 @@ import TextInput from '../fields/TextInput';
 import { Button } from '../ui/button';
 import { useState } from 'react';
 import {
-  createBillingRate,
-  getBillingRate
+  createBillingRate
+  // getBillingRate
 } from '@/services/billing-model.service';
 
 interface SlabWiseRateBillingFormValue {
@@ -40,11 +40,11 @@ export const SlabWiseRateBillingModel = ({
 }: SlabWiseRateFixedBillingFormProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const type = 'SLAB_WISE_RATE';
-  const { data } = useQuery({
-    queryKey: ['billing-model', type],
-    queryFn: () => getBillingRate(type)
-  });
+  // const type = 'SLAB_WISE_RATE';
+  // const { data } = useQuery({
+  //   queryKey: ['billing-model', type],
+  //   queryFn: () => getBillingRate(type)
+  // });
 
   // Initialize slab state with one slab
   const [slabs, setSlabs] = useState([
@@ -109,21 +109,18 @@ export const SlabWiseRateBillingModel = ({
       >
         <div className="mb-7 flex justify-between">
           <Heading className="text-lg">Slab-Wise Rate</Heading>
-
-          <Button type="button" onClick={handleAddSlab}>
-            Add Slab
-          </Button>
         </div>
         <table className="w-full">
           <thead>
             <tr className="my-10 h-10 rounded-lg bg-secondary">
+              <th>Slab</th>
               <th>Slab Start Unit</th>
               <th>Slab End Unit</th>
               <th>Rate</th>
             </tr>
           </thead>
           <tbody>
-            {data?.billingModeItems?.map((item: any) => {
+            {/* {data?.billingModeItems?.map((item: any) => {
               return (
                 <tr key={item?.id}>
                   <td className="h-10 text-center">
@@ -135,14 +132,16 @@ export const SlabWiseRateBillingModel = ({
                   <td className="h-10 text-center">{item?.rate}</td>
                 </tr>
               );
-            })}
+            })} */}
             {slabs.map((slab, index) => (
               <tr key={index}>
+                <td className="px-20">{index + 1}</td>
                 <td className="px-20">
                   <form.Field name={`billingModeItems[${index}].startSlab`}>
                     {(field) => (
                       <TextInput
                         label=""
+                        placeholder="0"
                         type="number"
                         field={field}
                         disabled={slab.disabled}
@@ -156,6 +155,7 @@ export const SlabWiseRateBillingModel = ({
                       <TextInput
                         label=""
                         type="number"
+                        placeholder="0"
                         field={field}
                         disabled={slab.disabled}
                       />
@@ -168,6 +168,7 @@ export const SlabWiseRateBillingModel = ({
                       <TextInput
                         label=""
                         type="number"
+                        placeholder="0.00"
                         field={field}
                         disabled={slab.disabled}
                       />
@@ -189,6 +190,9 @@ export const SlabWiseRateBillingModel = ({
               </Button>
             )}
           </form.Subscribe>
+          <Button type="button" onClick={handleAddSlab}>
+            Add More
+          </Button>
         </div>
       </form>
     </CardWrapper>

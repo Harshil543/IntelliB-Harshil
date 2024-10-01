@@ -1,16 +1,5 @@
-<<<<<<< Updated upstream
 import apiBillingClient from '@/config/api.billing.config';
-import apiClient from '@/config/api.config';
 import { BASE_URLS } from '@/constants/api.constants';
-=======
-<<<<<<< Updated upstream
-import apiClient from '@/config/api.config';
-=======
-import apiBillingClient from '@/config/api.billing.config';
-
-import { BASE_URLS } from '@/constants/api.constants';
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 // Define an interface for the payload
 interface LeasableUnitPayload {
@@ -34,27 +23,11 @@ export const getLeasableUnit = async (page: number, searchQuery: string) => {
 
 export const getAllLeasableUnit = async () => {
   try {
-<<<<<<< Updated upstream
-    const response = await apiClient.get(`${BASE_URLS.leasableUnit}`);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-=======
-<<<<<<< Updated upstream
-    const response = await apiClient.get(`/leasable-unit/${leasableUnitId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching by id leasable-unit:', error);
-    throw error;
-=======
     const response = await apiBillingClient.get(`${BASE_URLS.leasableUnit}`);
     return response?.data?.data?.items;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
->>>>>>> Stashed changes
->>>>>>> Stashed changes
   }
 };
 
