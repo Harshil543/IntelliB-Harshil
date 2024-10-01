@@ -13,18 +13,6 @@ interface TenantDataPayload {
   mobileNumber: string;
   email: string;
 }
-interface TenantLeasableUnitDataPayload {
-  leasedUnit: string;
-  leasedStartDate: string;
-  leasedEndDate: string;
-}
-
-interface TenantBillingDataPayload {
-  bilingMethod: string;
-  bilingType: string;
-  bilingCycle: string;
-  limit: string;
-}
 
 export const getTenant = async (page: number, searchQuery: string) => {
   try {
@@ -41,11 +29,25 @@ export const getTenant = async (page: number, searchQuery: string) => {
 // Tenant Company/Personal Data
 export const getTenantDataById = async (tenantId: number) => {
   try {
+<<<<<<< Updated upstream
     const response = await apiClient.get(`/tenant/${tenantId}`);
     return response.data;
+<<<<<<< Updated upstream
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
+=======
+  } catch (error) {
+    console.error('Error fetching by id tenant:', error);
+    throw error;
+=======
+    const response = await apiClient.get(`${BASE_URLS.tenant}/${tenantId}`);
+    return response?.data?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   }
 };
 
@@ -67,17 +69,16 @@ export const updateTenantData = async ({
   payload: TenantDataPayload;
 }) => {
   try {
-    const response = await apiClient.put(`/tenant/${id}`, payload);
+    const response = await apiClient.put(`${BASE_URLS?.tenant}/${id}`, payload);
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
   }
 };
-
-// Tenant Leasable Unit Data
-export const getLeasableUnitDataById = async (tenantId: number) => {
+export const statusTenant = async (payload: any): Promise<void> => {
   try {
+<<<<<<< Updated upstream
     const response = await apiClient.get(`/tenant/${tenantId}`);
     return response.data;
   } catch (error: any) {
@@ -155,10 +156,27 @@ export const updateTenantBillingData = async ({
 
 export const statusTenant = async (id: number) => {
   try {
+<<<<<<< Updated upstream
     const response = await apiClient.patch(`${BASE_URLS?.tenant}/${id}`);
     return response?.data?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
+=======
+    // Example usage of payload
+    console.log('tenant status', payload);
+    // Uncomment and update the API call if needed
+    // const response = await apiClient.patch(`/tenant/${id}/status`, payload);
+    // return response.data;
+  } catch (error) {
+    console.error('Error changing tenant status:', error);
+    throw error;
+=======
+    console.log('property user status', payload);
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
   }
 };

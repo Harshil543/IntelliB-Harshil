@@ -6,5 +6,7 @@ export const BASE_URLS = {
   propertyCoAdmin: '/api/property-co-admin/v1',
   tenant: '/api/tenant-admin/v1',
   leasableUnit: '/api/leasable-unit/v1',
-  meter: '/api/meters'
+  meter: '/api/meters',
+  lease: '/api/lease/v1',
+  billingMode: '/api/admin/billing-mode/v1'
 };

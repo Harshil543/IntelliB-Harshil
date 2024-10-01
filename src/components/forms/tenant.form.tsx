@@ -63,7 +63,10 @@ interface TenantFormProps {
   };
 }
 
-export const TenantDataForm = ({ initialValues }: TenantFormProps) => {
+export const TenantDataForm = ({
+  initialValues,
+  companyIdByUpdate
+}: TenantFormProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const isViewTenant = pathname.includes('view-tenant');

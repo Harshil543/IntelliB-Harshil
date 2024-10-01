@@ -1,15 +1,13 @@
-import apiClient from '@/config/api.config';
+import apiBillingClient from '@/config/api.billing.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
-interface FixedBillingModelPayload {
-  rs: number;
-  ps: number;
-}
-
-export const createFixedBillingModel = async (
-  payload: FixedBillingModelPayload
-) => {
+export const createBillingRate = async (payload: any) => {
   try {
-    const response = await apiClient.post('/fixed-billing-model', payload);
+    const response = await apiBillingClient.post(
+      `${BASE_URLS?.billingMode}`,
+      payload
+    );
+
     return response?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
@@ -17,13 +15,13 @@ export const createFixedBillingModel = async (
   }
 };
 
-export const updateFixedBillingModel = async (
-  id: number,
-  payload: FixedBillingModelPayload
-) => {
+export const getBillingRate = async (type: string) => {
   try {
-    const response = await apiClient.put(`/fixed-billing-model/${id}`, payload);
-    return response.data;
+    const response = await apiBillingClient.get(
+      `${BASE_URLS?.billingMode}/${type}`
+    );
+
+    return response?.data?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);

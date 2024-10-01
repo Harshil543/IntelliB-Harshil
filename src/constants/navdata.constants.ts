@@ -48,6 +48,7 @@ export const navItems: { [key: string]: NavItem[] } = {
     // },
 
     // {
+
     //   title: 'Billing Model',
     //   href: '/billing-model/',
     //   icon: 'profile',
@@ -55,6 +56,7 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   children: undefined
     // },
     // {
+
     //   title: 'Billing Cycle',
     //   href: '/billing-cycle/',
     //   icon: 'profile',
@@ -123,6 +125,13 @@ export const navItems: { [key: string]: NavItem[] } = {
       href: '/leasable-unit/',
       icon: 'alpha-l-circle-outline',
       label: 'leasable-unit',
+      children: undefined
+    },
+    {
+      title: 'Billing Model',
+      href: '/billing-model/',
+      icon: 'receipt-text-plus',
+      label: 'billing-model',
       children: undefined
     }
 

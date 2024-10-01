@@ -1,13 +1,11 @@
+import { FlatRateBillingModel } from '@/components/forms/flat-billing-model-rate.form';
+import { SlabWiseRateBillingModel } from '@/components/forms/slab-wise-billing-model-rate.form';
 import React from 'react';
-import {
-  FixedBillingModel,
-  SlabWiseRateBillingModel
-} from '@/components/forms/billing-model.form';
 
 const BillingModel = () => {
   return (
     <>
-      <FixedBillingModel />
+      <FlatRateBillingModel />
       <SlabWiseRateBillingModel />
     </>
   );
