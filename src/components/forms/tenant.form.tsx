@@ -69,6 +69,8 @@ export const TenantDataForm = ({
 }: TenantFormProps) => {
   const router = useRouter();
   const pathname = usePathname();
+  console.log('companyIdByUpdate', companyIdByUpdate);
+
   const isViewTenant = pathname.includes('view-tenant');
 
   const [selectedCountry, setSelectedCountry] = useState<OptionType | null>(
