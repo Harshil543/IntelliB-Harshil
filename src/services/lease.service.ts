@@ -4,6 +4,7 @@ import { BASE_URLS } from '@/constants/api.constants';
 interface CreateLeaseParams {
   companyId?: number;
   leasableUnitId?: number;
+  leaseId?: number;
   payload?: any;
 }
 
@@ -26,11 +27,35 @@ export const createLease = async ({
   leasableUnitId,
   payload
 }: CreateLeaseParams) => {
-  console.log('hello', companyId, leasableUnitId, payload);
-
   try {
     const response = await apiBillingClient.post(
       `${BASE_URLS.lease}/${leasableUnitId}/${companyId}`,
+      payload
+    );
+    return response?.data?.data;
+  } catch (error: any) {
+    const message = error?.response?.data?.message || 'An error occurred';
+    throw new Error(message);
+  }
+};
+
+export const updateLease = async ({
+  companyId,
+  leasableUnitId,
+  leaseId,
+  payload
+}: CreateLeaseParams) => {
+  console.log(
+    'companyId',
+    companyId,
+    'leasableUnitId',
+    leasableUnitId,
+    'payload',
+    payload
+  );
+  try {
+    const response = await apiBillingClient.put(
+      `${BASE_URLS.lease}/${leasableUnitId}/${companyId}/${leaseId}`,
       payload
     );
     return response?.data?.data;
