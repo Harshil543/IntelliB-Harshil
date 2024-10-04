@@ -1,35 +1,29 @@
 'use client';
 
 import { FormApi, useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import Heading from '../fields/Heading';
 import TextInput from '../fields/TextInput';
 import { Button } from '../ui/button';
-
-import { useState } from 'react';
 import {
-  createBillingRate
-  // getBillingRate
+  createBillingRate,
+  updateBillingRate,
+  getBillingRate
 } from '@/services/billing-model.service';
 
 interface FlatRateBillingFormValue {
   id?: number;
-  rate: number;
+  billingModeItems: {
+    rate: number;
+  }[];
 }
 
 interface FlatRateFixedBillingFormProps {
   initialValues?: FlatRateBillingFormValue;
-}
-
-// Slab Wise Billing Model
-
-interface FlatRateBillingFormValue {
-  billingModeItems: {
-    rate: number;
-  }[];
 }
 
 export const FlatRateBillingModel = ({
@@ -37,33 +31,45 @@ export const FlatRateBillingModel = ({
 }: FlatRateFixedBillingFormProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  // const type = 'FLAT_RATE';
-  // const { data } = useQuery({
-  //   queryKey: ['billing-model', type],
-  //   queryFn: () => getBillingRate(type)
-  // });
+  const type = 'FLAT_RATE';
 
-  // Initialize slab state with one slab
-  const [slabs, setSlabs] = useState([
-    {
-      rate: 0,
-      disabled: false
-    }
-  ]);
+  const { data } = useQuery({
+    queryKey: ['billing-model', type],
+    queryFn: () => getBillingRate(type)
+  });
+
+  // Determine default values based on fetched data
+  const defaultValues: FlatRateBillingFormValue = {
+    id: initialValues?.id,
+    billingModeItems:
+      data && data.billingModeItems && data.billingModeItems.length > 0
+        ? data.billingModeItems
+        : initialValues?.billingModeItems || [{ rate: '0' }]
+  };
+
+  const [isSubmitButtonVisible, setSubmitButtonVisible] = useState(true);
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: FlatRateBillingFormValue) => {
       const updatedData = {
         ...data,
         category: 'FLAT_RATE'
       };
-
-      return await createBillingRate(updatedData);
+      if (data.id) {
+        return await updateBillingRate(data.id, updatedData);
+      } else {
+        return await createBillingRate(updatedData);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['billing-model'] });
-      router.push('/billing-model/');
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+
+      // Hide the submit button after creation
+      if (!initialValues?.id) {
+        setSubmitButtonVisible(false);
+      }
+      router.push('/billing-model/');
     },
     onError: (error) => {
       toast.error(`Error: ${(error as Error).message}`);
@@ -71,7 +77,7 @@ export const FlatRateBillingModel = ({
   });
 
   const form = useForm<FlatRateBillingFormValue>({
-    defaultValues: initialValues,
+    defaultValues,
     onSubmit: async ({
       value
     }: {
@@ -82,15 +88,12 @@ export const FlatRateBillingModel = ({
     }
   });
 
-  const handleAddSlab = () => {
-    setSlabs((prevSlabs) => [
-      ...prevSlabs.map((slab) => ({ ...slab, disabled: true })),
-      {
-        rate: 0,
-        disabled: false
-      }
-    ]);
-  };
+  // Show button when editing
+  useEffect(() => {
+    if (initialValues?.id) {
+      setSubmitButtonVisible(true);
+    }
+  }, [initialValues]);
 
   return (
     <CardWrapper>
@@ -100,49 +103,40 @@ export const FlatRateBillingModel = ({
           form.handleSubmit();
         }}
       >
-        <div className="mb-7 flex items-center justify-start align-middle">
-          <Heading className="text-lg">Flat Rate</Heading>
-          {slabs.map((slab, index) => (
-            <tr key={index}>
-              <td className="px-20">
-                <form.Field name={`billingModeItems[${index}].rate`}>
-                  {(field) => (
-                    <TextInput
-                      label=""
-                      placeholder="0.00"
-                      type="number"
-                      field={field}
-                      disabled={slab.disabled}
-                    />
-                  )}
-                </form.Field>
-              </td>
-            </tr>
-          ))}
-          <Button type="button" onClick={handleAddSlab}>
-            Add More
-          </Button>
+        <div className="flex items-center justify-between gap-3 align-middle">
+          <div className="flex items-center justify-center gap-5 align-middle">
+            <Heading className="mt-2 text-lg">Flat Rate</Heading>
+
+            <form.Field name={`billingModeItems[0].rate`}>
+              {(field) => (
+                <TextInput
+                  label=""
+                  placeholder="0.00"
+                  type="number"
+                  field={field}
+                />
+              )}
+            </form.Field>
+          </div>
+          {isSubmitButtonVisible && (
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit]) => (
+                <Button
+                  type="submit"
+                  disabled={!canSubmit || mutation.isPending}
+                >
+                  {mutation.isPending ? 'Submitting...' : 'Submit'}
+                </Button>
+              )}
+            </form.Subscribe>
+          )}
         </div>
 
-        {/* {data?.billingModeItems?.map((item: any) => {
-          return (
-            <tr key={item?.id}>
-              <td className="h-10 text-center">{item?.rate}</td>
-            </tr>
-          );
-        })} */}
+        {/* <div className="col-span-full mt-10 flex justify-start space-x-4"> */}
 
-        <div className="col-span-full mt-10 flex justify-start space-x-4">
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-          >
-            {([canSubmit]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
-            )}
-          </form.Subscribe>
-        </div>
+        {/* </div> */}
       </form>
     </CardWrapper>
   );
