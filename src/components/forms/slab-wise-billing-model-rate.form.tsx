@@ -1,17 +1,17 @@
 'use client';
 
 import { FormApi, useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import CardWrapper from '../layout/CardWrapper';
 import Heading from '../fields/Heading';
 import TextInput from '../fields/TextInput';
 import { Button } from '../ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  createBillingRate
-  // getBillingRate
+  createBillingRate,
+  getBillingRate
 } from '@/services/billing-model.service';
 
 interface SlabWiseRateBillingFormValue {
@@ -24,8 +24,6 @@ interface SlabWiseRateBillingFormValue {
 interface SlabWiseRateFixedBillingFormProps {
   initialValues?: SlabWiseRateBillingFormValue;
 }
-
-// Slab Wise Billing Model
 
 interface SlabWiseRateBillingFormValue {
   billingModeItems: {
@@ -40,13 +38,13 @@ export const SlabWiseRateBillingModel = ({
 }: SlabWiseRateFixedBillingFormProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
-  // const type = 'SLAB_WISE_RATE';
-  // const { data } = useQuery({
-  //   queryKey: ['billing-model', type],
-  //   queryFn: () => getBillingRate(type)
-  // });
 
-  // Initialize slab state with one slab
+  const type = 'SLAB_WISE_RATE';
+  const { data } = useQuery({
+    queryKey: ['billing-model', type],
+    queryFn: () => getBillingRate(type)
+  });
+
   const [slabs, setSlabs] = useState([
     {
       startSlab: 0,
@@ -55,6 +53,19 @@ export const SlabWiseRateBillingModel = ({
       disabled: false
     }
   ]);
+
+  useEffect(() => {
+    if (data && data.billingModeItems) {
+      setSlabs(
+        data.billingModeItems.map((item: any) => ({
+          startSlab: item?.startSlab,
+          endSlab: item?.endSlab,
+          rate: item?.rate,
+          disabled: true
+        }))
+      );
+    }
+  }, [data]);
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -88,15 +99,29 @@ export const SlabWiseRateBillingModel = ({
   });
 
   const handleAddSlab = () => {
-    setSlabs((prevSlabs) => [
-      ...prevSlabs.map((slab) => ({ ...slab, disabled: true })),
-      {
-        startSlab: 0,
-        endSlab: 0,
-        rate: 0,
-        disabled: false
+    setSlabs((prevSlabs) => {
+      const lastSlab = prevSlabs[prevSlabs.length - 1];
+      const newStartSlab = lastSlab.endSlab + 1;
+
+      return [
+        ...prevSlabs.map((slab) => ({ ...slab, disabled: true })),
+        {
+          startSlab: newStartSlab,
+          endSlab: 0,
+          rate: 0,
+          disabled: false
+        }
+      ];
+    });
+  };
+
+  const handleRemoveSlab = (index: number) => {
+    setSlabs((prevSlabs) => {
+      if (prevSlabs.length > 1) {
+        return prevSlabs.filter((_, i) => i !== index);
       }
-    ]);
+      return prevSlabs;
+    });
   };
 
   return (
@@ -117,26 +142,14 @@ export const SlabWiseRateBillingModel = ({
               <th>Slab Start Unit</th>
               <th>Slab End Unit</th>
               <th>Rate</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {/* {data?.billingModeItems?.map((item: any) => {
-              return (
-                <tr key={item?.id}>
-                  <td className="h-10 text-center">
-                    <div className="h-10 rounded-lg border-border">
-                      {item?.startSlab}
-                    </div>
-                  </td>
-                  <td className="h-10 text-center">{item?.endSlab}</td>
-                  <td className="h-10 text-center">{item?.rate}</td>
-                </tr>
-              );
-            })} */}
             {slabs.map((slab, index) => (
               <tr key={index}>
-                <td className="px-20">{index + 1}</td>
-                <td className="px-20">
+                <td className="mx-3 sm:px-2 lg:px-10">{index + 1}</td>
+                <td className="mx-3 sm:px-2 lg:px-10">
                   <form.Field name={`billingModeItems[${index}].startSlab`}>
                     {(field) => (
                       <TextInput
@@ -144,25 +157,38 @@ export const SlabWiseRateBillingModel = ({
                         placeholder="0"
                         type="number"
                         field={field}
-                        disabled={slab.disabled}
+                        disabled={true}
+                        value={slab?.startSlab}
                       />
                     )}
                   </form.Field>
                 </td>
-                <td className="px-20">
+                <td className="mx-3 sm:px-2 lg:px-10">
                   <form.Field name={`billingModeItems[${index}].endSlab`}>
                     {(field) => (
                       <TextInput
                         label=""
                         type="number"
                         placeholder="0"
+                        value={slab?.endSlab}
                         field={field}
                         disabled={slab.disabled}
+                        onChange={(value: string | number) => {
+                          const newEndSlab =
+                            typeof value === 'number'
+                              ? value
+                              : parseInt(value) || 0;
+                          setSlabs((prevSlabs) => {
+                            const updatedSlabs = [...prevSlabs];
+                            updatedSlabs[index].endSlab = newEndSlab;
+                            return updatedSlabs;
+                          });
+                        }}
                       />
                     )}
                   </form.Field>
                 </td>
-                <td className="px-20">
+                <td className="mx-3 sm:px-2 lg:px-10">
                   <form.Field name={`billingModeItems[${index}].rate`}>
                     {(field) => (
                       <TextInput
@@ -170,10 +196,21 @@ export const SlabWiseRateBillingModel = ({
                         type="number"
                         placeholder="0.00"
                         field={field}
+                        value={slab?.rate}
                         disabled={slab.disabled}
                       />
                     )}
                   </form.Field>
+                </td>
+                <td className="mx-3 sm:px-2 lg:px-10">
+                  {slabs.length === index + 1 && !slab.disabled && (
+                    <Button
+                      type="button"
+                      onClick={() => handleRemoveSlab(index)}
+                    >
+                      Remove
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))}

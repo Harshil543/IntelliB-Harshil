@@ -11,6 +11,8 @@ interface TextInputProps {
   type?: any;
   placeholder?: string;
   disabled?: boolean;
+  onChange?: (value: string | number) => void;
+  value?: string | number;
 }
 
 const TextInput: React.FC<TextInputProps> = ({
@@ -18,11 +20,16 @@ const TextInput: React.FC<TextInputProps> = ({
   field,
   type = 'text',
   placeholder = `${label}`,
-  disabled
+  disabled,
+  onChange,
+  value
 }) => {
   const handleChange = (value: string) => {
     const newValue = type === 'number' ? Number(value) : value;
     field.handleChange(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
   };
 
   return (
@@ -33,9 +40,9 @@ const TextInput: React.FC<TextInputProps> = ({
         name={field.name}
         type={type}
         placeholder={placeholder}
-        value={field.state.value}
+        value={field.state.value || value}
         onBlur={field.handleBlur}
-        onChange={(e) => handleChange(e.target.value)} // Use the updated handler
+        onChange={(e) => handleChange(e.target.value)}
         required
         className="h-10 rounded-lg border-border"
         disabled={disabled}
