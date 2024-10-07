@@ -133,6 +133,13 @@ export const navItems: { [key: string]: NavItem[] } = {
       icon: 'receipt-text-plus',
       label: 'billing-model',
       children: undefined
+    },
+    {
+      title: 'Meter Reading',
+      href: '/meter-reading/',
+      icon: 'speedometer',
+      label: 'meter-reading',
+      children: undefined
     }
 
     // {

@@ -3,12 +3,12 @@ import Select, { StylesConfig } from 'react-select';
 import { Label } from '@/components/ui/label';
 
 interface Option {
-  value: string;
-  label: string;
+  value: string | number;
+  label: string | number;
 }
 
 interface SelectInputProps {
-  label: string;
+  label: string | number;
   field: any;
   options: Option[];
   placeholder?: string;
@@ -86,8 +86,8 @@ const SelectInput: React.FC<SelectInputProps> = ({
         onBlur={() => field.handleBlur()}
         isSearchable
         isDisabled={disabled}
-        getOptionLabel={(option: Option) => option.label}
-        getOptionValue={(option: Option) => option.value}
+        getOptionLabel={(option: Option) => String(option.label)}
+        getOptionValue={(option: Option) => String(option.value)}
         aria-live="off"
         styles={customStyles}
       />
