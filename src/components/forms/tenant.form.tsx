@@ -128,9 +128,7 @@ export const TenantDataForm = ({
     },
     onSubmit: async (value: any) => await mutation.mutateAsync({ value })
   });
-  const handleCountryChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCountryChange = (selectedOption: any) => {
     setSelectedCountry(selectedOption);
     form.setFieldValue('company.country', selectedOption?.label || '');
 
@@ -147,9 +145,7 @@ export const TenantDataForm = ({
     }
   };
 
-  const handleStateChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleStateChange = (selectedOption: any) => {
     form.setFieldValue('company.state', selectedOption?.label || '');
 
     if (selectedOption) {
@@ -165,9 +161,7 @@ export const TenantDataForm = ({
     }
   };
 
-  const handleCityChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCityChange = (selectedOption: any) => {
     form.setFieldValue('company.city', selectedOption?.label || '');
   };
   useEffect(() => {

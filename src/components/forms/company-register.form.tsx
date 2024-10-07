@@ -62,9 +62,7 @@ const CompanyRegisterForm: React.FC = () => {
     }
   });
 
-  const handleCountryChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCountryChange = (selectedOption: any) => {
     const countryCode = selectedOption ? selectedOption.value : '';
 
     const stateList = State.getStatesOfCountry(countryCode).map(
@@ -79,9 +77,7 @@ const CompanyRegisterForm: React.FC = () => {
     form.setFieldValue('city', '');
   };
 
-  const handleStateChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleStateChange = (selectedOption: any) => {
     const stateCode = selectedOption ? selectedOption.value : '';
     console.log('Selected State Code:', stateCode);
 
@@ -96,9 +92,7 @@ const CompanyRegisterForm: React.FC = () => {
     setCities(cityList);
   };
 
-  const handleCityChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCityChange = (selectedOption: any) => {
     const cityName = selectedOption ? selectedOption.value : '';
 
     // Set the selected city value to the form field

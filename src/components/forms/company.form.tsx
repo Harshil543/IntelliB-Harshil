@@ -107,9 +107,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     }
   });
 
-  const handleCountryChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCountryChange = (selectedOption: any) => {
     setSelectedCountry(selectedOption);
     form.setFieldValue('country', selectedOption?.label || '');
 
@@ -127,9 +125,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     }
   };
 
-  const handleStateChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleStateChange = (selectedOption: any) => {
     setSelectedState(selectedOption);
     form.setFieldValue('state', selectedOption?.label || '');
 
@@ -146,9 +142,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     }
   };
 
-  const handleCityChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
+  const handleCityChange = (selectedOption: any) => {
     form.setFieldValue('city', selectedOption?.label || '');
   };
 
