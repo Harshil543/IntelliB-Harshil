@@ -1,0 +1,63 @@
+import apiBillingClient from '@/config/api.billing.config';
+import { BASE_URLS } from '@/constants/api.constants';
+
+interface MeterReading {
+  id?: number;
+  meterId: number;
+  readingDate: Date;
+  readingValue: number;
+  payload: any;
+}
+export const getMeterReading = async (page: number, searchQuery: string) => {
+  try {
+    const response = await apiBillingClient.get(
+      `${BASE_URLS.meterReading}?page=${page}&limit=10&search=${searchQuery}`
+    );
+    return response?.data?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const getMeterReadingById = async (id: number) => {
+  try {
+    const response = await apiBillingClient.get(
+      `${BASE_URLS.meterReading}/${id}`
+    );
+    return response?.data?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+export const createrMeterReading = async (payload: any) => {
+  try {
+    console.log('payload meter reading', payload);
+
+    const response = await apiBillingClient.post(
+      `${BASE_URLS.meterReading}`,
+      payload
+    );
+    return response?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const updateMeterReading = async ({ id, payload }: MeterReading) => {
+  try {
+    console.log('payload meter reading id', id);
+    console.log('payload meter reading', payload);
+
+    // const response = await apiBillingClient.post(
+    //   `${BASE_URLS.meterReading}`,
+    //   payload
+    // );
+    // return response?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
