@@ -46,18 +46,15 @@ export const createrMeterReading = async (payload: any) => {
   }
 };
 
-export const updateMeterReading = async ({ id, payload }: MeterReading) => {
+export const updateMeterReading = async (id: number, payload: MeterReading) => {
   try {
-    console.log('payload meter reading id', id);
-    console.log('payload meter reading', payload);
-
-    // const response = await apiBillingClient.post(
-    //   `${BASE_URLS.meterReading}`,
-    //   payload
-    // );
-    // return response?.data;
+    const response = await apiBillingClient.put(
+      `${BASE_URLS.meterReading}/${id}`,
+      payload
+    );
+    return response?.data;
   } catch (error: any) {
-    const message = error.response?.data?.message;
+    const message = error.response?.data?.message || 'An error occurred';
     throw new Error(message);
   }
 };
