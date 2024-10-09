@@ -12,16 +12,19 @@ import { Button } from '@/components/ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { MeterFormModal } from '@/components/CommonComponents/meter.modal';
 
-interface MeterActionCellProps {
-  id: number;
+interface MeterFormValues {
   meterType: string;
   meterNumber: string;
   installationDate: Date;
+  leasableUnitId: number | null;
   status: string;
-  leasableUnitId: number;
 }
 
-const MeterActionCell: React.FC<MeterActionCellProps> = ({ id }) => {
+interface MeterActionCellProps {
+  row: MeterFormValues;
+}
+
+const MeterActionCell: React.FC<MeterActionCellProps> = ({ row }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleUpdate = () => {
@@ -49,8 +52,8 @@ const MeterActionCell: React.FC<MeterActionCellProps> = ({ id }) => {
         <MeterFormModal
           isOpen={isOpen}
           onClose={() => setIsOpen(false)}
-          leasableUnitId={5}
-          id={id}
+          initialValues={row}
+          leasableUnitId={row.leasableUnitId}
         />
       ) : null}
     </>

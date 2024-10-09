@@ -26,8 +26,8 @@ const MeterList = ({
     <div>
       <DataTable
         columns={meterColumn}
-        path="/meter/register-meter"
-        data={isError ? [] : data?.items}
+        path=""
+        data={isError ? [] : data}
         pagination={data?.pagination}
         handleNext={handleNext}
         handlePrevious={handlePrevious}
