@@ -85,8 +85,6 @@ export default function MeterForm({
       }}
     >
       <>
-        {/* <Heading>Meter Data</Heading> */}
-
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1">
           <form.Field
             name="meterType"

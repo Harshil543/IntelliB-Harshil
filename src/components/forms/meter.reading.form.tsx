@@ -7,18 +7,22 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-
 import SelectInput from '../fields/SelectInput';
-import { createrMeterReading } from '@/services/meter-reading.service';
+import {
+  createrMeterReading,
+  updateMeterReading
+} from '@/services/meter-reading.service';
 import DatePickerInput from '../fields/DatePickerInput';
 
+interface MeterReading {
+  id?: number;
+  meterId: number;
+  readingDate: Date;
+  readingValue: number;
+}
+
 interface MeterReadingProps {
-  initialValues?: {
-    id?: number;
-    meterId: number;
-    readingDate: Date;
-    readingValue: number;
-  };
+  initialValues?: MeterReading;
 }
 
 export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
@@ -30,9 +34,9 @@ export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       if (initialValues?.id) {
-        // return await updateMeterReading({id, data?.value});
+        return await updateMeterReading(initialValues?.id, data?.value);
       } else {
-        return await createrMeterReading(data?.value);
+        return await createrMeterReading(data);
       }
     },
     onSuccess: () => {

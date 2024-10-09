@@ -1,5 +1,4 @@
 import apiBillingClient from '@/config/api.billing.config';
-import apiClient from '@/config/api.config';
 import { BASE_URLS } from '@/constants/api.constants';
 
 interface MeterPayload {
@@ -15,6 +14,8 @@ export const getMeter = async (
   searchQuery: string,
   leasableUnitId: number
 ) => {
+  console.log('called', leasableUnitId);
+
   try {
     if (leasableUnitId) {
       const response = await apiBillingClient.get(
@@ -28,22 +29,12 @@ export const getMeter = async (
   }
 };
 
-export const getMeterById = async (id: number) => {
-  try {
-    const response = await apiClient.get(`/meter/${id}`);
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message;
-    throw new Error(message);
-  }
-};
-
 export const createMeter = async ({
   payload,
   id
 }: {
   payload: MeterPayload;
-  id: number;
+  id: number | null;
 }) => {
   try {
     const response = await apiBillingClient.post(
@@ -60,7 +51,10 @@ export const createMeter = async ({
 
 export const updateMeter = async (id: number, payload: MeterPayload) => {
   try {
-    const response = await apiClient.put(`/meter/${id}`, payload);
+    const response = await apiBillingClient.put(
+      `${BASE_URLS.meter}/${payload?.leasableUnitId}/v1/${id}`,
+      payload
+    );
     return response.data;
   } catch (error: any) {
     const message = error.response?.data?.message;

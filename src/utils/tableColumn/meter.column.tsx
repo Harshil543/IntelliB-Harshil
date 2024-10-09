@@ -99,25 +99,7 @@ const meterColumn: ColumnDef<MeterData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const {
-        id,
-        meterType,
-        meterNumber,
-        installationDate,
-        leasableUnitId,
-        status
-      } = row.original;
-
-      return (
-        <MeterActionCell
-          id={id}
-          meterType={meterType}
-          meterNumber={meterNumber}
-          installationDate={installationDate}
-          leasableUnitId={leasableUnitId}
-          status={status}
-        />
-      );
+      return <MeterActionCell row={row.original} />;
     }
   }
 ];
