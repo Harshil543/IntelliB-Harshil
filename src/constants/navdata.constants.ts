@@ -140,6 +140,13 @@ export const navItems: { [key: string]: NavItem[] } = {
       icon: 'speedometer',
       label: 'meter-reading',
       children: undefined
+    },
+    {
+      title: 'Invoice',
+      href: '/invoice/',
+      icon: 'invoice',
+      label: 'invoice',
+      children: undefined
     }
 
     // {

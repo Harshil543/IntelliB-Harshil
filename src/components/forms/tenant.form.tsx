@@ -243,6 +243,7 @@ export const TenantDataForm = ({
               name="company.email"
               validators={{
                 onChange: ({ value }) => {
+                  if (!value) return 'Email is required';
                   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                   if (!emailRegex.test(value)) return 'Invalid email address';
                   return undefined;
@@ -259,7 +260,15 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.mobileNumber">
+            <form.Field
+              name="company.mobileNumber"
+              validators={{
+                onChange: ({ value }) => {
+                  if (!value) return 'Mobile number is required';
+                  return undefined;
+                }
+              }}
+            >
               {(field) => (
                 <PhoneInputField
                   disabled={isViewTenant}
@@ -295,7 +304,13 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.addressLine2">
+            <form.Field
+              name="company.addressLine2"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'Address Line 2 is required' : undefined
+              }}
+            >
               {(field) => (
                 <TextInput
                   disabled={isViewTenant}
@@ -305,7 +320,13 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.country">
+            <form.Field
+              name="company.country"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'Country is required' : undefined
+              }}
+            >
               {(field) => (
                 <SelectInput
                   disabled={isViewTenant}
@@ -318,7 +339,13 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.state">
+            <form.Field
+              name="company.state"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'State is required' : undefined
+              }}
+            >
               {(field) => (
                 <SelectInput
                   disabled={isViewTenant}
@@ -331,7 +358,13 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.city">
+            <form.Field
+              name="company.city"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'City is required' : undefined
+              }}
+            >
               {(field) => (
                 <SelectInput
                   disabled={isViewTenant}
@@ -344,7 +377,13 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.pincode">
+            <form.Field
+              name="company.pincode"
+              validators={{
+                onChange: ({ value }) =>
+                  !value ? 'Pincode is required' : undefined
+              }}
+            >
               {(field) => (
                 <TextInput
                   disabled={isViewTenant}

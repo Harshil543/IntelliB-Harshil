@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 
 interface MeterReadingData {
   id: number;
-  meter: { id: number };
+  meter: { meterNumber: number };
   readingDate: string;
   readingValue: string[];
 }
@@ -47,9 +47,9 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
   },
   {
     accessorKey: 'meter',
-    header: 'Meter Id',
+    header: 'Meter Number',
     cell: ({ row }) => {
-      const meterId = row?.original?.meter?.id ?? 'N/A';
+      const meterId = row?.original?.meter?.meterNumber ?? 'N/A';
       return <div className="lowercase">{meterId}</div>;
     }
   },
