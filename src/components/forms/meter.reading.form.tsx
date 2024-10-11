@@ -79,7 +79,7 @@ export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
           {(field) => (
             <SelectInput
               disabled={isViewMeterReading}
-              label="Meter Id"
+              label="Meter Number"
               field={field}
               options={[
                 { value: 1, label: 1 },

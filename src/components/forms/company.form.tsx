@@ -78,7 +78,9 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
     },
     onSuccess: () => {
       router.push('/company');
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+      toast.success(
+        `${initialValues?.id ? 'Company Update' : 'Comapany registered'} successfully`
+      );
     },
     onError: (error) => {
       toast.error(`Error: ${(error as Error).message}`);

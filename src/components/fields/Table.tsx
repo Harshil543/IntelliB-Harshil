@@ -44,7 +44,7 @@ type DataTableProps<T> = {
   data: T[];
   path: string;
   addButton?: React.ReactNode;
-  pagination: Pagination;
+  pagination?: Pagination;
   handleNext: () => void;
   handlePrevious: () => void;
   onSearch: (query: string) => void;

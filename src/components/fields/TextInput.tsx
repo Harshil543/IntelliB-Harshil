@@ -43,7 +43,6 @@ const TextInput: React.FC<TextInputProps> = ({
         value={field.state.value || value}
         onBlur={field.handleBlur}
         onChange={(e) => handleChange(e.target.value)}
-        required
         className="h-10 rounded-lg border-border"
         disabled={disabled}
       />
