@@ -399,6 +399,7 @@ export const TenantDataForm = ({
                 <TextInput
                   disabled={isViewTenant}
                   label="Website URL"
+                  required={false}
                   field={field}
                 />
               )}
@@ -408,6 +409,7 @@ export const TenantDataForm = ({
               {(field) => (
                 <TextInput
                   disabled={isViewTenant}
+                  required={false}
                   label="GST Number"
                   field={field}
                 />
@@ -419,6 +421,7 @@ export const TenantDataForm = ({
                 <TextInput
                   disabled={isViewTenant}
                   label="CIN Number"
+                  required={false}
                   field={field}
                 />
               )}
@@ -576,18 +579,15 @@ export const TenantDataForm = ({
           )}
         </div>
       </form>
-      {tenantCompanyId
-        ? tenantCompanyId
-        : companyIdByUpdate && (
-            <CardWrapper>
-              <Heading className="mt-5">Lease Data</Heading>
-              <LeasaForm
-                companyId={
-                  tenantCompanyId ? tenantCompanyId : companyIdByUpdate
-                }
-              />
-            </CardWrapper>
-          )}
+      {tenantCompanyId ||
+        (companyIdByUpdate && (
+          <CardWrapper>
+            <Heading className="mt-5">Lease Data</Heading>
+            <LeasaForm
+              companyId={tenantCompanyId ? tenantCompanyId : companyIdByUpdate}
+            />
+          </CardWrapper>
+        ))}
     </>
   );
 };

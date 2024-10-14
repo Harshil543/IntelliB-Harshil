@@ -11,6 +11,7 @@ import PhoneInputField from '../fields/PhoneInput';
 import { Country, State, City } from 'country-state-city';
 import SelectInput from '@components/fields/SelectInput';
 import toast from 'react-hot-toast';
+import FileUpload from '../fields/FileUpload';
 
 interface OptionType {
   value: string;
@@ -20,6 +21,7 @@ interface OptionType {
 interface CompanyFormValues {
   id?: number;
   companyName: string;
+  propertyName: string;
   addressLine1: string;
   addressLine2: string;
   city: string;
@@ -90,6 +92,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
   const form = useForm({
     defaultValues: initialValues || {
       companyName: '',
+      propertyName: '',
       addressLine1: '',
       addressLine2: '',
       city: '',
@@ -218,7 +221,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
-                label="Company Name"
+                label="Company Name "
                 field={field}
               />
             )}
@@ -272,17 +275,14 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               />
             )}
           </form.Field>
-        </div>
-      </CardWrapper>
 
-      <CardWrapper>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field name="addressLine1">
             {(field) => (
               <TextInput
                 disabled={isViewCompany}
                 label="Address Line 1"
                 field={field}
+                required={false}
               />
             )}
           </form.Field>
@@ -293,6 +293,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 disabled={isViewCompany}
                 label="Address Line 2"
                 field={field}
+                required={false}
               />
             )}
           </form.Field>
@@ -372,11 +373,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
               />
             )}
           </form.Field>
-        </div>
-      </CardWrapper>
 
-      <CardWrapper>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="websiteUrl"
             validators={{
@@ -395,6 +392,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 disabled={isViewCompany}
                 label="Website URL"
                 field={field}
+                required={false}
               />
             )}
           </form.Field>
@@ -402,6 +400,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           <form.Field name="gstNumber">
             {(field) => (
               <TextInput
+                required={false}
                 disabled={isViewCompany}
                 label="GST Number"
                 field={field}
@@ -415,6 +414,29 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
                 disabled={isViewCompany}
                 label="CIN Number"
                 field={field}
+                required={false}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="propertyName">
+            {(field) => (
+              <TextInput
+                disabled={isViewCompany}
+                label="Property Name"
+                field={field}
+                required={false}
+              />
+            )}
+          </form.Field>
+
+          <form.Field name="companyLogo">
+            {(field) => (
+              <FileUpload
+                label="Upload Company Logo"
+                field={field}
+                accept="image/*"
+                disabled={isViewCompany}
               />
             )}
           </form.Field>

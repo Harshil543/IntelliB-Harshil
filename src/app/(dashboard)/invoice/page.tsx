@@ -60,6 +60,7 @@ const Invoice = () => {
       handleNext={handleNext}
       handlePrevious={handlePrevious}
       onSearch={handleSearch}
+      isUseImport={false}
     />
   );
 };

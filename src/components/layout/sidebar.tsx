@@ -41,8 +41,8 @@ export default function Sidebar({ className, data }: SidebarProps) {
 
   const handleLogout = () => {
     storage.clearToken();
-    toast.success('Logged out successfully');
     router.push('/login');
+    toast.success('Logged out successfully');
   };
 
   return (

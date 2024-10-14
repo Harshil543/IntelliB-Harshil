@@ -98,6 +98,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       );
     }
   },
+
   {
     accessorKey: 'status',
     header: 'Status',

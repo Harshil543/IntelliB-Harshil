@@ -1,10 +1,12 @@
 import React from 'react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import { Label } from '../ui/label';
 
 interface PhoneInputFieldProps {
   label: string;
   disabled: boolean;
+  required?: boolean;
   field: {
     value: string;
     countryCode: string;
@@ -17,7 +19,8 @@ interface PhoneInputFieldProps {
 const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
   label,
   field,
-  disabled
+  disabled,
+  required = true
 }) => {
   const { value, countryCode, setValue, setCountryCode, errorMessage } = field;
 
@@ -31,8 +34,11 @@ const PhoneInputField: React.FC<PhoneInputFieldProps> = ({
   };
 
   return (
-    <div className="form-group w-full">
-      <label className="form-label">{label}</label>
+    <div className="grid gap-2">
+      <Label className="form-label">
+        {label}{' '}
+        <span className="text-md pl-1 text-red-500">{required ? '*' : ''}</span>
+      </Label>
       <PhoneInput
         country={'in'}
         value={concatenatedValue}

@@ -48,6 +48,8 @@ type DataTableProps<T> = {
   handleNext: () => void;
   handlePrevious: () => void;
   onSearch: (query: string) => void;
+  isUseExport?: boolean;
+  isUseImport?: boolean;
 };
 
 export function DataTable<T>({
@@ -58,7 +60,9 @@ export function DataTable<T>({
   path,
   handleNext,
   handlePrevious,
-  onSearch
+  onSearch,
+  isUseExport = true,
+  isUseImport = true
 }: DataTableProps<T>) {
   const router = useRouter();
   const pathname = usePathname();
@@ -167,20 +171,26 @@ export function DataTable<T>({
   };
 
   const handleDownloadTemplate = () => {
+    console.log('table', table);
+
     const filteredColumns = table
       .getAllColumns()
       .filter(
         (column) =>
           !['select', 'serialNumber', 'id', 'actions'].includes(column.id)
       );
+    console.log('filteredColumns', filteredColumns);
 
     const headers = filteredColumns.map(
       (column) => column.columnDef.header as string
     );
+    console.log('headers', headers);
 
     const worksheet = XLSX.utils.aoa_to_sheet([headers]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
+    console.log('workbook', workbook);
+    console.log('worksheet', worksheet);
 
     XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   };
@@ -195,47 +205,51 @@ export function DataTable<T>({
           onChange={handleSearchChange}
         />
         <div className="flex items-center space-x-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                Export
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <Button onClick={exportCSV} variant="outline" size="sm">
-                Export CSV
-              </Button>
-              <Button onClick={exportXLSX} variant="outline" size="sm">
-                Export XLSX
-              </Button>
-              <Button onClick={exportPDF} variant="outline" size="sm">
-                Export PDF
-              </Button>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                Import
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownloadTemplate}
-              >
-                Download Template
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => console.log('Import Data')}
-              >
-                Import Data
-              </Button>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {isUseExport ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Export
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <Button onClick={exportCSV} variant="outline" size="sm">
+                  Export CSV
+                </Button>
+                <Button onClick={exportXLSX} variant="outline" size="sm">
+                  Export XLSX
+                </Button>
+                <Button onClick={exportPDF} variant="outline" size="sm">
+                  Export PDF
+                </Button>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
+          {isUseImport ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm">
+                  Import
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDownloadTemplate}
+                >
+                  Download Template
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => console.log('Import Data')}
+                >
+                  Import Data
+                </Button>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : null}
         </div>
 
         {addButton ? (

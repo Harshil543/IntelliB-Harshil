@@ -11,6 +11,7 @@ import SelectInput from '@components/fields/SelectInput';
 import { Button } from '@components/ui/button';
 import { getAllLeasableUnit } from '@/services/leasable-unit.service';
 import Loader from '@components/CommonComponents/Loader';
+import { DialogHeader, DialogTitle } from '../ui/dialog';
 
 interface MeterFormValues {
   id?: number;
@@ -36,7 +37,7 @@ export default function MeterForm({
   const queryClient = useQueryClient();
   const pathname = usePathname();
 
-  const isViewMeter = pathname.includes('view-meter');
+  const isViewLeasableUnit = pathname.includes('view-leasable-unit');
 
   const { isLoading } = useQuery({
     queryKey: ['meter'],
@@ -85,6 +86,12 @@ export default function MeterForm({
       }}
     >
       <>
+        <DialogHeader>
+          <DialogTitle>
+            {' '}
+            {initialValues?.id ? `Update Meter` : `Register Meter`}
+          </DialogTitle>
+        </DialogHeader>
         <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-1">
           <form.Field
             name="meterType"
@@ -102,7 +109,7 @@ export default function MeterForm({
                   { value: 'water', label: 'water' },
                   { value: 'GAS', label: 'GAS' }
                 ]}
-                disabled={isViewMeter}
+                disabled={isViewLeasableUnit}
               />
             )}
           </form.Field>
@@ -119,7 +126,7 @@ export default function MeterForm({
               <TextInput
                 label="Meter Number"
                 field={field}
-                disabled={isViewMeter}
+                disabled={isViewLeasableUnit}
               />
             )}
           </form.Field>
@@ -137,7 +144,7 @@ export default function MeterForm({
                 label="Installation Date"
                 field={field}
                 placeholder="Select a date"
-                disabled={isViewMeter}
+                disabled={isViewLeasableUnit}
               />
             )}
           </form.Field>
@@ -163,7 +170,7 @@ export default function MeterForm({
                   //     })) || []
                   []
                 }
-                disabled={isLoading || isViewMeter}
+                disabled={isLoading || isViewLeasableUnit}
               />
             )}
           </form.Field> */}
@@ -183,7 +190,7 @@ export default function MeterForm({
                   { value: 'inactive', label: 'inactive' },
                   { value: 'maintenance', label: 'maintenance' }
                 ]}
-                disabled={isViewMeter}
+                disabled={isViewLeasableUnit}
               />
             )}
           </form.Field>
@@ -191,7 +198,7 @@ export default function MeterForm({
         <div className="col-span-full mt-10 flex justify-start space-x-4">
           {closeButton}
 
-          {!isViewMeter && (
+          {!isViewLeasableUnit && (
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >

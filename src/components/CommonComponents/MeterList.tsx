@@ -33,6 +33,8 @@ const MeterList = ({
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
         addButton={addButton}
+        isUseExport={false}
+        isUseImport={false}
       />
     </div>
   );

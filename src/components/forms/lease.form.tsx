@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { useForm } from '@tanstack/react-form';
 import SelectInput from '../fields/SelectInput';
-import TextInput from '../fields/TextInput';
 import DatePickerInput from '../fields/DatePickerInput';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAllLeasableUnit } from '@/services/leasable-unit.service';
@@ -52,7 +51,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
   const defaultValues = {
     startDate: leaseData?.items[0]?.startDate || '',
     endDate: leaseData?.items[0]?.endDate || '',
-    rentAmount: leaseData?.items[0]?.rentAmount || '',
+    // rentAmount: leaseData?.items[0]?.rentAmount || '',
     leasableUnitId: leaseData?.items[0]?.leasableUnitId || ''
   };
 
@@ -193,7 +192,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
             />
           )}
         </form.Field>
-        <form.Field
+        {/* <form.Field
           name="rentAmount"
           validators={{
             onChange: ({ value }) => {
@@ -210,7 +209,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
               disabled={isViewTenant}
             />
           )}
-        </form.Field>
+        </form.Field> */}
       </div>
       <div className="col-span-full mt-10 flex justify-start space-x-4">
         <Button

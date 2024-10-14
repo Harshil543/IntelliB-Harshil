@@ -11,6 +11,7 @@ interface SelectInputProps {
   label: string | number;
   field: any;
   options: Option[];
+  required?: true;
   placeholder?: string;
   disabled?: boolean;
   onChange?: (selectedOption: Option | null) => void;
@@ -61,6 +62,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
   field,
   options,
   placeholder = `Select ${label}`,
+  required = true,
   disabled,
   onChange
 }) => {
@@ -75,7 +77,10 @@ const SelectInput: React.FC<SelectInputProps> = ({
 
   return (
     <div className="grid gap-2">
-      <Label htmlFor={field.name}>{label}</Label>
+      <Label htmlFor={field.name}>
+        {label}{' '}
+        <span className="text-md pl-1 text-red-500">{required ? '*' : ''}</span>
+      </Label>
       <Select
         id={field.name}
         name={field.name}
@@ -84,6 +89,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         value={selectedOption || null}
         onChange={handleChange}
         onBlur={() => field.handleBlur()}
+        required={required}
         isSearchable
         isDisabled={disabled}
         getOptionLabel={(option: Option) => String(option.label)}

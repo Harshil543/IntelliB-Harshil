@@ -21,6 +21,7 @@ import { getMeter } from '@/services/meter.service';
 interface LeasableUnitFormValues {
   id?: number;
   unitNumber: string;
+  leasableUnitName: string;
   unitType: string;
   floor?: number;
   squareFootage?: number;
@@ -35,6 +36,7 @@ export default function LeasableUnitForm({
   initialValues
 }: LeasableUnitFormProps) {
   const [leasableUnitId, setLeasableUnitId] = useState<number | null>(null);
+  const [isCreated, setIsCreated] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
   const pathname = usePathname();
@@ -64,6 +66,7 @@ export default function LeasableUnitForm({
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['leasable-unit'] });
       toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
+      setIsCreated(true);
       if (!initialValues?.id && setLeasableUnitId) {
         setLeasableUnitId(data.id);
       }
@@ -160,6 +163,16 @@ export default function LeasableUnitForm({
                 />
               )}
             </form.Field>
+            <form.Field name="leasableUnitName">
+              {(field) => (
+                <TextInput
+                  label="Leasable Unit Name"
+                  field={field}
+                  disabled={isViewLeasableUnit}
+                  required={false}
+                />
+              )}
+            </form.Field>
             <form.Field
               name="floor"
               validators={{
@@ -185,14 +198,14 @@ export default function LeasableUnitForm({
               name="squareFootage"
               validators={{
                 onChange: ({ value }) => {
-                  if (!value) return 'Square Footage is required';
+                  if (!value) return 'Floor Area is required';
                   return undefined;
                 }
               }}
             >
               {(field) => (
                 <TextInput
-                  label="Square Footage"
+                  label="Floor Area"
                   field={field}
                   type="string"
                   disabled={isViewLeasableUnit}
@@ -237,7 +250,7 @@ export default function LeasableUnitForm({
                 {([canSubmit]) => (
                   <Button
                     type="submit"
-                    disabled={!canSubmit || mutation.isPending}
+                    disabled={!canSubmit || mutation.isPending || isCreated}
                   >
                     {mutation.isPending ? 'Submitting...' : 'Submit'}
                   </Button>
@@ -248,7 +261,7 @@ export default function LeasableUnitForm({
         </CardWrapper>
       </form>
 
-      {leasableUnitId && (
+      {leasableUnitId ? (
         <CardWrapper>
           <Heading>Meter Data</Heading>
           <MeterList
@@ -262,13 +275,17 @@ export default function LeasableUnitForm({
             handleNext={handleNext}
             handleSearch={handleSearch}
             addButton={
-              <Button type="button" onClick={() => setIsOpen(true)}>
+              <Button
+                type="button"
+                disabled={isViewLeasableUnit}
+                onClick={() => setIsOpen(true)}
+              >
                 Add
               </Button>
             }
           />
         </CardWrapper>
-      )}
+      ) : null}
       {isOpen && (
         <MeterFormModal
           isOpen={isOpen}

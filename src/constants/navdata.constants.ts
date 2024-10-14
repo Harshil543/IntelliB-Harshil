@@ -114,19 +114,20 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   ]
     // },
     {
-      title: 'Tenant',
-      href: '/tenant/',
-      icon: 'users-group-outline',
-      label: 'tenant',
-      children: undefined
-    },
-    {
       title: 'Leasable Unit',
       href: '/leasable-unit/',
       icon: 'alpha-l-circle-outline',
       label: 'leasable-unit',
       children: undefined
     },
+    {
+      title: 'Tenant',
+      href: '/tenant/',
+      icon: 'users-group-outline',
+      label: 'tenant',
+      children: undefined
+    },
+
     {
       title: 'Billing Model',
       href: '/billing-model/',

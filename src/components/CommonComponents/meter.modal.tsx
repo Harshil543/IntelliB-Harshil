@@ -1,13 +1,7 @@
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import MeterForm from '../forms/meter.form';
 import { DialogClose } from '@radix-ui/react-dialog';
-
 interface MeterFormModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -24,9 +18,6 @@ export function MeterFormModal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Register Meter</DialogTitle>
-        </DialogHeader>
         <MeterForm
           leasableUnitId={leasableUnitId}
           onClose={onClose}
