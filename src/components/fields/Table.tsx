@@ -204,7 +204,6 @@ export function DataTable<T>({
 
   //   XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   // };
-  console.log('pathname', pathname);
 
   const handleDownloadTemplate = () => {
     // Define static headers
