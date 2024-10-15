@@ -64,13 +64,13 @@ const companyColumns: ColumnDef<CompanyData>[] = [
       <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'propertyName',
-    header: 'Property Name',
-    cell: ({ row }) => {
-      return <div className="capitalize">{row.original.propertyName}</div>;
-    }
-  },
+  // {
+  //   accessorKey: 'propertyName',
+  //   header: 'Property Name',
+  //   cell: ({ row }) => {
+  //     return <div className="capitalize">{row.original.propertyName}</div>;
+  //   }
+  // },
   {
     accessorKey: 'email',
     header: 'Email',

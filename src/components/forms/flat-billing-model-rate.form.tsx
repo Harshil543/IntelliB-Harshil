@@ -44,7 +44,7 @@ export const FlatRateBillingModel = ({
     billingModeItems:
       data && data.billingModeItems && data.billingModeItems.length > 0
         ? data.billingModeItems
-        : initialValues?.billingModeItems || [{ rate: '0' }]
+        : initialValues?.billingModeItems || [{ rate: 0 }]
   };
 
   const [isSubmitButtonVisible, setSubmitButtonVisible] = useState(true);

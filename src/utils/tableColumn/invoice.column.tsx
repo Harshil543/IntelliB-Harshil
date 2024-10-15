@@ -49,20 +49,20 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
       <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'userName',
-    header: 'User Name',
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('userName') ?? 'N/A'}</div>
-    )
-  },
-  {
-    accessorKey: 'property',
-    header: 'Property',
-    cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('property') ?? 'N/A'}</div>
-    )
-  },
+  // {
+  //   accessorKey: 'userName',
+  //   header: 'User Name',
+  //   cell: ({ row }) => (
+  //     <div className="capitalize">{row.getValue('userName') ?? 'N/A'}</div>
+  //   )
+  // },
+  // {
+  //   accessorKey: 'property',
+  //   header: 'Property',
+  //   cell: ({ row }) => (
+  //     <div className="lowercase">{row.getValue('property') ?? 'N/A'}</div>
+  //   )
+  // },
   {
     accessorKey: 'unit',
     header: 'Unit',
@@ -120,7 +120,14 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: () => {
-      return <Badge className={`bg-gray-200 capitalize`}>Generate Bills</Badge>;
+      return (
+        <Badge
+          className={`cursor-pointer bg-gray-200 capitalize`}
+          onClick={() => console.log('Generate bill')}
+        >
+          Generate Bills
+        </Badge>
+      );
     }
   }
 ];
