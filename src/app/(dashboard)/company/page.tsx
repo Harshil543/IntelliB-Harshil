@@ -41,6 +41,7 @@ export default function ComapnyPage() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        isUseImport={true}
       />
     </div>
   );

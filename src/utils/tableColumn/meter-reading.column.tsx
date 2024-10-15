@@ -34,7 +34,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'serialNumber',
+    id: 'serialNumber',
     header: 'Sr No',
     cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
   },
@@ -50,7 +50,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     header: 'Meter Number',
     cell: ({ row }) => {
       const meterId = row?.original?.meter?.meterNumber ?? 'N/A';
-      return <div className="lowercase">{meterId}</div>;
+      return <div>{meterId}</div>;
     }
   },
   {

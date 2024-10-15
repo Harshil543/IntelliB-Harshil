@@ -113,7 +113,10 @@ export function DataTable<T>({
     const selectedRows = table
       .getRowModel()
       .rows.filter((row) => row.getIsSelected());
-    const rows = selectedRows.map((row) => row.original);
+
+    const rows = selectedRows.length
+      ? selectedRows.map((row) => row.original)
+      : data;
 
     const fields = Object.keys(rows[0] || {});
     const parser = new Parser({ fields });
@@ -134,7 +137,11 @@ export function DataTable<T>({
     const selectedRows = table
       .getRowModel()
       .rows.filter((row) => row.getIsSelected());
-    const rows = selectedRows.map((row) => row.original);
+
+    const rows = selectedRows.length
+      ? selectedRows.map((row) => row.original)
+      : data;
+
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
@@ -148,9 +155,15 @@ export function DataTable<T>({
     const rows = selectedRows.length
       ? selectedRows.map((row) => row.original)
       : data;
+
     const doc = new jsPDF();
-    doc.text(`${pathname.split('/')[1]} data`, 20, 10);
-    const filteredColumns = columns.filter((column) => column.id !== 'select');
+    doc.text(`${pathname.split('/')[1]} Data`, 20, 10);
+
+    // Filter out the 'serialNumber' column
+    const filteredColumns = columns.filter(
+      (column) => column.id !== 'select' && column.id !== 'serialNumber'
+    );
+
     const tableColumn = filteredColumns.map((col) => col.header as string);
     const tableRows = rows.map((row: any) =>
       filteredColumns.map((col: any) => {
@@ -167,8 +180,38 @@ export function DataTable<T>({
       styles: { halign: 'center' },
       margin: { top: 20 }
     });
+
     doc.save(`${pathname.split('/')[1]}.pdf`);
   };
+
+  // const exportPDF = () => {
+  //   const selectedRows = table
+  //     .getRowModel()
+  //     .rows.filter((row) => row.getIsSelected());
+  //   const rows = selectedRows.length
+  //     ? selectedRows.map((row) => row.original)
+  //     : data;
+  //   const doc = new jsPDF();
+  //   doc.text(`${pathname.split('/')[1]} data`, 20, 10);
+  //   const filteredColumns = columns.filter((column) => column.id !== 'select');
+  //   const tableColumn = filteredColumns.map((col) => col.header as string);
+  //   const tableRows = rows.map((row: any) =>
+  //     filteredColumns.map((col: any) => {
+  //       const accessor = col.accessorKey;
+  //       return row[accessor] || '';
+  //     })
+  //   );
+
+  //   autoTable(doc, {
+  //     head: [tableColumn],
+  //     body: tableRows,
+  //     startY: 20,
+  //     theme: 'striped',
+  //     styles: { halign: 'center' },
+  //     margin: { top: 20 }
+  //   });
+  //   doc.save(`${pathname.split('/')[1]}.pdf`);
+  // };
 
   const handleDownloadTemplate = () => {
     console.log('table', table);

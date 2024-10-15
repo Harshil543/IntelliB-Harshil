@@ -6,6 +6,7 @@ import CompanyActionCell from '../cellsAction/company.action.cell';
 interface CompanyData {
   id: number;
   companyName: string;
+  propertyName: string;
   addressLine1: string;
   addressLine2: string;
   city: string;
@@ -45,7 +46,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'serialNumber',
+    id: 'serialNumber',
     header: 'Sr No',
     cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
   },
@@ -62,6 +63,13 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
     )
+  },
+  {
+    accessorKey: 'propertyName',
+    header: 'Property Name',
+    cell: ({ row }) => {
+      return <div className="capitalize">{row.original.propertyName}</div>;
+    }
   },
   {
     accessorKey: 'email',

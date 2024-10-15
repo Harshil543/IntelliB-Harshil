@@ -42,7 +42,7 @@ export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
       if (initialValues?.id) {
         return await updateMeterReading(initialValues?.id, data?.value);
       } else {
-        return await createrMeterReading(data);
+        return await createrMeterReading(data?.value);
       }
     },
     onSuccess: () => {

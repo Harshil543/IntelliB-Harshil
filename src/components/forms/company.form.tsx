@@ -430,16 +430,18 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             )}
           </form.Field>
 
-          <form.Field name="companyLogo">
-            {(field) => (
-              <FileUpload
-                label="Upload Company Logo"
-                field={field}
-                accept="image/*"
-                disabled={isViewCompany}
-              />
-            )}
-          </form.Field>
+          {isViewCompany ? null : (
+            <form.Field name="companyLogo">
+              {(field) => (
+                <FileUpload
+                  label="Upload Company Logo"
+                  field={field}
+                  accept="image/*"
+                  disabled={isViewCompany}
+                />
+              )}
+            </form.Field>
+          )}
         </div>
       </CardWrapper>
 

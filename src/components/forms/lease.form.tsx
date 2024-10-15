@@ -52,7 +52,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
     startDate: leaseData?.items[0]?.startDate || '',
     endDate: leaseData?.items[0]?.endDate || '',
     // rentAmount: leaseData?.items[0]?.rentAmount || '',
-    rentAmount: '0',
+    rentAmount: 0,
     leasableUnitId: leaseData?.items[0]?.leasableUnitId || ''
   };
 
@@ -65,10 +65,9 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
           ...value,
           companyId,
           leasableUnitId: selectedLeasableUnit,
-          leaseId: leaseData.items[0].id // Assuming leaseData has an id field
+          leaseId: leaseData.items[0].id
         });
       } else {
-        // Call create API if leaseData is empty
         await mutationCreate.mutateAsync({
           ...value,
           companyId,

@@ -35,7 +35,7 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     enableHiding: false
   },
   {
-    accessorKey: 'serialNumber',
+    id: 'serialNumber',
     header: 'Sr No',
     cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
   },
