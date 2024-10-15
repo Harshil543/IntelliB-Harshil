@@ -14,8 +14,6 @@ export const getMeter = async (
   searchQuery: string,
   leasableUnitId: number
 ) => {
-  console.log('called', leasableUnitId);
-
   try {
     if (leasableUnitId) {
       const response = await apiBillingClient.get(
@@ -23,6 +21,16 @@ export const getMeter = async (
       );
       return response?.data?.data;
     }
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const getAllMeter = async () => {
+  try {
+    const response = await apiBillingClient.get(`${BASE_URLS.meter}/all/v1`);
+    return response?.data?.data?.items;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);

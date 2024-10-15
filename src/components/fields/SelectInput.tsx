@@ -67,9 +67,12 @@ const SelectInput: React.FC<SelectInputProps> = ({
   onChange
 }) => {
   const selectedOption = options.find(
-    (option) => option.label === field.state.value
+    (option) => option.value === field.state.value
   );
 
+  const selectedOptionBylabel = options.find(
+    (option) => option.label === field.state.value
+  );
   const handleChange = (option: Option | null) => {
     field.handleChange(option ? option.value : '');
     if (onChange) onChange(option);
@@ -86,7 +89,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
         name={field.name}
         options={options}
         placeholder={placeholder}
-        value={selectedOption || null}
+        value={selectedOption || selectedOptionBylabel}
         onChange={handleChange}
         onBlur={() => field.handleBlur()}
         required={required}

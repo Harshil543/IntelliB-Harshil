@@ -35,11 +35,11 @@ export const createrMeterReading = async (payload: any) => {
   try {
     console.log('payload meter reading', payload);
 
-    const response = await apiBillingClient.post(
-      `${BASE_URLS.meterReading}`,
-      payload
-    );
-    return response?.data;
+    // const response = await apiBillingClient.post(
+    //   `${BASE_URLS.meterReading}`,
+    //   payload
+    // );
+    // return response?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);

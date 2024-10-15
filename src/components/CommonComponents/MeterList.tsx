@@ -34,7 +34,6 @@ const MeterList = ({
         onSearch={handleSearch}
         addButton={addButton}
         isUseExport={false}
-        isUseImport={false}
       />
     </div>
   );

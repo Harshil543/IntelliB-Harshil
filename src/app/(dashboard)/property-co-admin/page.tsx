@@ -41,6 +41,7 @@ export default function PropertyCoAdminPage() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        isUseImport={true}
       />
     </div>
   );

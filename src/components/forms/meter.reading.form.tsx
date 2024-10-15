@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import TextInput from '@/components/fields/TextInput';
 import { usePathname, useRouter } from 'next/navigation';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import SelectInput from '../fields/SelectInput';
 import {
@@ -13,6 +13,7 @@ import {
   updateMeterReading
 } from '@/services/meter-reading.service';
 import DatePickerInput from '../fields/DatePickerInput';
+import { getAllMeter } from '@/services/meter.service';
 
 interface MeterReading {
   id?: number;
@@ -30,6 +31,11 @@ export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
   const queryClient = useQueryClient();
   const pathname = usePathname();
   const isViewMeterReading = pathname.includes('view-meter-reading');
+
+  const { data } = useQuery({
+    queryKey: ['meter'],
+    queryFn: () => getAllMeter()
+  });
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -81,11 +87,12 @@ export default function MeterReadingForm({ initialValues }: MeterReadingProps) {
               disabled={isViewMeterReading}
               label="Meter Number"
               field={field}
-              options={[
-                { value: 1, label: 1 },
-                { value: 2, label: 2 },
-                { value: 3, label: 3 }
-              ]}
+              options={
+                data?.map((item: any) => ({
+                  value: item?.id,
+                  label: item?.meterNumber
+                })) || []
+              }
             />
           )}
         </form.Field>

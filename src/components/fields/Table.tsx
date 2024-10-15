@@ -62,7 +62,7 @@ export function DataTable<T>({
   handlePrevious,
   onSearch,
   isUseExport = true,
-  isUseImport = true
+  isUseImport = false
 }: DataTableProps<T>) {
   const router = useRouter();
   const pathname = usePathname();

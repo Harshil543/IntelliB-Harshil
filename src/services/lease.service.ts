@@ -28,6 +28,8 @@ export const createLease = async ({
   payload
 }: CreateLeaseParams) => {
   try {
+    console.log('payload', payload);
+
     const response = await apiBillingClient.post(
       `${BASE_URLS.lease}/${leasableUnitId}/${companyId}`,
       payload

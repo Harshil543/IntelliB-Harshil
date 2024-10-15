@@ -52,6 +52,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
     startDate: leaseData?.items[0]?.startDate || '',
     endDate: leaseData?.items[0]?.endDate || '',
     // rentAmount: leaseData?.items[0]?.rentAmount || '',
+    rentAmount: '0',
     leasableUnitId: leaseData?.items[0]?.leasableUnitId || ''
   };
 
