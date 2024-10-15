@@ -184,58 +184,79 @@ export function DataTable<T>({
     doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
-  // const exportPDF = () => {
-  //   const selectedRows = table
-  //     .getRowModel()
-  //     .rows.filter((row) => row.getIsSelected());
-  //   const rows = selectedRows.length
-  //     ? selectedRows.map((row) => row.original)
-  //     : data;
-  //   const doc = new jsPDF();
-  //   doc.text(`${pathname.split('/')[1]} data`, 20, 10);
-  //   const filteredColumns = columns.filter((column) => column.id !== 'select');
-  //   const tableColumn = filteredColumns.map((col) => col.header as string);
-  //   const tableRows = rows.map((row: any) =>
-  //     filteredColumns.map((col: any) => {
-  //       const accessor = col.accessorKey;
-  //       return row[accessor] || '';
-  //     })
+  // const handleDownloadTemplate = () => {
+  //   const filteredColumns = table
+  //     .getAllColumns()
+  //     .filter(
+  //       (column) =>
+  //         !['select', 'serialNumber', 'id', 'actions'].includes(column.id)
+  //     );
+
+  //   const headers = filteredColumns.map(
+  //     (column) => column.columnDef.header as string
   //   );
 
-  //   autoTable(doc, {
-  //     head: [tableColumn],
-  //     body: tableRows,
-  //     startY: 20,
-  //     theme: 'striped',
-  //     styles: { halign: 'center' },
-  //     margin: { top: 20 }
-  //   });
-  //   doc.save(`${pathname.split('/')[1]}.pdf`);
+  //   const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
+  //   console.log('workbook', workbook);
+  //   console.log('worksheet', worksheet);
+
+  //   XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
   // };
+  console.log('pathname', pathname);
 
   const handleDownloadTemplate = () => {
-    console.log('table', table);
+    // Define static headers
+    const headers = [
+      'Company Name',
+      'Email',
+      'Mobile No',
+      'Address Line 1',
+      'Address Line 2',
+      'Country',
+      'State',
+      'City',
+      'Pincode',
+      'Website URL',
+      'GST Number',
+      'CIN Number',
+      'Property Name'
+    ];
 
-    const filteredColumns = table
-      .getAllColumns()
-      .filter(
-        (column) =>
-          !['select', 'serialNumber', 'id', 'actions'].includes(column.id)
-      );
-    console.log('filteredColumns', filteredColumns);
+    const propertycoadminheader = [
+      'Salutation',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Mobile Number',
+      'Designation'
+    ];
 
-    const headers = filteredColumns.map(
-      (column) => column.columnDef.header as string
-    );
-    console.log('headers', headers);
+    const leasableunitheader = [
+      'Unit Number',
+      'Unit Type',
+      'Leasable Unit Name',
+      'Floor/Wing',
+      'Floor Area',
+      'Status'
+    ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+    // Create a worksheet with the headers
+    const worksheet = XLSX.utils.aoa_to_sheet([
+      pathname === '/property-co-admin/'
+        ? propertycoadminheader
+        : pathname === '/leasable-unit/'
+          ? leasableunitheader
+          : headers
+    ]);
+
+    // Create a new workbook and append the worksheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
-    console.log('workbook', workbook);
-    console.log('worksheet', worksheet);
 
-    XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
+    // Write the workbook to a file
+    XLSX.writeFile(workbook, `${pathname.split('/')[1]}_template.xlsx`);
   };
 
   return (
