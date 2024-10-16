@@ -170,7 +170,8 @@ export const SlabWiseRateBillingModel = ({
                         label=""
                         type="number"
                         placeholder="0"
-                        value={slab?.endSlab}
+                        // value={slab?.endSlab}
+                        value={slab.endSlab === 0 ? '' : slab.endSlab}
                         field={field}
                         disabled={slab.disabled}
                         onChange={(value: string | number) => {
@@ -196,7 +197,7 @@ export const SlabWiseRateBillingModel = ({
                         type="number"
                         placeholder="0.00"
                         field={field}
-                        value={slab?.rate}
+                        value={slab.rate === 0 ? '' : slab.rate}
                         disabled={slab.disabled}
                       />
                     )}
