@@ -148,13 +148,6 @@ export const navItems: { [key: string]: NavItem[] } = {
       icon: 'invoice',
       label: 'invoice',
       children: undefined
-    },
-    {
-      title: 'Configuration',
-      href: '/company-configuration/',
-      icon: 'file-settings-cog-outline',
-      label: 'company Setting',
-      children: undefined
     }
 
     // {

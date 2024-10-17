@@ -580,15 +580,18 @@ export const TenantDataForm = ({
           )}
         </div>
       </form>
-      {tenantCompanyId ||
-        (companyIdByUpdate && (
-          <CardWrapper>
-            <Heading className="mt-5">Lease Data</Heading>
-            <LeasaForm
-              companyId={tenantCompanyId ? tenantCompanyId : companyIdByUpdate}
-            />
-          </CardWrapper>
-        ))}
+      {tenantCompanyId && (
+        <CardWrapper>
+          <Heading className="mt-5">Lease Data</Heading>
+          <LeasaForm companyId={tenantCompanyId} />
+        </CardWrapper>
+      )}
+      {companyIdByUpdate && (
+        <CardWrapper>
+          <Heading className="mt-5">Lease Data</Heading>
+          <LeasaForm companyId={companyIdByUpdate} />
+        </CardWrapper>
+      )}
     </>
   );
 };

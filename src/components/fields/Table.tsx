@@ -30,8 +30,9 @@ import {
 import { usePathname, useRouter } from 'next/navigation';
 import { Parser } from 'json2csv';
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
+import autoTable from 'jspdf-autotable';
 
 type Pagination = {
   totalItems: number;

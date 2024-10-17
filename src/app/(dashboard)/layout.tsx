@@ -54,8 +54,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             <Topbar data={data} />
           </div>
           <Heading>{formattedHeading}</Heading>
-          <Heading className="text-md text-muted-foreground">
-            Hello, {data?.data?.firstName}&nbsp;{data?.data?.lastName}
+          <Heading className="text-md capitalize text-muted-foreground">
+            Hello, {data?.data?.salutation} {data?.data?.firstName}&nbsp;
+            {data?.data?.lastName}
           </Heading>
 
           <AuthProvider>{children} </AuthProvider>
