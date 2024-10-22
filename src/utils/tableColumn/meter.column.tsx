@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import MeterActionCell from '../cellsAction/meter.action.cell';
 import { format } from 'date-fns';
 
@@ -14,28 +13,28 @@ interface MeterData {
 }
 
 const meterColumn: ColumnDef<MeterData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -45,28 +44,28 @@ const meterColumn: ColumnDef<MeterData>[] = [
     accessorKey: 'id',
     header: 'Id',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'meterType',
     header: 'Meter Type',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('meterType') ?? 'N/A'}</div>
+      <div className="capitalize">{row.original.meterType ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'meterNumber',
     header: 'Meter Number',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('meterNumber') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.meterNumber ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'installationDate',
     header: 'Installation Date',
     cell: ({ row }) => {
-      const installationDate = row.getValue('installationDate');
+      const installationDate = row.original.installationDate;
 
       // Check if the installationDate is valid
       const formattedDate = installationDate
@@ -81,7 +80,7 @@ const meterColumn: ColumnDef<MeterData>[] = [
     accessorKey: 'leasableUnitId',
     header: 'Leasable Unit Id',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('leasableUnitId') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.leasableUnitId ?? 'N/A'}</div>
     )
   },
   {
@@ -89,9 +88,9 @@ const meterColumn: ColumnDef<MeterData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : row.getValue('status') === 'maintenance' ? 'bg-yellow-300' : 'bg-red-300'} capitalize`}
+        className={`${row.original.status === 'active' ? 'bg-green-700 text-white' : row.original.status === 'maintenance' ? 'bg-yellow-300' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },

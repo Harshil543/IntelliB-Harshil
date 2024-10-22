@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import PropertyUserActionsCell from '@/utils/cellsAction/property.user.action.cell';
 
 interface PropertyUserColumns {
@@ -17,33 +16,38 @@ interface PropertyUserColumns {
 }
 
 const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
+    id: 'serialNumber',
+    header: 'Sr No',
+    cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
   },
   {
     accessorKey: 'id',
     header: 'ID',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
@@ -62,7 +66,7 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'email',
     header: 'Email',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('email') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.email ?? 'N/A'}</div>
     )
   },
   {
@@ -80,7 +84,7 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     accessorKey: 'designation',
     header: 'Designation',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('designation') ?? 'N/A'}</div>
+      <div className="capitalize">{row.original.designation ?? 'N/A'}</div>
     )
   },
   {
@@ -90,7 +94,7 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
       <Badge
         className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },
@@ -98,8 +102,8 @@ const propertyUserColumns: ColumnDef<PropertyUserColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyUserId = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
+      const propertyUserId = row.original.id as number;
+      const currentStatus = row.original.status as string;
 
       return (
         <PropertyUserActionsCell

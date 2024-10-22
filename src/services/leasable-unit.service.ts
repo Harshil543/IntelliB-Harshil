@@ -9,10 +9,14 @@ interface LeasableUnitPayload {
   status: string;
 }
 
-export const getLeasableUnit = async (page: number, searchQuery: string) => {
+export const getLeasableUnit = async (
+  page: number,
+  searchQuery: string,
+  limit: number
+) => {
   try {
     const response = await apiBillingClient.get(
-      `${BASE_URLS.leasableUnit}?page=${page}&limit=10&search=${searchQuery}`
+      `${BASE_URLS.leasableUnit}?page=${page}&limit=${limit}&search=${searchQuery}`
     );
     return response?.data?.data;
   } catch (error: any) {

@@ -1,38 +1,38 @@
 import { ColumnDef } from '@tanstack/react-table';
-import { Checkbox } from '@/components/ui/checkbox';
 import MeterReadingActionCell from '../cellsAction/meter.reading.action.cell';
 import { format } from 'date-fns';
 
 interface MeterReadingData {
   id: number;
   meter: { meterNumber: number };
-  readingDate: string;
+  readingDate: Date;
   readingValue: string[];
+  status: string;
 }
 
 const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -42,7 +42,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     accessorKey: 'id',
     header: 'Code',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
@@ -57,7 +57,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     accessorKey: 'readingDate',
     header: 'Reading Date',
     cell: ({ row }) => {
-      const date = row.getValue('readingDate');
+      const date = row.original.readingDate;
       const formattedDate = date
         ? format(new Date(date as Date), 'dd/MM/yyyy')
         : 'N/A';
@@ -68,15 +68,15 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     accessorKey: 'readingValue',
     header: 'Reading Value',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('readingValue') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.readingValue ?? 'N/A'}</div>
     )
   },
   {
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const id = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
+      const id = row.original.id as number;
+      const currentStatus = row.original.status as string;
       return <MeterReadingActionCell id={id} status={currentStatus} />;
     }
   }

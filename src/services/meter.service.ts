@@ -12,12 +12,13 @@ interface MeterPayload {
 export const getMeter = async (
   page: number,
   searchQuery: string,
+  limit: number,
   leasableUnitId: number
 ) => {
   try {
     if (leasableUnitId) {
       const response = await apiBillingClient.get(
-        `${BASE_URLS.meter}/${leasableUnitId}/v1?page=${page}&limit=5&search=${searchQuery}`
+        `${BASE_URLS.meter}/${leasableUnitId}/v1?page=${page}&limit=${limit}&search=${searchQuery}`
       );
       return response?.data?.data;
     }

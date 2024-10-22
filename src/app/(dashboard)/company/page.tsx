@@ -10,10 +10,11 @@ import Loader from '@/components/CommonComponents/Loader';
 export default function ComapnyPage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['company', page, searchQuery],
-    queryFn: () => getCompany(page, searchQuery),
+    queryKey: ['company', page, searchQuery, limit],
+    queryFn: () => getCompany(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
 
@@ -25,6 +26,10 @@ export default function ComapnyPage() {
   };
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
   };
 
   if (isLoading) {
@@ -41,6 +46,8 @@ export default function ComapnyPage() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        handleLimitChange={handleLimitChange}
+        limit={limit}
         isUseImport={true}
       />
     </div>

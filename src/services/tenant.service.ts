@@ -14,10 +14,14 @@ interface TenantDataPayload {
   email: string;
 }
 
-export const getTenant = async (page: number, searchQuery: string) => {
+export const getTenant = async (
+  page: number,
+  searchQuery: string,
+  limit: number
+) => {
   try {
     const response = await apiClient.get(
-      `${BASE_URLS?.tenant}?page=${page}&limit=10&search=${searchQuery}`
+      `${BASE_URLS?.tenant}?page=${page}&limit=${limit}&search=${searchQuery}`
     );
     return response?.data?.data;
   } catch (error: any) {

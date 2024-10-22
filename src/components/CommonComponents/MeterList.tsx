@@ -12,6 +12,8 @@ interface MeterListProps {
   handleNext: () => void;
   handlePrevious: () => void;
   handleSearch: (query: string) => void;
+  handleLimitChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  limit: number;
 }
 
 const MeterList = ({
@@ -20,7 +22,9 @@ const MeterList = ({
   data,
   handleNext,
   handlePrevious,
-  handleSearch
+  handleSearch,
+  handleLimitChange,
+  limit
 }: MeterListProps) => {
   return (
     <div>
@@ -34,6 +38,8 @@ const MeterList = ({
         onSearch={handleSearch}
         addButton={addButton}
         isUseExport={false}
+        handleLimitChange={handleLimitChange}
+        limit={limit}
       />
     </div>
   );

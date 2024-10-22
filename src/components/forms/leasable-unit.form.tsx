@@ -91,12 +91,13 @@ export default function LeasableUnitForm({
   const [isOpen, setIsOpen] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [searchQuery, setSearchQuery] = React.useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { data: meterData, isError: isErrorMeter } = useQuery({
-    queryKey: ['meter', page, searchQuery, leasableUnitId],
+    queryKey: ['meter', page, searchQuery, limit, leasableUnitId],
     queryFn: () => {
       if (leasableUnitId !== null) {
-        return getMeter(page, searchQuery, leasableUnitId);
+        return getMeter(page, searchQuery, limit, leasableUnitId);
       }
       return Promise.resolve({ items: [] });
     },
@@ -115,6 +116,10 @@ export default function LeasableUnitForm({
     setSearchQuery(query);
   };
 
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
   return (
     <>
       <form
@@ -283,6 +288,8 @@ export default function LeasableUnitForm({
                 Add
               </Button>
             }
+            handleLimitChange={handleLimitChange}
+            limit={limit}
           />
         </CardWrapper>
       ) : null}

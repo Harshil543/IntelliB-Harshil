@@ -1,39 +1,40 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import LeasableUnitActionCell from '../cellsAction/leasable.unit.action.cell';
 
 interface LeasableUnitData {
   id: number;
-  name: string;
-  floorAndWing: string;
-  smartMeterId: string[];
+  unitName: string;
+  unitNumber: string;
+  unitType: string;
+  floor: string;
+  squareFootage: string;
   status: string;
 }
 
 const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -43,35 +44,35 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     accessorKey: 'id',
     header: 'Code',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'unitName',
     header: 'Unit Name',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('unitName') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.unitName ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'unitNumber',
     header: 'Unit Number',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('unitNumber') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.unitNumber ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'unitType',
     header: 'Unit Type',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('unitType') ?? 'N/A'}</div>
+      <div className="capitalize">{row.original.unitType ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'floor',
     header: 'Floor/Wing',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('floor') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.floor ?? 'N/A'}</div>
     )
   },
 
@@ -79,7 +80,7 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     accessorKey: 'squareFootage',
     header: 'Square Footage',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('squareFootage') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.squareFootage ?? 'N/A'}</div>
     )
   },
   {
@@ -87,9 +88,9 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'available' ? 'bg-green-700 text-white' : row.getValue('status') === 'leased' ? 'bg-yellow-300' : 'bg-red-300'} capitalize`}
+        className={`${row.original.status === 'available' ? 'bg-green-700 text-white' : row.original.status === 'leased' ? 'bg-yellow-300' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },
@@ -97,8 +98,8 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const id = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
+      const id = row.original.id as number;
+      const currentStatus = row.original.status as string;
       return <LeasableUnitActionCell id={id} status={currentStatus} />;
     }
   }

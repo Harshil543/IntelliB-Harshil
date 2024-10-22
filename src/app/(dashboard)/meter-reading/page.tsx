@@ -10,10 +10,11 @@ import MeterReadingColumn from '@/utils/tableColumn/meter-reading.column';
 export default function MeterReadingList() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['meter-reading', page, searchQuery],
-    queryFn: () => getMeterReading(page, searchQuery),
+    queryKey: ['meter-reading', page, searchQuery, limit],
+    queryFn: () => getMeterReading(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
 
@@ -26,7 +27,10 @@ export default function MeterReadingList() {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
-
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -41,6 +45,8 @@ export default function MeterReadingList() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        handleLimitChange={handleLimitChange}
+        limit={limit}
       />
     </div>
   );

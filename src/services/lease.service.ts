@@ -28,8 +28,6 @@ export const createLease = async ({
   payload
 }: CreateLeaseParams) => {
   try {
-    console.log('payload', payload);
-
     const response = await apiBillingClient.post(
       `${BASE_URLS.lease}/${leasableUnitId}/${companyId}`,
       payload
@@ -47,14 +45,6 @@ export const updateLease = async ({
   leaseId,
   payload
 }: CreateLeaseParams) => {
-  console.log(
-    'companyId',
-    companyId,
-    'leasableUnitId',
-    leasableUnitId,
-    'payload',
-    payload
-  );
   try {
     const response = await apiBillingClient.put(
       `${BASE_URLS.lease}/${leasableUnitId}/${companyId}/${leaseId}`,

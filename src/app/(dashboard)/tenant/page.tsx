@@ -10,10 +10,11 @@ import Loader from '@/components/CommonComponents/Loader';
 export default function TenantPage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['tenant', page, searchQuery],
-    queryFn: () => getTenant(page, searchQuery),
+    queryKey: ['tenant', page, searchQuery, limit],
+    queryFn: () => getTenant(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
 
@@ -25,6 +26,11 @@ export default function TenantPage() {
   };
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+  };
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
   };
 
   if (isLoading) {
@@ -41,6 +47,8 @@ export default function TenantPage() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        handleLimitChange={handleLimitChange}
+        limit={limit}
       />
     </div>
   );

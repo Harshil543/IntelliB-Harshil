@@ -10,10 +10,11 @@ import Loader from '@/components/CommonComponents/Loader';
 export default function PropertyCoAdminPage() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['property-co-admin', page, searchQuery],
-    queryFn: () => getPropertyCoAdmin(page, searchQuery),
+    queryKey: ['property-co-admin', page, searchQuery, limit],
+    queryFn: () => getPropertyCoAdmin(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
 
@@ -26,23 +27,27 @@ export default function PropertyCoAdminPage() {
   const handleSearch = (query: string) => {
     setSearchQuery(query);
   };
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
 
   if (isLoading) {
     return <Loader />;
   }
 
   return (
-    <div>
-      <DataTable
-        columns={propertyCoAdminColumns}
-        data={isError ? [] : data?.items}
-        path="/property-co-admin/register-property-co-admin/"
-        pagination={data?.pagination}
-        handleNext={handleNext}
-        handlePrevious={handlePrevious}
-        onSearch={handleSearch}
-        isUseImport={true}
-      />
-    </div>
+    <DataTable
+      columns={propertyCoAdminColumns}
+      data={isError ? [] : data?.items}
+      path="/property-co-admin/register-property-co-admin/"
+      pagination={data?.pagination}
+      handleNext={handleNext}
+      handlePrevious={handlePrevious}
+      onSearch={handleSearch}
+      handleLimitChange={handleLimitChange}
+      limit={limit}
+      isUseImport={true}
+    />
   );
 }

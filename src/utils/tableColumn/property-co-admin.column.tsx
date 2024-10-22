@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import PropertyCoAdminActionCell from '../cellsAction/property.coadmin.action.cell';
 
 interface PropertyCoAdminColumns {
@@ -17,28 +16,28 @@ interface PropertyCoAdminColumns {
 }
 
 const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -48,7 +47,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'id',
     header: 'Id',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
@@ -68,7 +67,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'email',
     header: 'Email',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('email') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.email ?? 'N/A'}</div>
     )
   },
 
@@ -88,7 +87,7 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     accessorKey: 'designation',
     header: 'Designation',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('designation') ?? 'N/A'}</div>
+      <div className="capitalize">{row.original.designation ?? 'N/A'}</div>
     )
   },
   {
@@ -96,9 +95,9 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+        className={`${row.original.status === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },
@@ -106,8 +105,8 @@ const propertyCoAdminColumns: ColumnDef<PropertyCoAdminColumns>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const propertyCoAdminId = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
+      const propertyCoAdminId = row.original.id as number;
+      const currentStatus = row.original.status as string;
       return (
         <PropertyCoAdminActionCell
           propertyCoAdminId={propertyCoAdminId}

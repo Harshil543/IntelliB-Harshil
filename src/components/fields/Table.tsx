@@ -46,8 +46,10 @@ type DataTableProps<T> = {
   path: string;
   addButton?: React.ReactNode;
   pagination?: Pagination;
+  limit?: number;
   handleNext: () => void;
   handlePrevious: () => void;
+  handleLimitChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onSearch: (query: string) => void;
   isUseExport?: boolean;
   isUseImport?: boolean;
@@ -59,8 +61,10 @@ export function DataTable<T>({
   pagination,
   addButton,
   path,
+  limit,
   handleNext,
   handlePrevious,
+  handleLimitChange,
   onSearch,
   isUseExport = true,
   isUseImport = false
@@ -76,6 +80,16 @@ export function DataTable<T>({
   const [rowSelection, setRowSelection] = React.useState({});
   const [searchQuery, setSearchQuery] = React.useState<string>('');
 
+  const initialPagination: Pagination = {
+    totalItems: 0,
+    currentPage: 1,
+    totalPages: 1
+  };
+
+  const [paginationState, setPaginationState] = React.useState<Pagination>(
+    pagination || initialPagination
+  );
+
   const table = useReactTable({
     data,
     columns,
@@ -83,12 +97,21 @@ export function DataTable<T>({
       sorting,
       columnFilters,
       columnVisibility,
-      rowSelection
+      rowSelection,
+      pagination: {
+        pageIndex: paginationState.currentPage - 1, // Use the current page
+        pageSize: limit || 10 // Default to 10 if limit is undefined
+      }
     },
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
+    onPaginationChange: (updater) => {
+      if (typeof updater === 'function') {
+        setPaginationState(paginationState);
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -160,7 +183,6 @@ export function DataTable<T>({
     const doc = new jsPDF();
     doc.text(`${pathname.split('/')[1]} Data`, 20, 10);
 
-    // Filter out the 'serialNumber' column
     const filteredColumns = columns.filter(
       (column) => column.id !== 'select' && column.id !== 'serialNumber'
     );
@@ -185,29 +207,7 @@ export function DataTable<T>({
     doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
-  // const handleDownloadTemplate = () => {
-  //   const filteredColumns = table
-  //     .getAllColumns()
-  //     .filter(
-  //       (column) =>
-  //         !['select', 'serialNumber', 'id', 'actions'].includes(column.id)
-  //     );
-
-  //   const headers = filteredColumns.map(
-  //     (column) => column.columnDef.header as string
-  //   );
-
-  //   const worksheet = XLSX.utils.aoa_to_sheet([headers]);
-  //   const workbook = XLSX.utils.book_new();
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
-  //   console.log('workbook', workbook);
-  //   console.log('worksheet', worksheet);
-
-  //   XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
-  // };
-
   const handleDownloadTemplate = () => {
-    // Define static headers
     const headers = [
       'Company Name',
       'Email',
@@ -242,7 +242,6 @@ export function DataTable<T>({
       'Status'
     ];
 
-    // Create a worksheet with the headers
     const worksheet = XLSX.utils.aoa_to_sheet([
       pathname === '/property-co-admin/'
         ? propertycoadminheader
@@ -251,11 +250,9 @@ export function DataTable<T>({
           : headers
     ]);
 
-    // Create a new workbook and append the worksheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
 
-    // Write the workbook to a file
     XLSX.writeFile(workbook, `${pathname.split('/')[1]}_template.xlsx`);
   };
 
@@ -322,7 +319,7 @@ export function DataTable<T>({
           <Button onClick={() => handleNavigate(path)}>Add</Button>
         )}
       </div>
-      <div className="rounded-lg border bg-background">
+      <div className={`rounded-lg border bg-background`}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -360,7 +357,7 @@ export function DataTable<T>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columns.length + 1}
                   className="h-24 text-center"
                 >
                   No results.
@@ -376,7 +373,7 @@ export function DataTable<T>({
           {pagination?.totalItems} row(s) selected.
         </div>
         <div className="text-sm text-muted-foreground">
-          Page {pagination?.currentPage} of {pagination?.totalPages}
+          Page {paginationState.currentPage} of {paginationState.totalPages}
         </div>
         <div className="space-x-2">
           <Button
@@ -394,6 +391,19 @@ export function DataTable<T>({
             // disabled={!table.getCanNextPage()}
           >
             Next
+          </Button>
+          <Button variant="outline" size="sm">
+            <select
+              value={limit}
+              onChange={handleLimitChange}
+              className="h-full w-full bg-transparent"
+            >
+              {[10, 50, 100].map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </Button>
         </div>
       </div>

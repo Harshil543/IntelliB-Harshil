@@ -1,6 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+
 import CompanyActionCell from '../cellsAction/company.action.cell';
 
 interface CompanyData {
@@ -23,28 +23,28 @@ interface CompanyData {
 }
 
 const companyColumns: ColumnDef<CompanyData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -54,14 +54,14 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'id',
     header: 'Id',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
     accessorKey: 'companyName',
     header: 'Company Name',
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue('companyName') ?? 'N/A'}</div>
+      <div className="capitalize">{row.original.companyName ?? 'N/A'}</div>
     )
   },
   // {
@@ -75,7 +75,7 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     accessorKey: 'email',
     header: 'Email',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('email') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.email ?? 'N/A'}</div>
     )
   },
   {
@@ -112,9 +112,9 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+        className={`${row.original.status === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },
@@ -122,8 +122,8 @@ const companyColumns: ColumnDef<CompanyData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const id = row.getValue('id') as number;
-      const status = row.getValue('status') as string;
+      const id = row.original.id as number;
+      const status = row.original.status as string;
 
       return <CompanyActionCell id={id} status={status} />;
     }

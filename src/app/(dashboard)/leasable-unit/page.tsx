@@ -10,10 +10,11 @@ import Loader from '@/components/CommonComponents/Loader';
 export default function LeasableUnit() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['leasable-unit', page, searchQuery],
-    queryFn: () => getLeasableUnit(page, searchQuery),
+    queryKey: ['leasable-unit', page, searchQuery, limit],
+    queryFn: () => getLeasableUnit(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
 
@@ -27,6 +28,10 @@ export default function LeasableUnit() {
     setSearchQuery(query);
   };
 
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
   if (isLoading) {
     return <Loader />;
   }
@@ -41,6 +46,8 @@ export default function LeasableUnit() {
         handleNext={handleNext}
         handlePrevious={handlePrevious}
         onSearch={handleSearch}
+        handleLimitChange={handleLimitChange}
+        limit={limit}
         isUseImport={true}
       />
     </div>

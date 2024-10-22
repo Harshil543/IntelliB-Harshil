@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
 import TenantActionsCell from '../cellsAction/teanant.action.cell';
 
 interface tenantData {
@@ -27,31 +26,32 @@ interface tenantData {
   mobileNumber: string;
   countryCode: string;
   email: string;
+  status: string;
 }
 
 const tenantColumn: ColumnDef<tenantData>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false
-  },
+  // {
+  //   id: 'select',
+  //   header: ({ table }) => (
+  //     <Checkbox
+  //       checked={
+  //         table.getIsAllPageRowsSelected() ||
+  //         (table.getIsSomePageRowsSelected() && 'indeterminate')
+  //       }
+  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //       aria-label="Select all"
+  //     />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Checkbox
+  //       checked={row.getIsSelected()}
+  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //       aria-label="Select row"
+  //     />
+  //   ),
+  //   enableSorting: false,
+  //   enableHiding: false
+  // },
   {
     id: 'serialNumber',
     header: 'Sr No',
@@ -61,7 +61,7 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     accessorKey: 'id',
     header: 'Tenant Id',
     cell: ({ row }) => (
-      <div className="lowercase">{row.getValue('id') ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
@@ -92,9 +92,9 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     header: 'Status',
     cell: ({ row }) => (
       <Badge
-        className={`${row.getValue('status') === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+        className={`${row.original.status === 'active' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
       >
-        {row.getValue('status') ?? 'N/A'}
+        {row.original.status ?? 'N/A'}
       </Badge>
     )
   },
@@ -102,8 +102,8 @@ const tenantColumn: ColumnDef<tenantData>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const tenantId = row.getValue('id') as number;
-      const currentStatus = row.getValue('status') as string;
+      const tenantId = row.original.id as number;
+      const currentStatus = row.original.status as string;
 
       return <TenantActionsCell tenantId={tenantId} status={currentStatus} />;
     }
