@@ -33,6 +33,7 @@ interface CompanyFormValues {
   mobileNumber: string;
   websiteUrl: string;
   gstNumber: string;
+  confirmGstNumber: string;
   cinNumber: string;
 }
 
@@ -397,12 +398,49 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
             )}
           </form.Field>
 
-          <form.Field name="gstNumber">
+          <form.Field
+            name="gstNumber"
+            validators={{
+              onChange: ({ value }) => {
+                if (
+                  value &&
+                  !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9][0-9]{3}[Z][A-Z0-9]$/.test(
+                    value
+                  )
+                ) {
+                  return 'Invalid GST Number';
+                }
+                return undefined;
+              }
+            }}
+          >
             {(field) => (
               <TextInput
                 required={false}
                 disabled={isViewCompany}
                 label="GST Number"
+                field={field}
+              />
+            )}
+          </form.Field>
+
+          <form.Field
+            name="confirmGstNumber"
+            validators={{
+              onChange: ({ value }) => {
+                const gstNumber = form.getFieldValue('gstNumber');
+                if (value !== gstNumber) {
+                  return 'GST Numbers do not match';
+                }
+                return undefined;
+              }
+            }}
+          >
+            {(field) => (
+              <TextInput
+                required={false}
+                disabled={isViewCompany}
+                label="Confirm GST Number"
                 field={field}
               />
             )}

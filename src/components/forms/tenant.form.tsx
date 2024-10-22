@@ -36,6 +36,7 @@ interface TenantFormProps {
       mobileNumber: string;
       websiteUrl: string;
       gstNumber: string;
+      confirmGstNumber: string;
       cinNumber: string;
     };
     id: number;
@@ -406,12 +407,49 @@ export const TenantDataForm = ({
               )}
             </form.Field>
 
-            <form.Field name="company.gstNumber">
+            <form.Field
+              name="company.gstNumber"
+              validators={{
+                onChange: ({ value }) => {
+                  if (
+                    value &&
+                    !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9][0-9]{3}[Z][A-Z0-9]$/.test(
+                      value
+                    )
+                  ) {
+                    return 'Invalid GST Number';
+                  }
+                  return undefined;
+                }
+              }}
+            >
               {(field) => (
                 <TextInput
-                  disabled={isViewTenant}
                   required={false}
+                  disabled={isViewTenant}
                   label="GST Number"
+                  field={field}
+                />
+              )}
+            </form.Field>
+
+            <form.Field
+              name="company.confirmGstNumber"
+              validators={{
+                onChange: ({ value }) => {
+                  const gstNumber = form.getFieldValue('company.gstNumber');
+                  if (value !== gstNumber) {
+                    return 'GST Numbers do not match';
+                  }
+                  return undefined;
+                }
+              }}
+            >
+              {(field) => (
+                <TextInput
+                  required={false}
+                  disabled={isViewTenant}
+                  label="Confirm GST Number"
                   field={field}
                 />
               )}
