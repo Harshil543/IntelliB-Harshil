@@ -4,7 +4,6 @@ import { FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useState, useEffect } from 'react';
 import CardWrapper from '../layout/CardWrapper';
 import Heading from '../fields/Heading';
 import TextInput from '../fields/TextInput';
@@ -47,8 +46,6 @@ export const FlatRateBillingModel = ({
         : initialValues?.billingModeItems || [{ rate: 0 }]
   };
 
-  const [isSubmitButtonVisible, setSubmitButtonVisible] = useState(true);
-
   const mutation = useMutation({
     mutationFn: async (data: FlatRateBillingFormValue) => {
       const updatedData = {
@@ -63,12 +60,7 @@ export const FlatRateBillingModel = ({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['billing-model'] });
-      toast.success(`${initialValues?.id ? 'Updated' : 'Added'} successfully`);
-
-      // Hide the submit button after creation
-      if (!initialValues?.id) {
-        setSubmitButtonVisible(false);
-      }
+      toast.success(`${data.id ? 'Updated' : 'Added'} successfully`);
       router.push('/billing-model/');
     },
     onError: (error) => {
@@ -87,13 +79,6 @@ export const FlatRateBillingModel = ({
       await mutation.mutateAsync(value);
     }
   });
-
-  // Show button when editing
-  useEffect(() => {
-    if (initialValues?.id) {
-      setSubmitButtonVisible(true);
-    }
-  }, [initialValues]);
 
   return (
     <CardWrapper>
@@ -118,25 +103,17 @@ export const FlatRateBillingModel = ({
               )}
             </form.Field>
           </div>
-          {isSubmitButtonVisible && (
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-            >
-              {([canSubmit]) => (
-                <Button
-                  type="submit"
-                  disabled={!canSubmit || mutation.isPending}
-                >
-                  {mutation.isPending ? 'Submitting...' : 'Submit'}
-                </Button>
-              )}
-            </form.Subscribe>
-          )}
+
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Submit'}
+              </Button>
+            )}
+          </form.Subscribe>
         </div>
-
-        {/* <div className="col-span-full mt-10 flex justify-start space-x-4"> */}
-
-        {/* </div> */}
       </form>
     </CardWrapper>
   );

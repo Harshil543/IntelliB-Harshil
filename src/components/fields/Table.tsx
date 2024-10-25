@@ -207,54 +207,54 @@ export function DataTable<T>({
     doc.save(`${pathname.split('/')[1]}.pdf`);
   };
 
-  const handleDownloadTemplate = () => {
-    const headers = [
-      'Company Name',
-      'Email',
-      'Mobile No',
-      'Address Line 1',
-      'Address Line 2',
-      'Country',
-      'State',
-      'City',
-      'Pincode',
-      'Website URL',
-      'GST Number',
-      'CIN Number',
-      'Property Name'
-    ];
+  // const handleDownloadTemplate = () => {
+  //   const headers = [
+  //     'Company Name',
+  //     'Email',
+  //     'Mobile No',
+  //     'Address Line 1',
+  //     'Address Line 2',
+  //     'Country',
+  //     'State',
+  //     'City',
+  //     'Pincode',
+  //     'Website URL',
+  //     'GST Number',
+  //     'CIN Number',
+  //     'Property Name'
+  //   ];
 
-    const propertycoadminheader = [
-      'Salutation',
-      'First Name',
-      'Last Name',
-      'Email',
-      'Mobile Number',
-      'Designation'
-    ];
+  //   const propertycoadminheader = [
+  //     'Salutation',
+  //     'First Name',
+  //     'Last Name',
+  //     'Email',
+  //     'Mobile Number',
+  //     'Designation'
+  //   ];
 
-    const leasableunitheader = [
-      'Unit Number',
-      'Unit Type',
-      'Leasable Unit Name',
-      'Floor/Wing',
-      'Floor Area',
-      'Status'
-    ];
+  //   const leasableunitheader = [
+  //     'Unit Number',
+  //     'Unit Type',
+  //     'Leasable Unit Name',
+  //     'Floor/Wing',
+  //     'Floor Area',
+  //     'Status'
+  //   ];
 
-    const worksheet = XLSX.utils.aoa_to_sheet([
-      pathname === '/property-co-admin/'
-        ? propertycoadminheader
-        : pathname === '/leasable-unit/'
-          ? leasableunitheader
-          : headers
-    ]);
+  //   const worksheet = XLSX.utils.aoa_to_sheet([
+  //     pathname === '/property-co-admin/'
+  //       ? propertycoadminheader
+  //       : pathname === '/leasable-unit/'
+  //         ? leasableunitheader
+  //         : headers
+  //   ]);
 
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
+  //   const workbook = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Template');
 
-    XLSX.writeFile(workbook, `${pathname.split('/')[1]}_template.xlsx`);
-  };
+  //   XLSX.writeFile(workbook, `${pathname.split('/')[1]}_template.xlsx`);
+  // };
 
   return (
     <div className="w-full">
@@ -286,31 +286,32 @@ export function DataTable<T>({
               </DropdownMenuContent>
             </DropdownMenu>
           ) : null}
-          {isUseImport ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
-                  Import
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleDownloadTemplate}
-                >
-                  Download Template
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => console.log('Import Data')}
-                >
-                  Import Data
-                </Button>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null}
+          {isUseImport
+            ? // <DropdownMenu>
+              //   <DropdownMenuTrigger asChild>
+              //     <Button variant="outline" size="sm">
+              //       Import
+              //     </Button>
+              //   </DropdownMenuTrigger>
+              //   <DropdownMenuContent align="end">
+              //     <Button
+              //       variant="outline"
+              //       size="sm"
+              //       onClick={handleDownloadTemplate}
+              //     >
+              //       Download Template
+              //     </Button>
+              //     <Button
+              //       variant="outline"
+              //       size="sm"
+              //       onClick={() => console.log('Import Data')}
+              //     >
+              //       Import Data
+              //     </Button>
+              //   </DropdownMenuContent>
+              // </DropdownMenu>
+              null
+            : null}
         </div>
 
         {addButton ? (

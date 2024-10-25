@@ -8,6 +8,7 @@ export const BASE_URLS = {
   leasableUnit: '/api/leasable-unit/v1',
   meter: '/api/meters',
   lease: '/api/lease/v1',
+  meterReading: 'api/meter-reading/v1',
   billingMode: '/api/admin/billing-mode/v1',
-  meterReading: 'api/meter-reading/v1'
+  invoice: '/api/bill/v1'
 };

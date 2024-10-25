@@ -10,13 +10,14 @@ interface InvoiceData {
   amount: number;
   status: string;
 }
-
+import Loader from '@/components/CommonComponents/Loader';
 import { DataTable } from '@/components/fields/Table';
+import { getInvoice } from '@/services/invoice.service';
 import invoiceColumn from '@/utils/tableColumn/invoice.column';
-import React from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
 
 const Invoice = () => {
-  // Sample data structured as an array
   const items: InvoiceData[] = [
     {
       id: 78787,
@@ -40,26 +41,45 @@ const Invoice = () => {
     }
   ];
 
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['invoice'],
+    queryFn: () => getInvoice(page, searchQuery, limit),
+    placeholderData: keepPreviousData
+  });
+
   const handlePrevious = () => {
-    console.log('Previous page');
+    setPage((prev) => prev - 1);
   };
-
   const handleNext = () => {
-    console.log('Next page');
+    setPage((prev) => prev + 1);
+  };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
   };
 
-  const handleSearch = () => {
-    console.log('Search term:');
-  };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <DataTable
       columns={invoiceColumn}
       path=""
-      data={items}
+      // data={isError ? items : data?.items}
+      data={items ? items : data?.items}
       handleNext={handleNext}
       handlePrevious={handlePrevious}
       onSearch={handleSearch}
+      handleLimitChange={handleLimitChange}
+      limit={limit}
     />
   );
 };

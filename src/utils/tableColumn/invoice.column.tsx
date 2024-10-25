@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
+import { generateInvoice } from '@/services/invoice.service';
 
 interface InvoiceData {
   id: number;
@@ -75,7 +76,6 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     cell: ({ row }) => {
       const installationDate = row.original.billingDate;
 
-      // Check if the installationDate is valid
       const formattedDate = installationDate
         ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
         : 'N/A';
@@ -89,7 +89,6 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     cell: ({ row }) => {
       const installationDate = row.original.endDate;
 
-      // Check if the installationDate is valid
       const formattedDate = installationDate
         ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
         : 'N/A';
@@ -118,11 +117,16 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
   {
     id: 'actions',
     enableHiding: false,
-    cell: () => {
+    cell: ({ row }) => {
+      const handleGenerateInvoice = () => {
+        const billId = row.original.id;
+        generateInvoice(billId);
+      };
+
       return (
         <Badge
           className={`cursor-pointer bg-gray-200 capitalize`}
-          onClick={() => console.log('Generate bill')}
+          onClick={handleGenerateInvoice}
         >
           Generate Bills
         </Badge>
