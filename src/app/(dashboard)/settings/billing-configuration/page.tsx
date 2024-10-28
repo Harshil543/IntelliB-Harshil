@@ -10,23 +10,17 @@ import { createBillingConfiguration } from '@/services/billing-configuration.ser
 import toast from 'react-hot-toast';
 
 interface BillingConfigurationValues {
-  configurations: {
+  data: {
     meterType: string;
     category: string;
   }[];
 }
 
-interface BillingConfigurationProps {
-  initialValues?: BillingConfigurationValues;
-}
-
-export default function BillingConfiguration({
-  initialValues
-}: BillingConfigurationProps) {
+const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
   const queryClient = useQueryClient();
-  const [configurations, setConfigurations] = useState(
-    initialValues?.configurations || [{ meterType: '', category: '' }]
-  );
+  const [configurations, setConfigurations] = useState([
+    BillingConfigurationValues || { meterType: '', category: '' }
+  ]);
 
   const meterTypeOptions = [
     { value: MeterType.ELECTRICITY, label: MeterType.ELECTRICITY },
@@ -63,9 +57,9 @@ export default function BillingConfiguration({
   });
 
   const form = useForm<BillingConfigurationValues>({
-    defaultValues: { configurations },
+    defaultValues: { data: configurations },
     onSubmit: async (values) => {
-      await mutation.mutateAsync(values.value.configurations);
+      await mutation.mutateAsync(values.value.data);
     }
   });
 
@@ -92,7 +86,7 @@ export default function BillingConfiguration({
               key={index}
               className="grid w-full grid-cols-3 items-end gap-4"
             >
-              <form.Field name={`configurations[${index}].meterType`}>
+              <form.Field name={`data[${index}].meterType`}>
                 {(field) => (
                   <SelectInput
                     label="Meter Type"
@@ -101,7 +95,7 @@ export default function BillingConfiguration({
                   />
                 )}
               </form.Field>
-              <form.Field name={`configurations[${index}].category`}>
+              <form.Field name={`data[${index}].category`}>
                 {(field) => (
                   <SelectInput
                     label="Category"
@@ -146,4 +140,6 @@ export default function BillingConfiguration({
       )}
     </form>
   );
-}
+};
+
+export default BillingConfigurationForm;

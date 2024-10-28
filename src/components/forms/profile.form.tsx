@@ -340,7 +340,7 @@ export default function ProfileForm() {
         }
       }
     }
-  }, [data?.data?.company, countries]);
+  }, [data?.data?.company, countries, data?.data]);
 
   if (isLoading) {
     return <Loader />;
