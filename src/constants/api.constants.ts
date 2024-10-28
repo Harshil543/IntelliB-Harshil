@@ -10,5 +10,6 @@ export const BASE_URLS = {
   lease: '/api/lease/v1',
   meterReading: 'api/meter-reading/v1',
   billingMode: '/api/admin/billing-mode/v1',
-  invoice: '/api/bill/v1'
+  invoice: '/api/bill/v1',
+  billingConfiguration: '/api/admin/bill-config/v1'
 };

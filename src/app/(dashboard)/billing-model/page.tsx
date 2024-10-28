@@ -34,7 +34,9 @@ const BillingModel = () => {
         ))}
       </div>
       <CardWrapper>
-        <h2 className="mt-4 text-lg font-semibold capitalize">{activeTab}</h2>
+        <h2 className="mt-4 text-lg font-semibold capitalize">
+          {activeTab.split('_').join(' ')}
+        </h2>
         <div className="mt-4">
           <div className="mb-4 flex gap-4">
             <label className="flex items-center justify-center gap-2 align-middle">
@@ -53,7 +55,7 @@ const BillingModel = () => {
                 checked={billingType === 'slab'}
                 onChange={handleBillingTypeChange}
               />
-              <span>Slab Wise</span>
+              <span>Slab Wise Rate</span>
             </label>
           </div>
 
