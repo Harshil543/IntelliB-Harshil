@@ -4,7 +4,6 @@ import { FormApi, useForm } from '@tanstack/react-form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import CardWrapper from '../layout/CardWrapper';
 import Heading from '../fields/Heading';
 import TextInput from '../fields/TextInput';
 import { Button } from '../ui/button';
@@ -23,18 +22,20 @@ interface FlatRateBillingFormValue {
 
 interface FlatRateFixedBillingFormProps {
   initialValues?: FlatRateBillingFormValue;
+  meterType: string;
 }
 
 export const FlatRateBillingModel = ({
-  initialValues
+  initialValues,
+  meterType
 }: FlatRateFixedBillingFormProps) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const type = 'FLAT_RATE';
 
   const { data } = useQuery({
-    queryKey: ['billing-model', type],
-    queryFn: () => getBillingRate(type)
+    queryKey: ['billing-model', meterType, type],
+    queryFn: () => getBillingRate(meterType, type)
   });
 
   // Determine default values based on fetched data
@@ -50,12 +51,13 @@ export const FlatRateBillingModel = ({
     mutationFn: async (data: FlatRateBillingFormValue) => {
       const updatedData = {
         ...data,
+        meterType: meterType,
         category: 'FLAT_RATE'
       };
       if (data.id) {
         return await updateBillingRate(data.id, updatedData);
       } else {
-        return await createBillingRate(updatedData);
+        return await createBillingRate(meterType, updatedData);
       }
     },
     onSuccess: () => {
@@ -81,40 +83,38 @@ export const FlatRateBillingModel = ({
   });
 
   return (
-    <CardWrapper>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          form.handleSubmit();
-        }}
-      >
-        <div className="flex items-center justify-between gap-3 align-middle">
-          <div className="flex items-center justify-center gap-5 align-middle">
-            <Heading className="mt-2 text-lg">Flat Rate</Heading>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+    >
+      <div className="flex items-center justify-between gap-3 align-middle">
+        <div className="flex items-center justify-center gap-5 align-middle">
+          <Heading className="mt-2 text-lg">Flat Rate</Heading>
 
-            <form.Field name={`billingModeItems[0].rate`}>
-              {(field) => (
-                <TextInput
-                  label=""
-                  placeholder="0.00"
-                  type="number"
-                  field={field}
-                />
-              )}
-            </form.Field>
-          </div>
-
-          <form.Subscribe
-            selector={(state) => [state.canSubmit, state.isSubmitting]}
-          >
-            {([canSubmit]) => (
-              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-                {mutation.isPending ? 'Submitting...' : 'Submit'}
-              </Button>
+          <form.Field name={`billingModeItems[0].rate`}>
+            {(field) => (
+              <TextInput
+                label=""
+                placeholder="0.00"
+                type="number"
+                field={field}
+              />
             )}
-          </form.Subscribe>
+          </form.Field>
         </div>
-      </form>
-    </CardWrapper>
+
+        <form.Subscribe
+          selector={(state) => [state.canSubmit, state.isSubmitting]}
+        >
+          {([canSubmit]) => (
+            <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+              {mutation.isPending ? 'Submitting...' : 'Submit'}
+            </Button>
+          )}
+        </form.Subscribe>
+      </div>
+    </form>
   );
 };

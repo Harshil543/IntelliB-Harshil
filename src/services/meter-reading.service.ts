@@ -35,6 +35,7 @@ export const getMeterReadingById = async (id: number) => {
     throw new Error(message);
   }
 };
+
 export const createrMeterReading = async (payload: any) => {
   try {
     const response = await apiBillingClient.post(
@@ -57,6 +58,36 @@ export const updateMeterReading = async (id: number, payload: MeterReading) => {
     return response?.data;
   } catch (error: any) {
     const message = error.response?.data?.message || 'An error occurred';
+    throw new Error(message);
+  }
+};
+
+export const downloadTemplate = async () => {
+  try {
+    const response = await apiBillingClient.get(
+      `${BASE_URLS.meterReading}/template`,
+      {
+        responseType: 'blob'
+      }
+    );
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const importData = async (data: MeterReading[]) => {
+  console.log('data', data);
+
+  try {
+    const response = await apiBillingClient.post(
+      `${BASE_URLS.meterReading}/upload`,
+      { data }
+    );
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
     throw new Error(message);
   }
 };

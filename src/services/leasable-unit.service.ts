@@ -80,3 +80,33 @@ export const updateLeasableUnit = async ({
     throw new Error(message);
   }
 };
+
+export const downloadTemplate = async () => {
+  try {
+    const response = await apiBillingClient.get(
+      `${BASE_URLS.leasableUnit}/template`,
+      {
+        responseType: 'blob'
+      }
+    );
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const importData = async (data: LeasableUnitPayload[]) => {
+  console.log('data LeasableUnitPayload', data);
+
+  try {
+    const response = await apiBillingClient.post(
+      `${BASE_URLS.leasableUnit}/upload`,
+      { data }
+    );
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};

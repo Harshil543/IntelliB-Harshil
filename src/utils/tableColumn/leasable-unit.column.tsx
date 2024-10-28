@@ -47,13 +47,13 @@ const leasableUnitColumn: ColumnDef<LeasableUnitData>[] = [
       <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'unitName',
-    header: 'Unit Name',
-    cell: ({ row }) => (
-      <div className="lowercase">{row.original.unitName ?? 'N/A'}</div>
-    )
-  },
+  // {
+  //   accessorKey: 'unitName',
+  //   header: 'Unit Name',
+  //   cell: ({ row }) => (
+  //     <div className="lowercase">{row.original.unitName ?? 'N/A'}</div>
+  //   )
+  // },
   {
     accessorKey: 'unitNumber',
     header: 'Unit Number',

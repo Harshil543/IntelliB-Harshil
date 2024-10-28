@@ -21,7 +21,7 @@ import { getMeter } from '@/services/meter.service';
 interface LeasableUnitFormValues {
   id?: number;
   unitNumber: string;
-  unitName: string;
+  // unitName: string;
   unitType: string;
   floor?: number;
   squareFootage?: number;
@@ -168,7 +168,7 @@ export default function LeasableUnitForm({
                 />
               )}
             </form.Field>
-            <form.Field name="unitName">
+            {/* <form.Field name="unitName">
               {(field) => (
                 <TextInput
                   label=" Unit Name"
@@ -177,7 +177,7 @@ export default function LeasableUnitForm({
                   required={false}
                 />
               )}
-            </form.Field>
+            </form.Field> */}
             <form.Field
               name="floor"
               validators={{

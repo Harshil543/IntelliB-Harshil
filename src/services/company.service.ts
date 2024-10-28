@@ -81,3 +81,29 @@ export const statusCompany = async (id: number) => {
     throw new Error(message);
   }
 };
+
+export const downloadTemplate = async () => {
+  try {
+    const response = await apiClient.get(`${BASE_URLS.company}/template`, {
+      responseType: 'blob'
+    });
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const importData = async (data: CompanyPayload[]) => {
+  console.log('data company import', data);
+
+  try {
+    const response = await apiClient.post(`${BASE_URLS.company}/upload`, {
+      data
+    });
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};

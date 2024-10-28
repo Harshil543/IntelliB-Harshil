@@ -47,7 +47,6 @@ export default function PropertyCoAdminPage() {
       onSearch={handleSearch}
       handleLimitChange={handleLimitChange}
       limit={limit}
-      isUseImport={true}
     />
   );
 }
