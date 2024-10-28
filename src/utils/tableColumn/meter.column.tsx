@@ -69,7 +69,7 @@ const meterColumn: ColumnDef<MeterData>[] = [
 
       // Check if the installationDate is valid
       const formattedDate = installationDate
-        ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
+        ? format(new Date(installationDate as Date), 'MM/dd/yyyy')
         : 'N/A';
 
       return <div className="lowercase">{formattedDate}</div>;

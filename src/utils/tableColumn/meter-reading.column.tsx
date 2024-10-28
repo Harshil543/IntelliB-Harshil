@@ -59,7 +59,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     cell: ({ row }) => {
       const date = row.original.readingDate;
       const formattedDate = date
-        ? format(new Date(date as Date), 'dd/MM/yyyy')
+        ? format(new Date(date as Date), 'MM/dd/yyyy')
         : 'N/A';
       return <div className="capitalize">{formattedDate}</div>;
     }
