@@ -11,5 +11,6 @@ export const BASE_URLS = {
   meterReading: 'api/meter-reading/v1',
   billingMode: '/api/admin/billing-mode/v1',
   invoice: '/api/bill/v1',
-  billingConfiguration: '/api/admin/bill-config/v1'
+  billingConfiguration: '/api/admin/bill-config/v1',
+  otherCharges: ''
 };

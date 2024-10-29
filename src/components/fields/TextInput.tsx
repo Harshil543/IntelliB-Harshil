@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 interface TextInputProps {
-  label: string;
-  field: any;
+  label?: string;
+  field?: any;
   type?: any;
   placeholder?: string;
   required?: boolean;

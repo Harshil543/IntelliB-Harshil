@@ -60,6 +60,7 @@ export const SlabWiseRateBillingModel = ({
     mutationFn: async (data: SlabWiseRateBillingFormValue) => {
       return await createBillingRate(meterType, {
         ...data,
+        meterType: meterType,
         category: 'SLAB_WISE_RATE'
       });
     },
