@@ -96,13 +96,16 @@ export const downloadTemplate = async () => {
   }
 };
 
-export const importData = async (data: LeasableUnitPayload[]) => {
-  console.log('data LeasableUnitPayload', data);
-
+export const importData = async (data: any) => {
   try {
     const response = await apiBillingClient.post(
       `${BASE_URLS.leasableUnit}/upload`,
-      { data }
+      data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
     );
     return response;
   } catch (error: any) {

@@ -15,25 +15,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from '@radix-ui/react-dropdown-menu';
-import * as XLSX from 'xlsx';
 import { Button } from '@/components/ui/button';
-
-interface CompanyPayload {
-  companyName: string;
-  addressLine1: string;
-  addressLine2: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode: string;
-  email: string;
-  countryCode: string;
-  mobileNumber: string;
-  websiteUrl: string;
-  gstNumber: string;
-  cinNumber: string;
-  status?: string;
-}
 
 export default function ComapnyPage() {
   const [page, setPage] = useState(1);
@@ -88,18 +70,10 @@ export default function ComapnyPage() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: CompanyPayload[] = XLSX.utils.sheet_to_json(worksheet);
+    const formData = new FormData();
+    formData.append('file', file);
 
-      console.log('Parsed JSON data from file:', jsonData);
-
-      mutation.mutate(jsonData);
-    };
-    reader.readAsArrayBuffer(file);
+    mutation.mutate(formData);
   };
 
   if (isLoading) {

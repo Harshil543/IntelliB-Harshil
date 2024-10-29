@@ -15,15 +15,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger
 } from '@radix-ui/react-dropdown-menu';
-import * as XLSX from 'xlsx';
 import { Button } from '@/components/ui/button';
-
-interface LeasableUnitPayload {
-  name: string;
-  floorAndWing: string;
-  smartMeterId: string[];
-  status: string;
-}
+import toast from 'react-hot-toast';
 
 export default function LeasableUnit() {
   const [page, setPage] = useState(1);
@@ -39,11 +32,11 @@ export default function LeasableUnit() {
   const mutation = useMutation({
     mutationFn: importData,
     onSuccess: () => {
-      alert('Data imported successfully!');
+      toast.success('Data imported successfully!');
       refetch();
     },
     onError: (error: any) => {
-      alert(`Error importing data: ${error.message}`);
+      toast.error(`Error importing data: ${error.message}`);
     }
   });
 
@@ -61,6 +54,8 @@ export default function LeasableUnit() {
     setLimit(Number(e.target.value));
     setPage(1);
   };
+  [];
+
   const handleDownloadTemplate = async () => {
     try {
       const response = await downloadTemplate();
@@ -80,19 +75,10 @@ export default function LeasableUnit() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: LeasableUnitPayload[] =
-        XLSX.utils.sheet_to_json(worksheet);
+    const formData = new FormData();
+    formData.append('file', file);
 
-      console.log('Parsed JSON data from file:', jsonData);
-
-      mutation.mutate(jsonData);
-    };
-    reader.readAsArrayBuffer(file);
+    mutation.mutate(formData);
   };
 
   if (isLoading) {
@@ -129,7 +115,7 @@ export default function LeasableUnit() {
               <label htmlFor="file-upload" className="cursor-pointer">
                 <input
                   type="file"
-                  accept=".xlsx, .xls"
+                  accept=".xlsx, .xls, .csv"
                   onChange={handleFileChange}
                   className=""
                   id="file-upload"

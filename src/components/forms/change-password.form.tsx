@@ -11,6 +11,7 @@ import { changePassword } from '@/services/user.service';
 import eyeIcon from '@iconify/icons-mdi/eye';
 import eyeOffIcon from '@iconify/icons-mdi/eye-off';
 import { Icon } from '@iconify/react';
+import Heading from '../fields/Heading';
 interface ChangePasswordProps {
   initialValues?: {
     id?: number;
@@ -69,7 +70,8 @@ export default function ChangePasswordForm({
       }}
     >
       <CardWrapper>
-        <div className="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <Heading>Change Password</Heading>
+        <div className="my-5 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <form.Field
             name="oldPassword"
             validators={{

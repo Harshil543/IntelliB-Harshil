@@ -16,14 +16,7 @@ import {
   DropdownMenuContent
 } from '@radix-ui/react-dropdown-menu';
 import { Button } from '@/components/ui/button';
-import * as XLSX from 'xlsx';
-
-type MeterReadingData = {
-  meterId: number;
-  readingDate: Date;
-  readingValue: number;
-  payload: any;
-};
+import toast from 'react-hot-toast';
 
 export default function MeterReadingList() {
   const [page, setPage] = useState(1);
@@ -39,11 +32,11 @@ export default function MeterReadingList() {
   const mutation = useMutation({
     mutationFn: importData,
     onSuccess: () => {
-      alert('Data imported successfully!');
+      toast.success('Data imported successfully!');
       refetch();
     },
     onError: (error: any) => {
-      alert(`Error importing data: ${error.message}`);
+      toast.error(`Error importing data: ${error.message}`);
     }
   });
 
@@ -83,19 +76,10 @@ export default function MeterReadingList() {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const data = new Uint8Array(e.target?.result as ArrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const jsonData: MeterReadingData[] = XLSX.utils.sheet_to_json(worksheet);
+    const formData = new FormData();
+    formData.append('file', file);
 
-      console.log('Parsed JSON data from file:', jsonData); // Log the parsed data
-
-      // Ensure the jsonData matches the expected structure before mutating
-      mutation.mutate(jsonData);
-    };
-    reader.readAsArrayBuffer(file);
+    mutation.mutate(formData);
   };
 
   if (isLoading) {

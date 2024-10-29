@@ -2,12 +2,21 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@tanstack/react-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query';
 import CardWrapper from '@/components/layout/CardWrapper';
 import SelectInput from '@/components/fields/SelectInput';
 import { MeterType, Category } from '@/constants/enums.constants';
-import { createBillingConfiguration } from '@/services/billing-configuration.service';
+import {
+  createBillingConfiguration,
+  getBillingConfiguration
+} from '@/services/billing-configuration.service';
 import toast from 'react-hot-toast';
+import Loader from '@/components/CommonComponents/Loader';
 
 interface BillingConfigurationValues {
   data: {
@@ -18,6 +27,14 @@ interface BillingConfigurationValues {
 
 const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
   const queryClient = useQueryClient();
+
+  const { isLoading, data } = useQuery({
+    queryKey: ['billing-configuration'],
+    queryFn: () => getBillingConfiguration(),
+    placeholderData: keepPreviousData
+  });
+  console.log('data', data);
+
   const [configurations, setConfigurations] = useState([
     BillingConfigurationValues || { meterType: '', category: '' }
   ]);
@@ -27,9 +44,9 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     {
       value: MeterType.DIESEL_GENERATOR,
       label: MeterType.DIESEL_GENERATOR.split('_').join(' ')
-    },
-    { value: MeterType.WATER, label: MeterType.WATER },
-    { value: MeterType.GAS, label: MeterType.GAS }
+    }
+    // { value: MeterType.WATER, label: MeterType.WATER },
+    // { value: MeterType.GAS, label: MeterType.GAS }
   ];
 
   const categoryOptions = [
@@ -72,6 +89,10 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     setConfigurations(newConfigurations);
   };
 
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <form
       onSubmit={(e) => {
@@ -81,6 +102,18 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     >
       <CardWrapper>
         <div className="my-5 w-full space-y-4">
+          {data?.map((item: any, i: number) => {
+            return (
+              <div key={i} className="grid w-full grid-cols-3 items-end gap-4">
+                <span className="text-g h-10 rounded-lg border border-border p-2 text-sm capitalize">
+                  {item?.meterType.split('_').join(' ').toLowerCase()}
+                </span>
+                <span className="text-g h-10 rounded-lg border border-border p-2 text-sm capitalize">
+                  {item?.category.split('_').join(' ').toLowerCase()}
+                </span>
+              </div>
+            );
+          })}
           {configurations.map((config, index) => (
             <div
               key={index}

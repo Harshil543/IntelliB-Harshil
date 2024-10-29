@@ -94,12 +94,12 @@ export const downloadTemplate = async () => {
   }
 };
 
-export const importData = async (data: CompanyPayload[]) => {
-  console.log('data company import', data);
-
+export const importData = async (data: any) => {
   try {
-    const response = await apiClient.post(`${BASE_URLS.company}/upload`, {
-      data
+    const response = await apiClient.post(`${BASE_URLS.company}/upload`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
     return response;
   } catch (error: any) {

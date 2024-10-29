@@ -77,13 +77,16 @@ export const downloadTemplate = async () => {
   }
 };
 
-export const importData = async (data: MeterReading[]) => {
-  console.log('data', data);
-
+export const importData = async (data: any) => {
   try {
     const response = await apiBillingClient.post(
       `${BASE_URLS.meterReading}/upload`,
-      { data }
+      data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
     );
     return response;
   } catch (error: any) {
