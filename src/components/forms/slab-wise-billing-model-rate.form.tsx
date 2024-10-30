@@ -50,7 +50,7 @@ export const SlabWiseRateBillingModel = ({
           startSlab: item.startSlab,
           endSlab: item.endSlab,
           rate: item.rate,
-          disabled: true
+          disabled: true // Existing slabs should be marked as disabled
         }))
       );
     }
@@ -58,11 +58,13 @@ export const SlabWiseRateBillingModel = ({
 
   const mutation = useMutation({
     mutationFn: async (data: SlabWiseRateBillingFormValue) => {
-      return await createBillingRate(meterType, {
+      const payload = {
         ...data,
         meterType: meterType,
         category: 'SLAB_WISE_RATE'
-      });
+      };
+
+      return await createBillingRate(meterType, payload);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['billing-model'] });
@@ -103,7 +105,8 @@ export const SlabWiseRateBillingModel = ({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        mutation.mutateAsync({ billingModeItems: slabs });
+        const newSlabs = slabs.filter((slab) => !slab.disabled); // Only include new slabs
+        mutation.mutateAsync({ billingModeItems: newSlabs });
       }}
     >
       <div className="mb-7 flex justify-between">
@@ -197,3 +200,5 @@ export const SlabWiseRateBillingModel = ({
     </form>
   );
 };
+
+export default SlabWiseRateBillingModel;
