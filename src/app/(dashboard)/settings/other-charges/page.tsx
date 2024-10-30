@@ -11,6 +11,7 @@ const OtherCharges = () => {
   const mutation = useMutation({});
   const form = useForm({});
   const [billingModel, setBillingModel] = useState('fixed'); // Default to 'fixed'
+  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
 
   const data = [
     {
@@ -24,13 +25,18 @@ const OtherCharges = () => {
       rate: '250'
     },
     {
-      chargesName: 'Maintainance Fee',
+      chargesName: 'Maintenance Fee',
       billingModel: 'amount',
       rate: '1200'
     }
   ];
+
   return (
     <div>
+      <div className="mb-4 flex justify-end">
+        <Button onClick={() => setShowForm(true)}>Add Other Charges</Button>
+      </div>
+
       <CardWrapper>
         <div className="grid w-full grid-cols-3 items-center gap-4">
           {data.map((item, i) => {
@@ -46,81 +52,91 @@ const OtherCharges = () => {
           })}
         </div>
       </CardWrapper>
-      <CardWrapper>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-        >
-          <div className="grid w-full grid-cols-3 items-center gap-0">
-            <Label htmlFor="chargesName">Charges Name</Label>
-            <form.Field name="chargesName">
-              {(field) => (
-                <TextInput field={field} placeholder="Charges name" />
-              )}
-            </form.Field>
-          </div>
 
-          <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
-            <Label>Choose Billing Model</Label>
-            <div className="flex space-x-4">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="billingModel"
-                  value="fixed"
-                  checked={billingModel === 'fixed'}
-                  onChange={() => setBillingModel('fixed')}
-                />
-                <span>Fixed Amount</span>
-              </label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  name="billingModel"
-                  value="p"
-                  checked={billingModel === 'percentage'}
-                  onChange={() => setBillingModel('percentage')}
-                />
-                <span>Percentage</span>
-              </label>
+      {showForm && (
+        <CardWrapper>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
+          >
+            <div className="grid w-full grid-cols-3 items-center gap-0">
+              <Label htmlFor="chargesName">Charges Name</Label>
+              <form.Field name="chargesName">
+                {(field) => (
+                  <TextInput field={field} placeholder="Charges name" />
+                )}
+              </form.Field>
             </div>
-          </div>
 
-          <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
-            <Label htmlFor="amountPercentage">Amount/Percentage</Label>
-            <form.Field name="amountPercentage">
-              {(field) => (
-                <TextInput field={field} placeholder="Amount/Percentage" />
-              )}
-            </form.Field>
-          </div>
-
-          <div className="col-span-full mt-10 flex justify-start space-x-4">
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-            >
-              {([canSubmit]) => (
-                <Button
-                  type="submit"
-                  disabled={!canSubmit || mutation.isPending}
-                >
-                  {mutation.isPending ? 'Submitting...' : 'Submit'}
-                </Button>
-              )}
-            </form.Subscribe>
-          </div>
-
-          {mutation.isError && (
-            <div className="col-span-full text-red-500">
-              {mutation.error instanceof Error
-                ? mutation.error.message
-                : 'An error occurred during submission.'}
+            <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
+              <Label>Choose Billing Model</Label>
+              <div className="flex space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="billingModel"
+                    value="fixed"
+                    checked={billingModel === 'fixed'}
+                    onChange={() => setBillingModel('fixed')}
+                  />
+                  <span>Fixed Amount</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="billingModel"
+                    value="percentage"
+                    checked={billingModel === 'percentage'}
+                    onChange={() => setBillingModel('percentage')}
+                  />
+                  <span>Percentage</span>
+                </label>
+              </div>
             </div>
-          )}
-        </form>
-      </CardWrapper>
+
+            <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
+              <Label htmlFor="amountPercentage">Amount/Percentage</Label>
+              <form.Field name="amountPercentage">
+                {(field) => (
+                  <TextInput field={field} placeholder="Amount/Percentage" />
+                )}
+              </form.Field>
+            </div>
+
+            <div className="col-span-full mt-10 flex space-x-4">
+              <Button
+                type="button"
+                className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </Button>
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+              >
+                {([canSubmit]) => (
+                  <Button
+                    type="submit"
+                    disabled={!canSubmit || mutation.isPending}
+                  >
+                    {mutation.isPending ? 'Submitting...' : 'Submit'}
+                  </Button>
+                )}
+              </form.Subscribe>
+            </div>
+
+            {mutation.isError && (
+              <div className="col-span-full text-red-500">
+                {mutation.error instanceof Error
+                  ? mutation.error.message
+                  : 'An error occurred during submission.'}
+              </div>
+            )}
+          </form>
+        </CardWrapper>
+      )}
     </div>
   );
 };
