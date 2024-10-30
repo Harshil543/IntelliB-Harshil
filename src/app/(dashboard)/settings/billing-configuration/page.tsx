@@ -35,7 +35,7 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
   });
   console.log('data', data);
 
-  const [configurations, setConfigurations] = useState([
+  const [configurations] = useState([
     BillingConfigurationValues || { meterType: '', category: '' }
   ]);
 
@@ -80,14 +80,14 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     }
   });
 
-  const handleAddConfiguration = () => {
-    setConfigurations([...configurations, { meterType: '', category: '' }]);
-  };
+  // const handleAddConfiguration = () => {
+  //   setConfigurations([...configurations, { meterType: '', category: '' }]);
+  // };
 
-  const handleRemoveConfiguration = (index: number) => {
-    const newConfigurations = configurations.filter((_, i) => i !== index);
-    setConfigurations(newConfigurations);
-  };
+  // const handleRemoveConfiguration = (index: number) => {
+  //   const newConfigurations = configurations.filter((_, i) => i !== index);
+  //   setConfigurations(newConfigurations);
+  // };
 
   if (isLoading) {
     return <Loader />;
@@ -137,19 +137,19 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
                   />
                 )}
               </form.Field>
-              <Button
+              {/* <Button
                 type="button"
                 className="w-fit"
                 onClick={() => handleRemoveConfiguration(index)}
               >
                 Remove
-              </Button>
+              </Button> */}
             </div>
           ))}
         </div>
-        <Button type="button" onClick={handleAddConfiguration}>
+        {/* <Button type="button" onClick={handleAddConfiguration}>
           Add More
-        </Button>
+        </Button> */}
       </CardWrapper>
 
       <div className="col-span-full mt-10 flex justify-start space-x-4">
