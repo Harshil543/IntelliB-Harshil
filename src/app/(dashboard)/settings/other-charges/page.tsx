@@ -10,24 +10,29 @@ import React, { useState } from 'react';
 const OtherCharges = () => {
   const mutation = useMutation({});
   const form = useForm({});
-  const [billingModel, setBillingModel] = useState('fixed'); // Default to 'fixed'
-  const [showForm, setShowForm] = useState(false); // State to toggle form visibility
+  const [billingModel, setBillingModel] = useState('fixed');
+  const [showForm, setShowForm] = useState(false);
 
   const data = [
     {
-      chargesName: 'GST',
-      billingModel: 'percentage',
-      rate: '18'
+      createdAt: '2024-10-28T04:59:27.771Z',
+      updatedAt: '2024-10-28T04:59:27.771Z',
+      id: 2,
+      name: 'MAINTENANCE',
+      chargeType: 'FIXED',
+      value: '200.00',
+      applicableOn: 'ALL',
+      isActive: true
     },
     {
-      chargesName: 'Admin Fee',
-      billingModel: 'amount',
-      rate: '250'
-    },
-    {
-      chargesName: 'Maintenance Fee',
-      billingModel: 'amount',
-      rate: '1200'
+      createdAt: '2024-10-28T04:56:21.454Z',
+      updatedAt: '2024-10-28T04:56:21.454Z',
+      id: 1,
+      name: 'GST',
+      chargeType: 'PERCENTAGE',
+      value: '18.00',
+      applicableOn: 'ALL',
+      isActive: true
     }
   ];
 
@@ -40,12 +45,19 @@ const OtherCharges = () => {
       <CardWrapper>
         <div className="grid w-full grid-cols-3 items-center gap-4">
           {data.map((item, i) => {
+            const formattedLabel =
+              item.name.length <= 3
+                ? item.name.toUpperCase()
+                : item.name.charAt(0).toUpperCase() +
+                  item.name.slice(1).toLowerCase();
+
             return (
               <div key={i}>
-                <Label htmlFor={item.chargesName}>{item.chargesName}</Label>
+                <Label htmlFor={item.name}>{formattedLabel}</Label>
+
                 <div className="h-10 rounded-lg border border-border p-2 text-sm">
-                  {item.billingModel === 'amount' && '₹'} {item.rate}
-                  {item.billingModel === 'percentage' && '%'}
+                  {item.chargeType === 'FIXED' && '₹'} {item.value}
+                  {item.chargeType === 'PERCENTAGE' && '%'}
                 </div>
               </div>
             );
@@ -63,7 +75,7 @@ const OtherCharges = () => {
           >
             <div className="grid w-full grid-cols-3 items-center gap-0">
               <Label htmlFor="chargesName">Charges Name</Label>
-              <form.Field name="chargesName">
+              <form.Field name="name">
                 {(field) => (
                   <TextInput field={field} placeholder="Charges name" />
                 )}
@@ -76,7 +88,7 @@ const OtherCharges = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    name="billingModel"
+                    name="chargeType"
                     value="fixed"
                     checked={billingModel === 'fixed'}
                     onChange={() => setBillingModel('fixed')}
@@ -86,7 +98,7 @@ const OtherCharges = () => {
                 <label className="flex items-center space-x-2">
                   <input
                     type="radio"
-                    name="billingModel"
+                    name="chargeType"
                     value="percentage"
                     checked={billingModel === 'percentage'}
                     onChange={() => setBillingModel('percentage')}
@@ -98,7 +110,7 @@ const OtherCharges = () => {
 
             <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
               <Label htmlFor="amountPercentage">Amount/Percentage</Label>
-              <form.Field name="amountPercentage">
+              <form.Field name="value">
                 {(field) => (
                   <TextInput field={field} placeholder="Amount/Percentage" />
                 )}

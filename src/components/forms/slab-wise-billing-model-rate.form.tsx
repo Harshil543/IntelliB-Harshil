@@ -43,6 +43,8 @@ export const SlabWiseRateBillingModel = ({
     SlabWiseRateBillingFormValue['billingModeItems']
   >([{ startSlab: 0, endSlab: 0, rate: 0, disabled: false }]);
 
+  const [errors, setErrors] = useState<string[]>([]); // State to hold error messages
+
   useEffect(() => {
     if (data?.billingModeItems) {
       setSlabs(
@@ -101,14 +103,29 @@ export const SlabWiseRateBillingModel = ({
     });
   };
 
+  const validateSlabs = () => {
+    const newErrors: string[] = [];
+    slabs.forEach((slab, index) => {
+      if (slab.endSlab <= slab.startSlab) {
+        newErrors.push(
+          `End Slab must be greater than Start Slab at index ${index + 1}`
+        );
+      }
+    });
+    setErrors(newErrors);
+    return newErrors.length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validateSlabs()) {
+      const newSlabs = slabs.filter((slab) => !slab.disabled);
+      mutation.mutateAsync({ billingModeItems: newSlabs });
+    }
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        const newSlabs = slabs.filter((slab) => !slab.disabled); // Only include new slabs
-        mutation.mutateAsync({ billingModeItems: newSlabs });
-      }}
-    >
+    <form onSubmit={handleSubmit}>
       <div className="mb-7 flex justify-between">
         <Heading className="text-lg">Slab-Wise Rate</Heading>
       </div>
@@ -188,6 +205,14 @@ export const SlabWiseRateBillingModel = ({
           </tbody>
         </table>
       </div>
+
+      {errors.length > 0 && (
+        <div className="text-red-500">
+          {errors.map((error, idx) => (
+            <p key={idx}>{error}</p>
+          ))}
+        </div>
+      )}
 
       <div className="col-span-full mt-10 flex justify-start space-x-4">
         <Button type="submit" disabled={mutation.isPending}>
