@@ -12,6 +12,7 @@ import { Button } from '@components/ui/button';
 import { getAllLeasableUnit } from '@/services/leasable-unit.service';
 import Loader from '@components/CommonComponents/Loader';
 import { DialogHeader, DialogTitle } from '../ui/dialog';
+import { getBillingConfiguration } from '@/services/billing-configuration.service';
 
 interface MeterFormValues {
   id?: number;
@@ -43,6 +44,17 @@ export default function MeterForm({
     queryKey: ['meter'],
     queryFn: getAllLeasableUnit
   });
+
+  const { data } = useQuery({
+    queryKey: ['billingConfiguration'],
+    queryFn: getBillingConfiguration
+  });
+
+  const meterTypeOptions =
+    data?.map((item: any) => ({
+      value: item.meterType,
+      label: `${item.meterType.split('_').join(' ')}`
+    })) || [];
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -78,6 +90,7 @@ export default function MeterForm({
   if (isLoading) {
     return <Loader />;
   }
+
   return (
     <form
       onSubmit={(e) => {
@@ -104,11 +117,7 @@ export default function MeterForm({
               <SelectInput
                 label="Meter Type"
                 field={field}
-                options={[
-                  { value: 'electricity', label: 'electricity' },
-                  { value: 'water', label: 'water' },
-                  { value: 'GAS', label: 'GAS' }
-                ]}
+                options={meterTypeOptions}
                 disabled={isViewLeasableUnit}
               />
             )}
