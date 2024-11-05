@@ -28,16 +28,17 @@ export const createBillingRate = async (meterType: string, payload: any) => {
   }
 };
 
-export const updateBillingRate = async (id: number, payload: any) => {
+export const deleteBillingRate = async (
+  meterType: string,
+  type: string,
+  id: number
+) => {
   try {
-    console.log('update payload', payload);
+    const response = await apiBillingClient.delete(
+      `${BASE_URLS?.billingMode}/${meterType}/${type}/${id}`
+    );
 
-    // const response = await apiBillingClient.post(
-    //   `${BASE_URLS?.billingMode}`,
-    //   payload
-    // );
-
-    // return response?.data;
+    return response?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
