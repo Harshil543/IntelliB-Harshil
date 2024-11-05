@@ -9,7 +9,6 @@ import TextInput from '../fields/TextInput';
 import { Button } from '../ui/button';
 import {
   createBillingRate,
-  updateBillingRate,
   getBillingRate
 } from '@/services/billing-model.service';
 
@@ -55,7 +54,7 @@ export const FlatRateBillingModel = ({
         category: 'FLAT_RATE'
       };
       if (data.id) {
-        return await updateBillingRate(data.id, updatedData);
+        // return await updateBillingRate(data.id, updatedData);
       } else {
         return await createBillingRate(meterType, updatedData);
       }
