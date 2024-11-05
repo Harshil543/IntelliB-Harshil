@@ -7,10 +7,10 @@ interface InvoiceData {
   id: number;
   userName: string;
   property: string;
-  unit: number;
-  billingDate: Date;
-  endDate: Date;
-  amount: number;
+  invoiceNumber: number;
+  billDate: Date;
+  dueDate: Date;
+  totalAmount: number;
   status: string;
 }
 
@@ -64,17 +64,17 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
   //   )
   // },
   {
-    accessorKey: 'unit',
-    header: 'Unit',
+    accessorKey: 'invoiceNumber',
+    header: 'Invoice Number',
     cell: ({ row }) => (
-      <div className="lowercase">{row.original.unit ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.invoiceNumber ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'billingDate',
+    accessorKey: 'billDate',
     header: 'Billing Date',
     cell: ({ row }) => {
-      const installationDate = row.original.billingDate;
+      const installationDate = row.original.billDate;
 
       const formattedDate = installationDate
         ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
@@ -84,10 +84,10 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     }
   },
   {
-    accessorKey: 'endDate',
-    header: 'End Date',
+    accessorKey: 'dueDate',
+    header: 'Due Date',
     cell: ({ row }) => {
-      const installationDate = row.original.endDate;
+      const installationDate = row.original.dueDate;
 
       const formattedDate = installationDate
         ? format(new Date(installationDate as Date), 'dd/MM/yyyy')
@@ -97,23 +97,23 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     }
   },
   {
-    accessorKey: 'amount',
+    accessorKey: 'totalAmount',
     header: 'Amount',
     cell: ({ row }) => (
-      <div className="lowercase">{row.original.amount ?? 'N/A'}</div>
+      <div className="lowercase">{row.original.totalAmount ?? 'N/A'}</div>
     )
   },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <Badge
-        className={`${row.original.status === 'paid' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
-      >
-        {row.original.status ?? 'N/A'}
-      </Badge>
-    )
-  },
+  // {
+  //   accessorKey: 'status',
+  //   header: 'Status',
+  //   cell: ({ row }) => (
+  //     <Badge
+  //       className={`${row.original.status === 'paid' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+  //     >
+  //       {row.original.status ?? 'N/A'}
+  //     </Badge>
+  //   )
+  // },
   {
     id: 'actions',
     enableHiding: false,
