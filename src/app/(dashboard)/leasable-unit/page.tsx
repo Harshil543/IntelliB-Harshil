@@ -54,7 +54,6 @@ export default function LeasableUnit() {
     setLimit(Number(e.target.value));
     setPage(1);
   };
-  [];
 
   const handleDownloadTemplate = async () => {
     try {
@@ -79,6 +78,14 @@ export default function LeasableUnit() {
     formData.append('file', file);
 
     mutation.mutate(formData);
+  };
+
+  const triggerFileInput = () => {
+    // This function will be called when the "Import Data" button is clicked
+    const fileInput = document.getElementById(
+      'file-upload'
+    ) as HTMLInputElement;
+    fileInput?.click();
   };
 
   if (isLoading) {
@@ -113,15 +120,15 @@ export default function LeasableUnit() {
                 Download Template
               </Button>
               <label htmlFor="file-upload" className="cursor-pointer">
+                {/* The hidden file input will still work */}
                 <input
                   type="file"
                   accept=".xlsx, .xls, .csv"
                   onChange={handleFileChange}
-                  className=""
+                  className="hidden"
                   id="file-upload"
                 />
-
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={triggerFileInput}>
                   Import Data
                 </Button>
               </label>

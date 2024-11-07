@@ -82,6 +82,14 @@ export default function MeterReadingList() {
     mutation.mutate(formData);
   };
 
+  const triggerFileInput = () => {
+    // This function will be called when the "Import Data" button is clicked
+    const fileInput = document.getElementById(
+      'file-upload'
+    ) as HTMLInputElement;
+    fileInput?.click();
+  };
+
   if (isLoading) {
     return <Loader />;
   }
@@ -118,11 +126,11 @@ export default function MeterReadingList() {
                   type="file"
                   accept=".xlsx, .xls"
                   onChange={handleFileChange}
-                  className=""
                   id="file-upload"
+                  className="hidden"
                 />
 
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={triggerFileInput}>
                   Import Data
                 </Button>
               </label>

@@ -2,6 +2,8 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
 import { generateInvoice } from '@/services/invoice.service';
+import apiBillingClient from '@/config/api.billing.config';
+import { BASE_URLS } from '@/constants/api.constants';
 
 interface InvoiceData {
   id: number;
@@ -120,16 +122,59 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
     cell: ({ row }) => {
       const handleGenerateInvoice = () => {
         const billId = row.original.id;
-        generateInvoice(billId);
+        generateInvoice(billId); // Generate Invoice as per your logic
+      };
+
+      const handlePreviewInvoice = async () => {
+        const billId = row.original.id;
+        try {
+          const response = await apiBillingClient.get(
+            `${BASE_URLS?.invoice}/${billId}/invoice`
+          );
+          const { base64File } = response?.data?.data;
+
+          // Preview the invoice in a new window
+          const byteCharacters = atob(base64File.split(',')[1]); // Decode base64 part
+          const byteArrays = [];
+
+          for (let offset = 0; offset < byteCharacters.length; offset++) {
+            byteArrays.push(byteCharacters.charCodeAt(offset));
+          }
+
+          const blob = new Blob([new Uint8Array(byteArrays)], {
+            type: 'application/pdf'
+          });
+
+          const previewWindow = window.open('', '_blank'); // Open a new tab
+          const url = URL.createObjectURL(blob);
+          previewWindow?.document.write(`
+            <html>
+              <head><title>Preview Invoice</title></head>
+              <body>
+                <embed src="${url}" width="100%" height="100%" />
+              </body>
+            </html>
+          `);
+        } catch (error) {
+          console.error('Error previewing invoice:', error);
+        }
       };
 
       return (
-        <Badge
-          className={`cursor-pointer bg-gray-200 capitalize`}
-          onClick={handleGenerateInvoice}
-        >
-          Generate Bills
-        </Badge>
+        <div className="flex space-x-2">
+          <Badge
+            className="cursor-pointer bg-blue-200 capitalize"
+            onClick={handlePreviewInvoice}
+          >
+            Preview Bill
+          </Badge>
+          <Badge
+            className="cursor-pointer bg-gray-200 capitalize"
+            onClick={handleGenerateInvoice}
+          >
+            Download Bill
+          </Badge>
+        </div>
       );
     }
   }
