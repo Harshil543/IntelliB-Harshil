@@ -1,33 +1,5 @@
-import usersIcon from '@iconify/icons-mdi/user';
-import calenderIcon from '@iconify/icons-mdi/calendar';
-import moneyIcon from '@iconify/icons-mdi/attach-money';
-
-export const dashboardItems = [
-  {
-    id: 1,
-    title: 'Tenants',
-    count: 30,
-    icon: usersIcon
-  },
-  {
-    id: 2,
-    title: 'Invoice Pending',
-    count: 'Rs. 200,000',
-    icon: moneyIcon
-  },
-  {
-    id: 3,
-    title: 'Total Bills',
-    count: 'Rs. 200,000',
-    icon: moneyIcon
-  },
-  {
-    id: 4,
-    title: 'Monthly Revenue',
-    count: 30,
-    icon: calenderIcon
-  }
-];
+// import calenderIcon from '@iconify/icons-mdi/calendar';
+// import usersIcon from '@iconify/icons-mdi/attach-money';
 
 export const paymentHistory = [
   {
@@ -66,46 +38,6 @@ export const paymentHistory = [
     dueDate: 7
   }
 ];
-
-// export const pieChartData = {
-//   labels: [],
-//   datasets: [
-//     {
-//       data: [63, 25],
-//       backgroundColor: ['#4318FF', '#6AD2FF']
-//     }
-//   ]
-// };
-
-export const pieChartDataYearly = {
-  labels: ['Payment Done', 'Payment Pending'],
-  datasets: [
-    {
-      data: [63, 25],
-      backgroundColor: ['#4318FF', '#6AD2FF']
-    }
-  ]
-};
-
-export const pieChartDataMonthly = {
-  labels: ['Payment Done', 'Payment Pending'],
-  datasets: [
-    {
-      data: [50, 40],
-      backgroundColor: ['#4318FF', '#6AD2FF']
-    }
-  ]
-};
-
-export const pieChartDataQuarterly = {
-  labels: ['Payment Done', 'Payment Pending'],
-  datasets: [
-    {
-      data: [70, 30],
-      backgroundColor: ['#4318FF', '#6AD2FF']
-    }
-  ]
-};
 
 // Sample data for Line Chart
 

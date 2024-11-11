@@ -12,5 +12,7 @@ export const BASE_URLS = {
   billingMode: '/api/admin/billing-mode/v1',
   invoice: '/api/bill/v1',
   billingConfiguration: '/api/admin/bill-config/v1',
-  otherCharges: ''
+  otherCharges: '/api/admin/other-charges/v1',
+  dashboard: '/api/dashboard/v1/bill-stats',
+  dasboardbillanalysis: '/api/dashboard/v1/bill-analysis'
 };

@@ -1,40 +1,100 @@
 'use client';
+import Loader from '@/components/CommonComponents/Loader';
 import TextInput from '@/components/fields/TextInput';
 import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  createOtherCharges,
+  getOtherCharges
+} from '@/services/other-charges.service';
 import { useForm } from '@tanstack/react-form';
-import { useMutation } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient
+} from '@tanstack/react-query';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 
-const OtherCharges = () => {
-  const mutation = useMutation({});
-  const form = useForm({});
-  const [billingModel, setBillingModel] = useState('fixed');
+export default function OtherChargesForm() {
+  const queryClient = useQueryClient();
+
+  const [billingModel, setBillingModel] = useState('FIXED');
   const [showForm, setShowForm] = useState(false);
 
-  const data = [
-    {
-      createdAt: '2024-10-28T04:59:27.771Z',
-      updatedAt: '2024-10-28T04:59:27.771Z',
-      id: 2,
-      name: 'MAINTENANCE',
-      chargeType: 'FIXED',
-      value: '200.00',
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
+
+  const { isLoading, data } = useQuery({
+    queryKey: ['other-charges', page, searchQuery, limit],
+    queryFn: () => getOtherCharges(page, searchQuery, limit),
+    placeholderData: keepPreviousData
+  });
+
+  const handlePrevious = () => {
+    setPage((prev) => prev - 1);
+  };
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+    handleSearch(e.target.value);
+  };
+
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
+
+  const mutation = useMutation({
+    mutationFn: async (data: any) => {
+      console.log('data', data.value);
+
+      // Update this to pass the full data object as the payload
+      const payload = {
+        name: data?.value?.name,
+        chargeType: billingModel,
+        value: data?.value?.value,
+        applicableOn: data?.value?.applicableOn,
+        isActive: data?.value?.isActive
+      };
+
+      return await createOtherCharges({ payload });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['other-charges'] });
+      toast.success(`${'Added'} successfully`);
+      setShowForm(false);
+    },
+    onError: (error: Error) => {
+      toast.error(`Error: ${(error as Error).message}`);
+    }
+  });
+
+  const form = useForm({
+    defaultValues: {
+      value: 0,
+      name: '',
+      chargeType: '',
       applicableOn: 'ALL',
       isActive: true
     },
-    {
-      createdAt: '2024-10-28T04:56:21.454Z',
-      updatedAt: '2024-10-28T04:56:21.454Z',
-      id: 1,
-      name: 'GST',
-      chargeType: 'PERCENTAGE',
-      value: '18.00',
-      applicableOn: 'ALL',
-      isActive: true
+    onSubmit: async (values) => {
+      await mutation.mutateAsync(values);
     }
-  ];
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div>
@@ -43,26 +103,65 @@ const OtherCharges = () => {
       </div>
 
       <CardWrapper>
-        <div className="grid w-full grid-cols-3 items-center gap-4">
-          {data.map((item, i) => {
-            const formattedLabel =
-              item.name.length <= 3
-                ? item.name.toUpperCase()
-                : item.name.charAt(0).toUpperCase() +
-                  item.name.slice(1).toLowerCase();
+        <>
+          <Input
+            placeholder="Search..."
+            className="w-full rounded-3xl border-border bg-background"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+          <div className="my-10 grid w-full grid-cols-3 items-center gap-4">
+            {data?.items?.map((item: any, i: number) => {
+              const formattedLabel =
+                item.name.length <= 3
+                  ? item.name.toUpperCase()
+                  : item.name.charAt(0).toUpperCase() +
+                    item.name.slice(1).toLowerCase();
 
-            return (
-              <div key={i}>
-                <Label htmlFor={item.name}>{formattedLabel}</Label>
+              return (
+                <div key={i}>
+                  <Label htmlFor={item.name}>{formattedLabel}</Label>
 
-                <div className="h-10 rounded-lg border border-border p-2 text-sm">
-                  {item.chargeType === 'FIXED' && '₹'} {item.value}
-                  {item.chargeType === 'PERCENTAGE' && '%'}
+                  <div className="h-10 rounded-lg border border-border p-2 text-sm">
+                    {item.chargeType === 'FIXED' && '₹'} {item.value}
+                    {item.chargeType === 'PERCENTAGE' && '%'}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+          <div className="flex w-full items-end justify-end space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrevious}
+              disabled={page === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNext}
+              disabled={!data?.items || page >= data?.totalPages}
+            >
+              Next
+            </Button>
+            <Button variant="outline" size="sm">
+              <select
+                value={limit}
+                onChange={handleLimitChange}
+                className="h-full w-full bg-transparent"
+              >
+                {[10, 50, 100].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </Button>
+          </div>
+        </>
       </CardWrapper>
 
       {showForm && (
@@ -89,9 +188,9 @@ const OtherCharges = () => {
                   <input
                     type="radio"
                     name="chargeType"
-                    value="fixed"
-                    checked={billingModel === 'fixed'}
-                    onChange={() => setBillingModel('fixed')}
+                    value="FIXED"
+                    checked={billingModel === 'FIXED'}
+                    onChange={() => setBillingModel('FIXED')}
                   />
                   <span>Fixed Amount</span>
                 </label>
@@ -99,9 +198,9 @@ const OtherCharges = () => {
                   <input
                     type="radio"
                     name="chargeType"
-                    value="percentage"
-                    checked={billingModel === 'percentage'}
-                    onChange={() => setBillingModel('percentage')}
+                    value="PERCENTAGE"
+                    checked={billingModel === 'PERCENTAGE'}
+                    onChange={() => setBillingModel('PERCENTAGE')}
                   />
                   <span>Percentage</span>
                 </label>
@@ -112,7 +211,11 @@ const OtherCharges = () => {
               <Label htmlFor="amountPercentage">Amount/Percentage</Label>
               <form.Field name="value">
                 {(field) => (
-                  <TextInput field={field} placeholder="Amount/Percentage" />
+                  <TextInput
+                    type="number"
+                    field={field}
+                    placeholder="Amount/Percentage"
+                  />
                 )}
               </form.Field>
             </div>
@@ -151,6 +254,4 @@ const OtherCharges = () => {
       )}
     </div>
   );
-};
-
-export default OtherCharges;
+}

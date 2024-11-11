@@ -81,7 +81,6 @@ export default function LeasableUnit() {
   };
 
   const triggerFileInput = () => {
-    // This function will be called when the "Import Data" button is clicked
     const fileInput = document.getElementById(
       'file-upload'
     ) as HTMLInputElement;
@@ -120,7 +119,6 @@ export default function LeasableUnit() {
                 Download Template
               </Button>
               <label htmlFor="file-upload" className="cursor-pointer">
-                {/* The hidden file input will still work */}
                 <input
                   type="file"
                   accept=".xlsx, .xls, .csv"

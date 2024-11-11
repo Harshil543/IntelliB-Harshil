@@ -53,12 +53,15 @@ type DataTableProps<T> = {
   compo?: React.ReactNode;
   onSearch: (query: string) => void;
   isUseExport?: boolean;
+  isSearch?: boolean;
+  isPagination?: boolean;
 };
 
 export function DataTable<T>({
   columns,
   data,
   pagination,
+
   addButton,
   path,
   limit,
@@ -67,6 +70,8 @@ export function DataTable<T>({
   handleLimitChange,
   compo,
   onSearch,
+  isSearch = true,
+  isPagination = true,
   isUseExport = true
 }: DataTableProps<T>) {
   const router = useRouter();
@@ -210,12 +215,14 @@ export function DataTable<T>({
   return (
     <div className="w-full">
       <div className="flex flex-wrap items-center gap-2 py-4 sm:flex-wrap md:flex-nowrap">
-        <Input
-          placeholder="Search..."
-          className="w-full rounded-3xl border-border bg-background"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
+        {isSearch ? (
+          <Input
+            placeholder="Search..."
+            className="w-full rounded-3xl border-border bg-background"
+            value={searchQuery}
+            onChange={handleSearchChange}
+          />
+        ) : null}
         <div className="flex items-center space-x-2">
           {isUseExport ? (
             <DropdownMenu>
@@ -239,7 +246,6 @@ export function DataTable<T>({
           ) : null}
           {compo}
         </div>
-
         {addButton ? (
           addButton
         ) : (
@@ -294,46 +300,48 @@ export function DataTable<T>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex flex-wrap items-center justify-between py-4 md:flex-nowrap">
-        <div className="text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {pagination?.totalItems} row(s) selected.
-        </div>
-        <div className="text-sm text-muted-foreground">
-          Page {paginationState.currentPage} of {paginationState.totalPages}
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrevious}
-            // disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNext}
-            // disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-          <Button variant="outline" size="sm">
-            <select
-              value={limit}
-              onChange={handleLimitChange}
-              className="h-full w-full bg-transparent"
+      {isPagination ? (
+        <div className="flex flex-wrap items-center justify-between py-4 md:flex-nowrap">
+          <div className="text-sm text-muted-foreground">
+            {table.getFilteredSelectedRowModel().rows.length} of{' '}
+            {pagination?.totalItems} row(s) selected.
+          </div>
+          <div className="text-sm text-muted-foreground">
+            Page {paginationState.currentPage} of {paginationState.totalPages}
+          </div>
+          <div className="space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePrevious}
+              // disabled={!table.getCanPreviousPage()}
             >
-              {[10, 50, 100].map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </Button>
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNext}
+              // disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+            <Button variant="outline" size="sm">
+              <select
+                value={limit}
+                onChange={handleLimitChange}
+                className="h-full w-full bg-transparent"
+              >
+                {[10, 50, 100].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }

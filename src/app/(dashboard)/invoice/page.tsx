@@ -47,6 +47,7 @@ const Invoice = () => {
       onSearch={handleSearch}
       handleLimitChange={handleLimitChange}
       limit={limit}
+      addButton={<></>}
     />
   );
 };
