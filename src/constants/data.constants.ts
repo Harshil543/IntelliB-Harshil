@@ -110,3 +110,10 @@ export const lineChartDataQuarterly = {
     }
   ]
 };
+
+export const filterOptions = [
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'quarterly', label: 'Quarterly' },
+  { value: 'half-yearly', label: 'Half Yearly' },
+  { value: 'yearly', label: 'Yearly' }
+];

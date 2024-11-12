@@ -136,13 +136,13 @@ const IncomeExpenseAnalysis = () => {
           labels: data.labels,
           datasets: [
             {
-              label: 'Income',
+              label: 'Paid Amount',
               data: data.incomeData,
               borderColor: 'green',
               backgroundColor: 'rgba(0, 255, 0, 0.2)'
             },
             {
-              label: 'Expense',
+              label: 'Unpaid Amount',
               data: data.expenseData,
               borderColor: 'red',
               backgroundColor: 'rgba(255, 0, 0, 0.2)'

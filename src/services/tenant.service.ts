@@ -43,7 +43,6 @@ export const getTenantDataById = async (tenantId: number) => {
 export const createTenantData = async (payload: TenantDataPayload) => {
   try {
     const response = await apiClient.post(`${BASE_URLS?.tenant}`, payload);
-    console.log('response?.data?.data', response?.data?.data);
 
     return response?.data?.data;
   } catch (error: any) {

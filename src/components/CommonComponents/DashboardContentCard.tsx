@@ -1,11 +1,13 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardTitle } from '@/components/ui/card';
 import type { IconifyIcon } from '@iconify/react';
 import { Icon } from '@iconify/react';
 import usersIcon from '@iconify/icons-mdi/user';
 import { useQuery } from '@tanstack/react-query';
 import { getDashboardData } from '@/services/dashboard.service';
+import Select from 'react-select';
+import { filterOptions } from '@/constants/data.constants';
 
 interface DashboardContentItem {
   id: number;
@@ -46,14 +48,92 @@ const DashboardContentCard: React.FC<DashboardContentCardProps> = ({
   </Card>
 );
 
-interface DashboardContentProps {
-  dateRange: { startDate: string; endDate: string };
-}
+const DashboardContent = () => {
+  const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: '',
+    endDate: ''
+  });
 
-const DashboardContent: React.FC<DashboardContentProps> = ({ dateRange }) => {
+  useEffect(() => {
+    const { startDate, endDate } = calculateDateRange(selectedFilter.value);
+
+    if (startDate && endDate) {
+      setDateRange({ startDate, endDate });
+    }
+  }, [selectedFilter]);
+
+  const calculateDateRange = (filter: string) => {
+    const now = new Date();
+    let startDate = new Date(now);
+    let endDate = new Date(now);
+
+    const getLastDayOfMonth = (month: number, year: number) => {
+      return new Date(year, month, 0);
+    };
+
+    switch (filter) {
+      case 'monthly':
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
+
+      case 'quarterly':
+        // Start date: 1st of the month, 3 months ago
+        startDate.setMonth(now.getMonth() - 2);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
+
+      case 'half-yearly':
+        // Start date: 1st of the month, 6 months ago
+        startDate.setMonth(now.getMonth() - 5);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        // End date: last day of the current month
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      case 'yearly':
+        // Start date: 1st of the month, 6 months ago
+        startDate.setMonth(now.getMonth() - 11);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        // End date: last day of the current month
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
+      default:
+        break;
+    }
+
+    return {
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0]
+    };
+  };
+
+  const handleFilterChange = (selectedOption: any) => {
+    setSelectedFilter(selectedOption);
+  };
   const { data, isLoading } = useQuery({
-    queryKey: ['dashboard', dateRange],
-    queryFn: () => getDashboardData(dateRange)
+    queryKey: ['dashboard', dateRange.startDate, dateRange.endDate],
+    queryFn: () =>
+      getDashboardData({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate
+      })
   });
 
   const dashboardItems = [
@@ -91,9 +171,25 @@ const DashboardContent: React.FC<DashboardContentProps> = ({ dateRange }) => {
     }
   ];
 
-  return dashboardItems.map((item, i) => (
-    <DashboardContentCard item={item} key={i} loading={isLoading} />
-  ));
+  return (
+    <>
+      <div className="flex w-full justify-end">
+        <Select
+          options={filterOptions}
+          value={selectedFilter}
+          onChange={handleFilterChange}
+          className="inline-block h-10 w-40 text-sm"
+          isSearchable={false}
+        />
+      </div>
+
+      <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-6">
+        {dashboardItems.map((item, i) => (
+          <DashboardContentCard item={item} key={i} loading={isLoading} />
+        ))}
+      </div>
+    </>
+  );
 };
 
 export default DashboardContent;

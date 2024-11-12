@@ -56,8 +56,6 @@ export default function OtherChargesForm() {
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
-      console.log('data', data.value);
-
       // Update this to pass the full data object as the payload
       const payload = {
         name: data?.value?.name,

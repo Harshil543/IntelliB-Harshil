@@ -33,7 +33,6 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     queryFn: () => getBillingConfiguration(),
     placeholderData: keepPreviousData
   });
-  console.log('data', data);
 
   const [configurations] = useState([
     BillingConfigurationValues || { meterType: '', category: '' }

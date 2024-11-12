@@ -19,8 +19,6 @@ export const getOtherCharges = async (
 
 export const createOtherCharges = async ({ payload }: any) => {
   try {
-    console.log('other charges payload', payload);
-
     const response = await apiBillingClient.post(
       `${BASE_URLS.otherCharges}`,
       payload

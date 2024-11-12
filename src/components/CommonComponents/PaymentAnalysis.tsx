@@ -9,11 +9,14 @@ import {
   CardFooter,
   CardTitle
 } from '@components/ui/card';
-import { getDashboardData } from '@/services/dashboard.service'; // Import your API function
+
 import Image from 'next/image';
 import verticleSeprator from '@assets/images/verticleSeprator.png';
 import Select from 'react-select';
+import { getDashboardData } from '@/services/dashboard.service';
+import { useQuery } from '@tanstack/react-query';
 import Loader from './Loader';
+import { filterOptions } from '@/constants/data.constants';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
@@ -32,8 +35,6 @@ export const PieChart: React.FC<PieChartProps> = ({ data }) => {
 };
 
 const PaymentAnalysis = () => {
-  const [selectedFilter, setSelectedFilter] = useState('yearly');
-
   const [chartData, setChartData] = useState<any>({
     labels: ['Payment Done', 'Payment Pending'],
     datasets: [
@@ -42,63 +43,73 @@ const PaymentAnalysis = () => {
         backgroundColor: ['#4318FF', '#6AD2FF']
       }
     ]
-  }); /// State to store fetched chart data
-  const [loading, setLoading] = useState<boolean>(false); // State to handle loading state
+  });
 
-  const filterOptions = [
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'quarterly', label: 'Quarterly' },
-    { value: 'halfyearly', label: 'Half Yearly' },
-    { value: 'yearly', label: 'Yearly' }
-  ];
+  const [selectedFilter, setSelectedFilter] = useState(filterOptions[0]);
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: '',
+    endDate: ''
+  });
 
-  // Calculate date range based on the selected filter
+  useEffect(() => {
+    const { startDate, endDate } = calculateDateRange(selectedFilter.value);
+
+    if (startDate && endDate) {
+      setDateRange({ startDate, endDate });
+    }
+  }, [selectedFilter]);
+
   const calculateDateRange = (filter: string) => {
     const now = new Date();
     let startDate = new Date(now);
     let endDate = new Date(now);
 
     const getLastDayOfMonth = (month: number, year: number) => {
-      return new Date(year, month + 1, 0); // Last day of the month
+      return new Date(year, month, 0);
     };
 
     switch (filter) {
       case 'monthly':
-        startDate.setDate(1);
-        endDate = getLastDayOfMonth(now.getMonth(), now.getFullYear());
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
         break;
 
       case 'quarterly':
-        const currentQuarter = Math.floor(now.getMonth() / 3);
-        const prevQuarterStartMonth = currentQuarter * 3;
-        let prevQuarterStartDate = new Date(now);
-        prevQuarterStartDate.setMonth(prevQuarterStartMonth - 3);
-        prevQuarterStartDate.setDate(1);
-        endDate = getLastDayOfMonth(
-          prevQuarterStartDate.getMonth() + 2,
-          prevQuarterStartDate.getFullYear()
-        );
-        startDate = prevQuarterStartDate;
+        // Start date: 1st of the month, 3 months ago
+        startDate.setMonth(now.getMonth() - 2);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
+
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
         break;
 
-      case 'halfyearly':
-        const isFirstHalfYear = now.getMonth() < 6;
-        let halfYearStartMonth = isFirstHalfYear ? 0 : 6;
-        startDate.setMonth(halfYearStartMonth - 6);
-        startDate.setDate(1);
-        endDate = getLastDayOfMonth(
-          startDate.getMonth() + 5,
-          startDate.getFullYear()
-        );
-        break;
+      case 'half-yearly':
+        // Start date: 1st of the month, 6 months ago
+        startDate.setMonth(now.getMonth() - 5);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
 
+        // End date: last day of the current month
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
       case 'yearly':
-        startDate.setFullYear(now.getFullYear() - 1);
-        startDate.setMonth(9);
-        startDate.setDate(1);
-        endDate = getLastDayOfMonth(9, startDate.getFullYear());
-        break;
+        // Start date: 1st of the month, 6 months ago
+        startDate.setMonth(now.getMonth() - 11);
+        startDate.setDate(2);
+        startDate.setHours(0, 0, 0, 0);
 
+        // End date: last day of the current month
+        endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+        endDate.setHours(23, 59, 59, 999);
+        break;
       default:
         break;
     }
@@ -109,42 +120,53 @@ const PaymentAnalysis = () => {
     };
   };
 
-  // Handle filter change
   const handleFilterChange = (selectedOption: any) => {
-    setSelectedFilter(selectedOption.value);
+    setSelectedFilter(selectedOption);
   };
 
-  // Fetch the dashboard data based on the date range and selected filter
+  const { data, isLoading } = useQuery({
+    queryKey: ['dashboard', dateRange.startDate, dateRange.endDate],
+    queryFn: () =>
+      getDashboardData({
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate
+      })
+  });
+
   useEffect(() => {
-    const { startDate, endDate } = calculateDateRange(selectedFilter);
+    if (data) {
+      const totalPaymentOutstanding = parseFloat(data.totalPaymentOutstanding);
+      const totalPaymentReceived = parseFloat(data.totalPaymentReceived);
 
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const data = await getDashboardData({ startDate, endDate });
+      if (!isNaN(totalPaymentOutstanding) && !isNaN(totalPaymentReceived)) {
+        const total = totalPaymentOutstanding + totalPaymentReceived;
 
-        const chartData = {
+        const percentageOutstanding = (
+          (totalPaymentOutstanding / total) *
+          100
+        ).toFixed(2);
+        const percentageReceived = (
+          (totalPaymentReceived / total) *
+          100
+        ).toFixed(2);
+
+        setChartData({
           labels: ['Payment Done', 'Payment Pending'],
           datasets: [
             {
               data: [
-                data.totalPaymentReceived ? data.totalPaymentReceived : 0,
-                data.totalPaymentOutstanding ? data.totalPaymentOutstanding : 0
+                parseFloat(percentageReceived),
+                parseFloat(percentageOutstanding)
               ],
               backgroundColor: ['#4318FF', '#6AD2FF']
             }
           ]
-        };
-        setChartData(chartData); // Set fetched chart data
-      } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-      } finally {
-        setLoading(false);
+        });
+      } else {
+        console.error('Invalid data for payment values');
       }
-    };
-
-    fetchData();
-  }, [selectedFilter]);
+    }
+  }, [data]);
 
   return (
     <Card className="col-span-4 md:col-span-3">
@@ -153,23 +175,25 @@ const PaymentAnalysis = () => {
         {/* Dropdown for filtering */}
         <Select
           options={filterOptions}
-          defaultValue={filterOptions[0]}
+          value={selectedFilter}
           onChange={handleFilterChange}
           className="inline-block h-10 w-40 text-sm"
           isSearchable={false}
         />
       </CardHeader>
-      {loading ? (
-        <Loader />
-      ) : (
-        <CardContent className="flex h-[50%] items-center justify-center">
-          {chartData ? (
-            <PieChart data={chartData} />
+
+      <CardContent className="flex h-[50%] items-center justify-center">
+        {chartData ? (
+          isLoading ? (
+            <Loader />
           ) : (
-            <div>No data available for the selected range.</div>
-          )}
-        </CardContent>
-      )}
+            <PieChart data={chartData} />
+          )
+        ) : (
+          <div>No data available for the selected range.</div>
+        )}
+      </CardContent>
+
       <CardFooter className="flex items-center justify-center align-middle">
         <Card className="flex w-fit justify-center text-center align-middle">
           <div>

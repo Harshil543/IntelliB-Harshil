@@ -1,15 +1,16 @@
 import apiBillingClient from '@/config/api.billing.config';
 import { BASE_URLS } from '@/constants/api.constants';
 
-export const getDashboardData = async (dateRange: {
+export const getDashboardData = async ({
+  startDate,
+  endDate
+}: {
   startDate: string;
   endDate: string;
 }) => {
   try {
-    console.log('dateRange', dateRange);
-
     const response = await apiBillingClient.get(
-      `${BASE_URLS?.dashboard}?startDate=${dateRange && dateRange.startDate}&endDate=${dateRange && dateRange.endDate}`
+      `${BASE_URLS?.dashboard}?startDate=${startDate}&endDate=${endDate}`
     );
 
     return response?.data?.data;
@@ -30,7 +31,6 @@ export const getDashboardLineChartData = async (
     const response = await apiBillingClient.get(
       `${BASE_URLS?.dasboardbillanalysis}?startDate=${dateRange && dateRange.startDate}&endDate=${dateRange && dateRange.endDate}&filterCategory=${filterCategory}`
     );
-    console.log('res', response.data);
 
     return response?.data?.data;
   } catch (error: any) {
