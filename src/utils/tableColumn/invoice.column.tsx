@@ -7,13 +7,14 @@ import { BASE_URLS } from '@/constants/api.constants';
 
 interface InvoiceData {
   id: number;
-  userName: string;
-  property: string;
+  company: {
+    companyName: string;
+  };
   invoiceNumber: number;
   billDate: Date;
   dueDate: Date;
   totalAmount: number;
-  status: string;
+  paymentStatus: string;
 }
 
 const invoiceColumn: ColumnDef<InvoiceData>[] = [
@@ -51,20 +52,16 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
       <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
-  // {
-  //   accessorKey: 'userName',
-  //   header: 'User Name',
-  //   cell: ({ row }) => (
-  //     <div className="capitalize">{row.getValue('userName') ?? 'N/A'}</div>
-  //   )
-  // },
-  // {
-  //   accessorKey: 'property',
-  //   header: 'Property',
-  //   cell: ({ row }) => (
-  //     <div className="lowercase">{row.getValue('property') ?? 'N/A'}</div>
-  //   )
-  // },
+  {
+    accessorKey: 'company.companyName',
+    header: 'Company Name',
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {row.original.company.companyName ?? 'N/A'}
+      </div>
+    )
+  },
+
   {
     accessorKey: 'invoiceNumber',
     header: 'Invoice Number',
@@ -105,17 +102,17 @@ const invoiceColumn: ColumnDef<InvoiceData>[] = [
       <div className="lowercase">{row.original.totalAmount ?? 'N/A'}</div>
     )
   },
-  // {
-  //   accessorKey: 'status',
-  //   header: 'Status',
-  //   cell: ({ row }) => (
-  //     <Badge
-  //       className={`${row.original.status === 'paid' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
-  //     >
-  //       {row.original.status ?? 'N/A'}
-  //     </Badge>
-  //   )
-  // },
+  {
+    accessorKey: 'paymentStatus',
+    header: 'Payment Status',
+    cell: ({ row }) => (
+      <Badge
+        className={`${row.original.paymentStatus === 'PAID' ? 'bg-green-700 text-white' : 'bg-red-300'} capitalize`}
+      >
+        {row.original.paymentStatus ?? 'N/A'}
+      </Badge>
+    )
+  },
   {
     id: 'actions',
     enableHiding: false,
