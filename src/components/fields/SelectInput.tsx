@@ -11,7 +11,7 @@ interface SelectInputProps {
   label: string | number;
   field: any;
   options: Option[];
-  required?: true;
+  required?: boolean;
   placeholder?: string;
   disabled?: boolean;
   onChange?: (selectedOption: Option | null) => void;

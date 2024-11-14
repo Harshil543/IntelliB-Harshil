@@ -54,6 +54,7 @@ export default function ComapnyPage() {
   const handleDownloadTemplate = async () => {
     try {
       const response = await downloadTemplate();
+
       const blob = new Blob([response.data], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       });
@@ -61,8 +62,8 @@ export default function ComapnyPage() {
       link.href = window.URL.createObjectURL(blob);
       link.download = 'company_template.xlsx';
       link.click();
-    } catch (error) {
-      console.error('Error downloading template:', error);
+    } catch (error: any) {
+      console.log('download template error', error);
     }
   };
 

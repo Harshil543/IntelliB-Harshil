@@ -89,7 +89,8 @@ export const downloadTemplate = async () => {
     });
     return response;
   } catch (error: any) {
-    const message = error.response?.data?.message;
+    const message = error.error.message;
+
     throw new Error(message);
   }
 };

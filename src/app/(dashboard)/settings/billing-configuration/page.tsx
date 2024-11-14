@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useForm } from '@tanstack/react-form';
 import {
@@ -10,7 +10,7 @@ import {
 } from '@tanstack/react-query';
 import CardWrapper from '@/components/layout/CardWrapper';
 import SelectInput from '@/components/fields/SelectInput';
-import { MeterType, Category } from '@/constants/enums.constants';
+import { Category } from '@/constants/enums.constants';
 import {
   createBillingConfiguration,
   getBillingConfiguration
@@ -33,21 +33,13 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     queryFn: () => getBillingConfiguration(),
     placeholderData: keepPreviousData
   });
+  console.log('data', data);
 
-  const [configurations] = useState([
-    BillingConfigurationValues || { meterType: '', category: '' }
-  ]);
+  const [configurations, setConfigurations] = useState(
+    BillingConfigurationValues || []
+  );
 
-  const meterTypeOptions = [
-    { value: MeterType.ELECTRICITY, label: MeterType.ELECTRICITY },
-    {
-      value: MeterType.DIESEL_GENERATOR,
-      label: MeterType.DIESEL_GENERATOR.split('_').join(' ')
-    }
-    // { value: MeterType.WATER, label: MeterType.WATER },
-    // { value: MeterType.GAS, label: MeterType.GAS }
-  ];
-
+  // Categories options
   const categoryOptions = [
     {
       value: Category.FLAT_RATE,
@@ -59,34 +51,38 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
     }
   ];
 
+  // Mutation to create/update billing configuration
   const mutation = useMutation({
     mutationFn: async (data: any) => {
       return await createBillingConfiguration({ data: data });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['billing-configuration'] });
-      toast.success(`Added successfully`);
+      toast.success(`Updated successfully`);
     },
     onError: (error: Error) => {
       toast.error(`Error: ${(error as Error).message}`);
     }
   });
 
+  // Set up the form with initial values
   const form = useForm<BillingConfigurationValues>({
     defaultValues: { data: configurations },
     onSubmit: async (values) => {
-      await mutation.mutateAsync(values.value.data);
+      // We only need to send the category field in the payload
+      const payload = values.value.data.map((item: any) => ({
+        meterType: item.meterType,
+        category: item.category
+      }));
+      await mutation.mutateAsync(payload);
     }
   });
 
-  // const handleAddConfiguration = () => {
-  //   setConfigurations([...configurations, { meterType: '', category: '' }]);
-  // };
-
-  // const handleRemoveConfiguration = (index: number) => {
-  //   const newConfigurations = configurations.filter((_, i) => i !== index);
-  //   setConfigurations(newConfigurations);
-  // };
+  useEffect(() => {
+    if (data) {
+      setConfigurations(data);
+    }
+  }, [data]);
 
   if (isLoading) {
     return <Loader />;
@@ -100,68 +96,45 @@ const BillingConfigurationForm = ({ BillingConfigurationValues }: any) => {
       }}
     >
       <CardWrapper>
-        <div className="my-5 w-full space-y-4">
-          {data?.map((item: any, i: number) => {
-            return (
-              <div key={i} className="grid w-full grid-cols-3 items-end gap-4">
-                <span className="text-g h-10 rounded-lg border border-border p-2 text-sm capitalize">
-                  {item?.meterType.split('_').join(' ').toLowerCase()}
-                </span>
-                <span className="text-g h-10 rounded-lg border border-border p-2 text-sm capitalize">
-                  {item?.category.split('_').join(' ').toLowerCase()}
-                </span>
-              </div>
-            );
-          })}
-          {configurations.map((config, index) => (
-            <div
-              key={index}
-              className="grid w-full grid-cols-3 items-end gap-4"
-            >
-              <form.Field name={`data[${index}].meterType`}>
-                {(field) => (
-                  <SelectInput
-                    label="Meter Type"
-                    field={field}
-                    options={meterTypeOptions}
-                  />
-                )}
-              </form.Field>
-              <form.Field name={`data[${index}].category`}>
-                {(field) => (
-                  <SelectInput
-                    label="Category"
-                    field={field}
-                    options={categoryOptions}
-                  />
-                )}
-              </form.Field>
-              {/* <Button
-                type="button"
-                className="w-fit"
-                onClick={() => handleRemoveConfiguration(index)}
-              >
-                Remove
-              </Button> */}
-            </div>
-          ))}
-        </div>
-        {/* <Button type="button" onClick={handleAddConfiguration}>
-          Add More
-        </Button> */}
-      </CardWrapper>
+        {configurations.map((item: any, i: number) => {
+          // Filter category options based on meterType (optional, if you need to restrict category options)
+          const availableCategories = categoryOptions;
 
-      <div className="col-span-full mt-10 flex justify-start space-x-4">
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-        >
-          {([canSubmit]) => (
-            <Button type="submit" disabled={!canSubmit || mutation.isPending}>
-              {mutation.isPending ? 'Submitting...' : 'Save Changes'}
-            </Button>
-          )}
-        </form.Subscribe>
-      </div>
+          return (
+            <div
+              key={i}
+              className="flex-wrap items-center justify-start gap-2 sm:flex sm:w-full md:w-full md:flex-wrap lg:w-[50%]"
+            >
+              <span className="mt-5 flex w-[30%] items-center justify-center align-middle text-sm capitalize">
+                {item?.meterType.split('_').join(' ').toLowerCase()}
+              </span>
+              <div className="w-[60%]">
+                <form.Field name={`data[${i}].category`}>
+                  {(field) => (
+                    <SelectInput
+                      label=""
+                      required={false}
+                      field={field}
+                      options={availableCategories}
+                    />
+                  )}
+                </form.Field>
+              </div>
+            </div>
+          );
+        })}
+        <div className="col-span-full mt-10 flex justify-start space-x-4">
+          <form.Subscribe
+            selector={(state) => [state.canSubmit, state.isSubmitting]}
+          >
+            {([canSubmit]) => (
+              <Button type="submit" disabled={!canSubmit || mutation.isPending}>
+                {mutation.isPending ? 'Submitting...' : 'Save Changes'}
+              </Button>
+            )}
+          </form.Subscribe>
+        </div>
+      </CardWrapper>
 
       {mutation.isError && (
         <div className="col-span-full text-red-500">
