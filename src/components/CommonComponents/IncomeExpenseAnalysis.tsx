@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -16,7 +17,7 @@ import { getDashboardLineChartData } from '@/services/dashboard.service';
 import checked from '@iconify/icons-mdi/check-circle';
 import { Icon } from '@iconify/react';
 import Select from 'react-select';
-import Loader from './Loader';
+import { filterOptions } from '@/constants/data.constants';
 
 // Register Chart.js components
 ChartJS.register(
@@ -38,6 +39,7 @@ interface LineChartProps {
       data: number[];
       borderColor: string;
       backgroundColor: string;
+      fill: boolean;
     }[];
   };
 }
@@ -51,12 +53,6 @@ const IncomeExpenseAnalysis = () => {
   const [selectedFilter, setSelectedFilter] = useState('monthly');
   const [chartData, setChartData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const filterOptions = [
-    { value: 'monthly', label: 'Monthly' },
-    { value: 'quarterly', label: 'Quarterly' },
-    { value: 'half-yearly', label: 'Half Yearly' },
-    { value: 'yearly', label: 'Yearly' }
-  ];
 
   // Handle filter change
   const handleFilterChange = (selectedOption: any) => {
@@ -71,46 +67,48 @@ const IncomeExpenseAnalysis = () => {
       let endDate = new Date(now);
 
       const getLastDayOfMonth = (month: number, year: number) => {
-        return new Date(year, month + 1, 0);
+        return new Date(year, month, 0);
       };
 
       switch (filter) {
         case 'monthly':
-          startDate.setDate(1);
-          endDate = getLastDayOfMonth(now.getMonth(), now.getFullYear());
+          startDate.setDate(2);
+          startDate.setHours(0, 0, 0, 0);
+
+          endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+          endDate.setHours(23, 59, 59, 999);
           break;
 
         case 'quarterly':
-          const currentQuarter = Math.floor(now.getMonth() / 3);
-          const prevQuarterStartMonth = currentQuarter * 3;
-          let prevQuarterStartDate = new Date(now);
-          prevQuarterStartDate.setMonth(prevQuarterStartMonth - 3);
-          prevQuarterStartDate.setDate(1);
-          endDate = getLastDayOfMonth(
-            prevQuarterStartDate.getMonth() + 2,
-            prevQuarterStartDate.getFullYear()
-          );
-          startDate = prevQuarterStartDate;
+          // Start date: 1st of the month, 3 months ago
+          startDate.setMonth(now.getMonth() - 2);
+          startDate.setDate(2);
+          startDate.setHours(0, 0, 0, 0);
+
+          endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+          endDate.setHours(23, 59, 59, 999);
           break;
 
         case 'half-yearly':
-          const isFirstHalfYear = now.getMonth() < 6;
-          let halfYearStartMonth = isFirstHalfYear ? 0 : 6;
-          startDate.setMonth(halfYearStartMonth - 6);
-          startDate.setDate(1);
-          endDate = getLastDayOfMonth(
-            startDate.getMonth() + 5,
-            startDate.getFullYear()
-          );
-          break;
+          // Start date: 1st of the month, 6 months ago
+          startDate.setMonth(now.getMonth() - 5);
+          startDate.setDate(2);
+          startDate.setHours(0, 0, 0, 0);
 
+          // End date: last day of the current month
+          endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+          endDate.setHours(23, 59, 59, 999);
+          break;
         case 'yearly':
-          startDate.setFullYear(now.getFullYear() - 1);
-          startDate.setMonth(9);
-          startDate.setDate(1);
-          endDate = getLastDayOfMonth(9, startDate.getFullYear());
-          break;
+          // Start date: 1st of the month, 6 months ago
+          startDate.setMonth(now.getMonth() - 11);
+          startDate.setDate(2);
+          startDate.setHours(0, 0, 0, 0);
 
+          // End date: last day of the current month
+          endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
+          endDate.setHours(23, 59, 59, 999);
+          break;
         default:
           break;
       }
@@ -131,21 +129,26 @@ const IncomeExpenseAnalysis = () => {
           selectedFilter
         );
 
-        // Format the data for the chart
         const formattedData = {
-          labels: data.labels,
+          labels: data.map((entry: { date: string }) => entry.date),
           datasets: [
             {
               label: 'Paid Amount',
-              data: data.incomeData,
-              borderColor: 'green',
-              backgroundColor: 'rgba(0, 255, 0, 0.2)'
+              data: data.map(
+                (entry: { paidAmount: number }) => entry.paidAmount
+              ),
+              borderColor: '#4318FF',
+              backgroundColor: '#4318FF',
+              fill: false
             },
             {
               label: 'Unpaid Amount',
-              data: data.expenseData,
-              borderColor: 'red',
-              backgroundColor: 'rgba(255, 0, 0, 0.2)'
+              data: data.map(
+                (entry: { unpaidAmount: number }) => entry.unpaidAmount
+              ),
+              borderColor: '#6AD2FF',
+              backgroundColor: '#6AD2FF',
+              fill: false
             }
           ]
         };
@@ -180,19 +183,23 @@ const IncomeExpenseAnalysis = () => {
           isSearchable={false}
         />
       </CardHeader>
-      {loading ? (
-        <Loader />
-      ) : (
-        <CardContent className="flex flex-row flex-wrap gap-4 p-4 md:flex-nowrap">
-          <div className="relative h-[300px] w-full">
-            {chartData ? (
-              <LineChart data={chartData} />
-            ) : (
-              <div>No data available for the selected filter.</div>
-            )}
+      <div className="flex w-full items-center justify-center">
+        {loading ? (
+          <div className="mt-5 flex h-8 items-center justify-start align-middle">
+            <div className="h-5 w-5 animate-spin rounded-full border-t-4 border-primary"></div>
           </div>
-        </CardContent>
-      )}
+        ) : (
+          <CardContent className="flex w-full flex-row flex-wrap gap-4 p-4 md:flex-nowrap">
+            <div className="relative h-[300px] w-full">
+              {chartData ? (
+                <LineChart data={chartData} />
+              ) : (
+                <div>No data available for the selected filter.</div>
+              )}
+            </div>
+          </CardContent>
+        )}
+      </div>
     </Card>
   );
 };

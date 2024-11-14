@@ -204,7 +204,10 @@ const PaymentAnalysis = () => {
             </CardHeader>
             <CardContent>
               <div className="text-lg font-bold">
-                {chartData?.datasets[0].data[0]}%
+                {chartData?.datasets[0].data[0]
+                  ? chartData?.datasets[0].data[0]
+                  : 0}
+                %
               </div>
             </CardContent>
           </div>
@@ -219,7 +222,10 @@ const PaymentAnalysis = () => {
             </CardHeader>
             <CardContent>
               <div className="text-lg font-bold">
-                {chartData?.datasets[0].data[1]}%
+                {chartData?.datasets[0].data[1]
+                  ? chartData?.datasets[0].data[1]
+                  : 0}
+                %
               </div>
             </CardContent>
           </div>
