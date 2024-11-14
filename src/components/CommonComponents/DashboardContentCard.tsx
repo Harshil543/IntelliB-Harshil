@@ -1,11 +1,14 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Card, CardTitle } from '@/components/ui/card';
-import type { IconifyIcon } from '@iconify/react';
 import { Icon } from '@iconify/react';
+import type { IconifyIcon } from '@iconify/react';
 import usersIcon from '@iconify/icons-mdi/user';
 import { useQuery } from '@tanstack/react-query';
-import { getDashboardData } from '@/services/dashboard.service';
+import {
+  getDashboardData,
+  getTenantDashboardData
+} from '@/services/dashboard.service';
 import Select from 'react-select';
 import { filterOptions } from '@/constants/data.constants';
 
@@ -127,46 +130,79 @@ const DashboardContent = () => {
   const handleFilterChange = (selectedOption: any) => {
     setSelectedFilter(selectedOption);
   };
-  const { data, isLoading } = useQuery({
+
+  // Use useQuery with Promise.all for parallel fetching
+  const { data: dashboardData, isLoading: isDashboardLoading } = useQuery({
     queryKey: ['dashboard', dateRange.startDate, dateRange.endDate],
-    queryFn: () =>
-      getDashboardData({
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate
-      })
+    queryFn: async () => {
+      const [dashboardResponse, tenantResponse] = await Promise.all([
+        getDashboardData({
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate
+        }),
+        getTenantDashboardData({
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate
+        })
+      ]);
+
+      return { dashboardData: dashboardResponse, tenantData: tenantResponse };
+    }
   });
 
   const dashboardItems = [
-    { id: 1, title: 'No of Tenants', count: 0, icon: usersIcon },
+    {
+      id: 1,
+      title: 'No of Tenants',
+      count:
+        dashboardData?.tenantData?.length > 0
+          ? dashboardData?.tenantData?.length
+          : 0,
+      icon: usersIcon
+    },
     {
       id: 2,
       title: 'No of Bills Raised',
-      count: data?.noOfBillsRaised > 0 ? data?.noOfBillsRaised : 0,
+      count:
+        dashboardData?.dashboardData?.noOfBillsRaised > 0
+          ? dashboardData?.dashboardData?.noOfBillsRaised
+          : 0,
       icon: usersIcon
     },
     {
       id: 3,
       title: 'No of Bills Paid',
-      count: data?.noOfBillsPaid > 0 ? data?.noOfBillsPaid : 0,
+      count:
+        dashboardData?.dashboardData?.noOfBillsPaid > 0
+          ? dashboardData?.dashboardData?.noOfBillsPaid
+          : 0,
       icon: usersIcon
     },
     {
       id: 4,
       title: 'Total Billing Value',
-      count: data?.totalBillValue > 0 ? data?.totalBillValue : 0,
+      count:
+        dashboardData?.dashboardData?.totalBillValue > 0
+          ? dashboardData?.dashboardData?.totalBillValue
+          : 0,
       icon: usersIcon
     },
     {
       id: 5,
       title: 'Total Payment Received',
-      count: data?.totalPaymentReceived > 0 ? data?.totalPaymentReceived : 0,
+      count:
+        dashboardData?.dashboardData?.totalPaymentReceived > 0
+          ? dashboardData?.dashboardData?.totalPaymentReceived
+          : 0,
       icon: usersIcon
     },
     {
       id: 6,
       title: 'Total Payment Outstanding',
       count:
-        data?.totalPaymentOutstanding > 0 ? data?.totalPaymentOutstanding : 0,
+        dashboardData?.dashboardData?.totalPaymentOutstanding > 0
+          ? dashboardData?.dashboardData?.totalPaymentOutstanding
+          : 0,
       icon: usersIcon
     }
   ];
@@ -185,7 +221,11 @@ const DashboardContent = () => {
 
       <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-6">
         {dashboardItems.map((item, i) => (
-          <DashboardContentCard item={item} key={i} loading={isLoading} />
+          <DashboardContentCard
+            item={item}
+            key={i}
+            loading={isDashboardLoading}
+          />
         ))}
       </div>
     </>

@@ -14,5 +14,6 @@ export const BASE_URLS = {
   billingConfiguration: '/api/admin/bill-config/v1',
   otherCharges: '/api/admin/other-charges/v1',
   dashboard: '/api/dashboard/v1/bill-stats',
-  dasboardbillanalysis: '/api/dashboard/v1/bill-analysis'
+  dasboardbillanalysis: '/api/dashboard/v1/bill-analysis',
+  dashboardTenantAdmin: '/api/dashboard/v1/tenant-stats'
 };

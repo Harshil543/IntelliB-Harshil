@@ -1,4 +1,5 @@
 import apiBillingClient from '@/config/api.billing.config';
+import apiClient from '@/config/api.config';
 import { BASE_URLS } from '@/constants/api.constants';
 
 export const getDashboardData = async ({
@@ -11,6 +12,25 @@ export const getDashboardData = async ({
   try {
     const response = await apiBillingClient.get(
       `${BASE_URLS?.dashboard}?startDate=${startDate}&endDate=${endDate}`
+    );
+
+    return response?.data?.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || error.message;
+    throw new Error(message);
+  }
+};
+
+export const getTenantDashboardData = async ({
+  startDate,
+  endDate
+}: {
+  startDate: string;
+  endDate: string;
+}) => {
+  try {
+    const response = await apiClient.get(
+      `${BASE_URLS?.dashboardTenantAdmin}?startDate=${startDate}&endDate=${endDate}`
     );
 
     return response?.data?.data;
