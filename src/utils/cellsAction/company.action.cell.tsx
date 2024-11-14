@@ -1,5 +1,5 @@
 // src/components/CompanyActionCell.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { DotsHorizontalIcon } from '@radix-ui/react-icons';
-import { statusCompany } from '@/services/company.service';
+import { deleteComapny, statusCompany } from '@/services/company.service';
+import { DeleteModal } from '@/components/CommonComponents/DeleteModal';
 
 interface CompanyActionCellProps {
   id: number;
@@ -26,6 +27,20 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
 }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteComapny(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company'] });
+      toast.success('Company deleted successfully');
+      setDeleteModalOpen(false);
+    },
+    onError: (error) => {
+      console.error('Error deleting Company:', error);
+      toast.error('Failed to delete Company');
+    }
+  });
 
   const statusMutation = useMutation({
     mutationFn: (id: number) => statusCompany(id)
@@ -37,6 +52,10 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
 
   const handleUpdate = (id: number) => {
     router.push(`/company/update-company/${id}`);
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate(id);
   };
 
   const handleStatus = async (id: number) => {
@@ -53,31 +72,44 @@ const CompanyActionCell: React.FC<CompanyActionCellProps> = ({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button className="h-8 w-8 p-0" variant="none">
-          <span className="sr-only">Open menu</span>
-          <DotsHorizontalIcon className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button className="h-8 w-8 p-0" variant="none">
+            <span className="sr-only">Open menu</span>
+            <DotsHorizontalIcon className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleView(id)}>View</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleUpdate(id)}>
-          Update
-        </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => handleView(id)}>
+            View
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleUpdate(id)}>
+            Update
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteModalOpen(true)}>
+            Delete
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => handleStatus(id)}
+            className="cursor-pointer"
+          >
+            {status === 'active' ? 'In-Activate' : 'Activate'}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => handleStatus(id)}
-          className="cursor-pointer"
-        >
-          {status === 'active' ? 'In-Activate' : 'Activate'}
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <DeleteModal
+        modalOpen={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this Company?"
+      />
+    </>
   );
 };
 

@@ -71,6 +71,16 @@ export const updateCompany = async (
   }
 };
 
+export const deleteComapny = async (id: number) => {
+  try {
+    const response = await apiClient.delete(`${BASE_URLS.company}/${id}`);
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
 export const statusCompany = async (id: number) => {
   try {
     const response = await apiClient.patch(`${BASE_URLS?.company}/${id}`);

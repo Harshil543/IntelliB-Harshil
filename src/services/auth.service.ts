@@ -11,7 +11,10 @@ export const loginUser = async (payload: {
   try {
     const response = await apiClient.post(`${BASE_URLS?.auth}/login`, payload);
 
-    if (response?.data?.code === 201) {
+    if (
+      response?.data?.code === 201 ||
+      response?.data?.message === 'Resource created successfully'
+    ) {
       storage?.setToken(response?.data?.data?.token);
     }
 

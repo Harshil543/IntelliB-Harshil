@@ -53,9 +53,9 @@ export const SlabWiseRateBillingModel = ({
     SlabWiseRateBillingFormValue['billingModeItems']
   >([{ id: null, startSlab: 0, endSlab: 0, rate: 0, disabled: false }]);
 
-  const [errors, setErrors] = useState<string[]>([]); // State to hold error messages
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
-  const [slabToDelete, setSlabToDelete] = useState<number | null>(null); // State to hold the slab id to delete
+  const [errors, setErrors] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+  const [slabToDelete, setSlabToDelete] = useState<number | null>(null);
 
   useEffect(() => {
     if (data?.billingModeItems) {
@@ -65,7 +65,7 @@ export const SlabWiseRateBillingModel = ({
           startSlab: item.startSlab,
           endSlab: item.endSlab,
           rate: item.rate,
-          disabled: true // Existing slabs should be marked as disabled
+          disabled: true
         }))
       );
     }

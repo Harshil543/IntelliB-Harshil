@@ -75,6 +75,17 @@ export const updatePropertyCoAdmin = async ({
   }
 };
 
+export const deletePropertyCoAdmin = async (id: number) => {
+  try {
+    const response = await apiClient.delete(
+      `${BASE_URLS.propertyCoAdmin}/${id}`
+    );
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
 export const statusPropertyCoAdmin = async (id: number) => {
   try {
     const response = await apiClient.patch(
