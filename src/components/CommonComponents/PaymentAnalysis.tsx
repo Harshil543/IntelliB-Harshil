@@ -15,7 +15,6 @@ import verticleSeprator from '@assets/images/verticleSeprator.png';
 import Select from 'react-select';
 import { getDashboardData } from '@/services/dashboard.service';
 import { useQuery } from '@tanstack/react-query';
-import Loader from './Loader';
 import { filterOptions } from '@/constants/data.constants';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
@@ -182,15 +181,13 @@ const PaymentAnalysis = () => {
         />
       </CardHeader>
 
-      <CardContent className="flex h-[50%] items-center justify-center">
-        {chartData ? (
-          isLoading ? (
-            <Loader />
-          ) : (
-            <PieChart data={chartData} />
-          )
+      <CardContent className="flex h-60 items-center justify-center">
+        {isLoading ? (
+          <div className="mt-5 flex h-8 items-center justify-start align-middle">
+            <div className="h-5 w-5 animate-spin rounded-full border-t-4 border-primary"></div>
+          </div>
         ) : (
-          <div>No data available for the selected range.</div>
+          <PieChart data={chartData} />
         )}
       </CardContent>
 
