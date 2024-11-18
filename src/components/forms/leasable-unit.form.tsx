@@ -210,7 +210,7 @@ export default function LeasableUnitForm({
             >
               {(field) => (
                 <TextInput
-                  label="Floor Area (feet)"
+                  label="Floor Area (Square Feet)"
                   field={field}
                   type="string"
                   disabled={isViewLeasableUnit}

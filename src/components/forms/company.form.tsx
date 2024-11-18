@@ -401,7 +401,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           <form.Field name="gstNumber">
             {(field) => (
               <TextInput
-                required={false}
+                required={true}
                 disabled={isViewCompany}
                 label="GST Number"
                 field={field}
@@ -423,7 +423,7 @@ export default function CompanyForm({ initialValues }: CompanyFormProps) {
           >
             {(field) => (
               <TextInput
-                required={false}
+                required={true}
                 disabled={isViewCompany}
                 label="Confirm GST Number"
                 field={field}

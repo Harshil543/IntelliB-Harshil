@@ -103,30 +103,31 @@ export const TenantDataForm = ({
   });
 
   const form = useForm({
-    defaultValues: initialValues || {
-      company: {
-        companyName: '',
-        addressLine1: '',
-        addressLine2: '',
-        city: '',
-        state: '',
-        country: '',
-        pincode: '',
-        email: '',
-        countryCode: '',
-        mobileNumber: '',
-        websiteUrl: '',
-        gstNumber: '',
-        cinNumber: ''
-      },
-      salutation: '',
-      firstName: '',
-      lastName: '',
-      designation: '',
-      mobileNumber: '',
-      countryCode: '',
-      email: ''
-    },
+    defaultValues: initialValues,
+    // || {
+    //   company: {
+    //     companyName: '',
+    //     addressLine1: '',
+    //     addressLine2: '',
+    //     city: '',
+    //     state: '',
+    //     country: '',
+    //     pincode: '',
+    //     email: '',
+    //     countryCode: '',
+    //     mobileNumber: '',
+    //     websiteUrl: '',
+    //     gstNumber: '',
+    //     cinNumber: ''
+    //   },
+    //   salutation: '',
+    //   firstName: '',
+    //   lastName: '',
+    //   designation: '',
+    //   mobileNumber: '',
+    //   countryCode: '',
+    //   email: ''
+    // },
     onSubmit: async (value: any) => await mutation.mutateAsync({ value })
   });
 
@@ -166,6 +167,7 @@ export const TenantDataForm = ({
   const handleCityChange = (selectedOption: any) => {
     form.setFieldValue('company.city', selectedOption?.label || '');
   };
+
   useEffect(() => {
     if (initialValues) {
       // Set the selected country
@@ -212,6 +214,7 @@ export const TenantDataForm = ({
       form.setFieldValue('company.city', initialValues.company.city);
     }
   }, [initialValues, form]);
+
   return (
     <>
       <form
@@ -382,8 +385,12 @@ export const TenantDataForm = ({
             <form.Field
               name="company.pincode"
               validators={{
-                onChange: ({ value }) =>
-                  !value ? 'Pincode is required' : undefined
+                onChange: ({ value }) => {
+                  if (!/^\d+$/.test(value)) return 'Pincode must be numeric';
+                  if (value.length !== 6)
+                    return 'Pincode must be 6 digits long';
+                  return undefined;
+                }
               }}
             >
               {(field) => (

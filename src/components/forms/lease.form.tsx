@@ -177,7 +177,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
         >
           {(field) => (
             <SelectInput
-              label="Leasable Unit"
+              label="Leasable Unit Code"
               field={field}
               disabled={isViewTenant}
               options={leasableUnitData.map((unit: any) => ({

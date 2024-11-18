@@ -14,7 +14,7 @@ const Invoice = () => {
   const [limit, setLimit] = useState<number>(10);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['invoice'],
+    queryKey: ['invoice', page, searchQuery, limit],
     queryFn: () => getInvoice(page, searchQuery, limit),
     placeholderData: keepPreviousData
   });
@@ -47,6 +47,7 @@ const Invoice = () => {
       onSearch={handleSearch}
       handleLimitChange={handleLimitChange}
       limit={limit}
+      searchKey="By Invoice Number"
       addButton={<></>}
     />
   );

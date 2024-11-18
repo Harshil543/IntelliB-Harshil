@@ -103,6 +103,7 @@ export default function LeasableUnit() {
         onSearch={handleSearch}
         handleLimitChange={handleLimitChange}
         limit={limit}
+        searchKey="By Unit Number"
         compo={
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

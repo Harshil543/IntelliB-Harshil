@@ -55,13 +55,14 @@ type DataTableProps<T> = {
   isUseExport?: boolean;
   isSearch?: boolean;
   isPagination?: boolean;
+  searchKey?: string;
 };
 
 export function DataTable<T>({
   columns,
   data,
   pagination,
-
+  searchKey,
   addButton,
   path,
   limit,
@@ -217,7 +218,7 @@ export function DataTable<T>({
       <div className="flex flex-wrap items-center gap-2 py-4 sm:flex-wrap md:flex-nowrap">
         {isSearch ? (
           <Input
-            placeholder="Search..."
+            placeholder={` ${searchKey ? `Search ${searchKey} ` : 'Search...'}`}
             className="w-full rounded-3xl border-border bg-background"
             value={searchQuery}
             onChange={handleSearchChange}

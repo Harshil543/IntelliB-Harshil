@@ -46,7 +46,7 @@ const MeterReadingColumn: ColumnDef<MeterReadingData>[] = [
     )
   },
   {
-    accessorKey: 'meter',
+    accessorKey: 'meterNumber',
     header: 'Meter Number',
     cell: ({ row }) => {
       const meterId = row?.original?.meter?.meterNumber ?? 'N/A';
