@@ -47,6 +47,10 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
   const leasableUnitData = leasableUnitsData.filter(
     (unit: any) => unit.status === 'available'
   );
+  const leasableUnitOptions = leasableUnitData.map((unit: any) => ({
+    value: unit.id,
+    label: `${unit.unitNumber}`
+  }));
 
   const defaultValues = {
     startDate: leaseData?.items[0]?.startDate || '',
@@ -128,6 +132,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
     return null;
   }
 
+  console.log('leasableUnitData', leasableUnitData);
   return (
     <form
       onSubmit={(e) => {
@@ -180,10 +185,7 @@ const LeasaForm = ({ companyId, isViewTenant }: LeasaFormProps) => {
               label="Leasable Unit Code"
               field={field}
               disabled={isViewTenant}
-              options={leasableUnitData.map((unit: any) => ({
-                value: unit.id,
-                label: unit.id
-              }))}
+              options={leasableUnitOptions}
               onChange={(selectedOption: any) => {
                 const value = selectedOption.value;
                 setSelectedLeasableUnit(value);
