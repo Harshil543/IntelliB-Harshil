@@ -28,10 +28,10 @@ import {
   TableRow
 } from '@/components/ui/table';
 import { usePathname, useRouter } from 'next/navigation';
-import { Parser } from 'json2csv';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import * as XLSX from 'xlsx';
+import { utils, writeFile } from 'xlsx';
+import { saveAs } from 'file-saver';
 import autoTable from 'jspdf-autotable';
 
 type Pagination = {
@@ -139,43 +139,75 @@ export function DataTable<T>({
     onSearch(e.target.value);
   };
 
+  // Function to export as CSV
   const exportCSV = () => {
     const selectedRows = table
       .getRowModel()
       .rows.filter((row) => row.getIsSelected());
-
     const rows = selectedRows.length
       ? selectedRows.map((row) => row.original)
       : data;
 
-    const fields = Object.keys(rows[0] || {});
-    const parser = new Parser({ fields });
-    const csv = parser.parse(rows);
+    // Filter columns to exclude unwanted ones
+    const filteredColumns = columns.filter(
+      (column) =>
+        column.id !== 'select' &&
+        column.id !== 'serialNumber' &&
+        column.id !== 'actions'
+    );
 
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${pathname.split('/')[1]}.csv`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Prepare CSV headers and rows
+    const headers = filteredColumns.map((col) => col.header as string);
+    const rowsData = rows.map((row: any) =>
+      filteredColumns.map((col: any) => {
+        const accessor = col.accessorKey;
+        return getNestedValue(row, accessor) || 'N/A'; // Provide 'N/A' if undefined
+      })
+    );
+
+    // Convert to CSV format
+    const csvContent = [
+      headers.join(','), // Add headers to CSV
+      ...rowsData.map((row) => row.join(',')) // Add each row data
+    ].join('\n');
+
+    // Trigger CSV file download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `${pathname.split('/')[1]}.csv`);
   };
 
   const exportXLSX = () => {
     const selectedRows = table
       .getRowModel()
       .rows.filter((row) => row.getIsSelected());
-
     const rows = selectedRows.length
       ? selectedRows.map((row) => row.original)
       : data;
 
-    const worksheet = XLSX.utils.json_to_sheet(rows);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
-    XLSX.writeFile(workbook, `${pathname.split('/')[1]}.xlsx`);
+    // Filter columns to exclude unwanted ones
+    const filteredColumns = columns.filter(
+      (column) =>
+        column.id !== 'select' &&
+        column.id !== 'serialNumber' &&
+        column.id !== 'actions'
+    );
+
+    // Prepare headers and rows for XLSX
+    const headers = filteredColumns.map((col) => col.header as string);
+    const rowsData = rows.map((row: any) =>
+      filteredColumns.map((col: any) => {
+        const accessor = col.accessorKey;
+        return getNestedValue(row, accessor) || 'N/A'; // Provide 'N/A' if undefined
+      })
+    );
+
+    // Create a worksheet and workbook using xlsx utils
+    const ws = utils.aoa_to_sheet([headers, ...rowsData]);
+    const wb = utils.book_new();
+    utils.book_append_sheet(wb, ws, 'Data');
+
+    // Trigger XLSX file download
+    writeFile(wb, `${pathname.split('/')[1]}.xlsx`);
   };
 
   const exportPDF = () => {
@@ -187,20 +219,33 @@ export function DataTable<T>({
       : data;
 
     const doc = new jsPDF();
-    doc.text(`${pathname.split('/')[1]} Data`, 20, 10);
+    doc.text(`${pathname.split('/')[1].toUpperCase()} DATA`, 20, 10);
 
+    // Filter columns to exclude unwanted ones like 'select' and 'serialNumber'
     const filteredColumns = columns.filter(
-      (column) => column.id !== 'select' && column.id !== 'serialNumber'
+      (column) =>
+        column.id !== 'select' &&
+        column.id !== 'serialNumber' &&
+        column.id !== 'actions'
     );
 
+    // Prepare table headers from column definitions
     const tableColumn = filteredColumns.map((col) => col.header as string);
+
+    // Prepare table rows by handling nested data
     const tableRows = rows.map((row: any) =>
       filteredColumns.map((col: any) => {
         const accessor = col.accessorKey;
-        return row[accessor] || '';
+
+        // Check if the accessor is a nested object, and extract the relevant field
+        const value = getNestedValue(row, accessor);
+        console.log(`Fetching value for accessor ${accessor}:`, value);
+
+        return value || 'N/A'; // Provide a default value in case it's undefined
       })
     );
 
+    // Generate the table in the PDF document
     autoTable(doc, {
       head: [tableColumn],
       body: tableRows,
@@ -210,7 +255,29 @@ export function DataTable<T>({
       margin: { top: 20 }
     });
 
+    // Save the generated PDF
     doc.save(`${pathname.split('/')[1]}.pdf`);
+  };
+
+  // Helper function to get nested values dynamically
+  const getNestedValue = (obj: any, path: string) => {
+    const keys = path && path.split('.');
+    if (!keys || !keys.length) return '';
+
+    // Debug log to see the keys being processed
+    console.log('Navigating path:', keys);
+
+    // Reduce the object to extract the value based on the path
+    const value = keys.reduce((acc, key) => {
+      if (acc && acc[key] !== undefined) {
+        return acc[key];
+      }
+      console.log('value-=>', value);
+
+      return undefined; // Return undefined if key doesn't exist
+    }, obj);
+
+    return value ?? 'N/A'; // Return 'N/A' if value is undefined or null
   };
 
   return (
