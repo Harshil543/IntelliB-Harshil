@@ -10,7 +10,8 @@ const apiBillingClient = axios.create({
 });
 
 const handleUnauthorized = () => {
-  // storage.clearToken();
+  storage.clearToken();
+  window.location.href = '/login';
 };
 
 apiBillingClient.interceptors.request.use(

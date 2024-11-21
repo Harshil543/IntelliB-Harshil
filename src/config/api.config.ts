@@ -10,8 +10,16 @@ const apiClient = axios.create({
 });
 
 const handleUnauthorized = () => {
+  let redirectTimeout;
   storage.clearToken();
-  window.location.href = '/login';
+
+  if (redirectTimeout) {
+    clearTimeout(redirectTimeout);
+  }
+
+  redirectTimeout = setTimeout(() => {
+    window.location.href = '/login';
+  }, 500);
 };
 
 apiClient.interceptors.request.use(
