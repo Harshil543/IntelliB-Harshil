@@ -51,7 +51,9 @@ const meterColumn: ColumnDef<MeterData>[] = [
     accessorKey: 'meterType',
     header: 'Meter Type',
     cell: ({ row }) => (
-      <div className="capitalize">{row.original.meterType ?? 'N/A'}</div>
+      <div className="capitalize">
+        {row.original.meterType.split('_').join(' ') ?? 'N/A'}
+      </div>
     )
   },
   {

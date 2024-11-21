@@ -168,7 +168,9 @@ const PaymentAnalysis = () => {
     }
   }, [data]);
 
-  console.log('chartData', chartData.datasets[0].data[0]);
+  const hh =
+    (chartData.datasets[0].data[0] === 0 || NaN) &&
+    (chartData.datasets[0].data[1] === 0 || NaN);
 
   return (
     <Card className="col-span-4 md:col-span-3">
@@ -189,9 +191,7 @@ const PaymentAnalysis = () => {
           <div className="mt-5 flex h-8 items-center justify-start align-middle">
             <div className="h-5 w-5 animate-spin rounded-full border-t-4 border-primary"></div>
           </div>
-        ) : ((chartData.datasets[0].data[0] === 0 || NaN) &&
-            chartData.datasets[0].data[1] === 0) ||
-          NaN ? (
+        ) : hh === true || NaN ? (
           <div>No data available for the selected filter.</div>
         ) : (
           <PieChart data={chartData} />
