@@ -61,14 +61,6 @@ const DashboardContent = () => {
     endDate: ''
   });
 
-  useEffect(() => {
-    const { startDate, endDate } = calculateDateRange(selectedFilter.value);
-
-    if (startDate && endDate) {
-      setDateRange({ startDate, endDate });
-    }
-  }, [selectedFilter]);
-
   const calculateDateRange = (filter: string) => {
     const now = new Date();
     let startDate = new Date(now);
@@ -126,6 +118,14 @@ const DashboardContent = () => {
       endDate: endDate.toISOString().split('T')[0]
     };
   };
+
+  useEffect(() => {
+    const { startDate, endDate } = calculateDateRange(selectedFilter.value);
+
+    if (startDate && endDate) {
+      setDateRange({ startDate, endDate });
+    }
+  }, [selectedFilter]);
 
   const handleFilterChange = (selectedOption: any) => {
     setSelectedFilter(selectedOption);

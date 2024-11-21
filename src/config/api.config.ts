@@ -10,12 +10,14 @@ const apiClient = axios.create({
 });
 
 const handleUnauthorized = () => {
-  // storage.clearToken();
+  storage.clearToken();
+  window.location.href = '/login';
 };
 
 apiClient.interceptors.request.use(
   (config) => {
     const token = storage.getToken();
+
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
     }
