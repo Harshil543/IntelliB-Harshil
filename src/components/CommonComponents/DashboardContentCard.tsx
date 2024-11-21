@@ -147,7 +147,8 @@ const DashboardContent = () => {
       ]);
 
       return { dashboardData: dashboardResponse, tenantData: tenantResponse };
-    }
+    },
+    enabled: !!dateRange.startDate && !!dateRange.endDate
   });
 
   const dashboardItems = [

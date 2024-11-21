@@ -14,7 +14,6 @@ export default function Dashbord() {
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsContent value="overview" className="space-y-4">
             <DashboardContent />
-
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-7">
               <IncomeExpenseAnalysis />
               <PaymentAnalysis />

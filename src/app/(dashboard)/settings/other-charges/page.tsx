@@ -3,7 +3,7 @@ import Loader from '@/components/CommonComponents/Loader';
 import TextInput from '@/components/fields/TextInput';
 import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+// import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   createOtherCharges,
@@ -25,34 +25,40 @@ export default function OtherChargesForm() {
   const [billingModel, setBillingModel] = useState('FIXED');
   const [showForm, setShowForm] = useState(false);
 
-  const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [limit, setLimit] = useState<number>(10);
+  // const [page, setPage] = useState(1);
+  // const [searchQuery, setSearchQuery] = useState<string>('');
+  // const [limit, setLimit] = useState<number>(10);
+
+  // const { isLoading, data } = useQuery({
+  //   queryKey: ['other-charges', page, searchQuery, limit],
+  //   queryFn: () => getOtherCharges(page, searchQuery, limit),
+  //   placeholderData: keepPreviousData
+  // });
 
   const { isLoading, data } = useQuery({
-    queryKey: ['other-charges', page, searchQuery, limit],
-    queryFn: () => getOtherCharges(page, searchQuery, limit),
+    queryKey: ['other-charges'],
+    queryFn: () => getOtherCharges(),
     placeholderData: keepPreviousData
   });
 
-  const handlePrevious = () => {
-    setPage((prev) => prev - 1);
-  };
-  const handleNext = () => {
-    setPage((prev) => prev + 1);
-  };
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-  };
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    handleSearch(e.target.value);
-  };
+  // const handlePrevious = () => {
+  //   setPage((prev) => prev - 1);
+  // };
+  // const handleNext = () => {
+  //   setPage((prev) => prev + 1);
+  // };
+  // const handleSearch = (query: string) => {
+  //   setSearchQuery(query);
+  // };
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchQuery(e.target.value);
+  //   handleSearch(e.target.value);
+  // };
 
-  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setLimit(Number(e.target.value));
-    setPage(1);
-  };
+  // const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setLimit(Number(e.target.value));
+  //   setPage(1);
+  // };
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -102,12 +108,13 @@ export default function OtherChargesForm() {
 
       <CardWrapper>
         <>
-          <Input
+          {/* <Input
             placeholder="Search..."
             className="w-full rounded-3xl border-border bg-background"
             value={searchQuery}
             onChange={handleSearchChange}
-          />
+          /> */}
+
           <div className="my-10 grid w-full grid-cols-3 items-center gap-4">
             {data?.items?.map((item: any, i: number) => {
               const formattedLabel =
@@ -128,7 +135,7 @@ export default function OtherChargesForm() {
               );
             })}
           </div>
-          <div className="flex w-full items-end justify-end space-x-2">
+          {/* <div className="flex w-full items-end justify-end space-x-2">
             <Button
               variant="outline"
               size="sm"
@@ -158,7 +165,7 @@ export default function OtherChargesForm() {
                 ))}
               </select>
             </Button>
-          </div>
+          </div> */}
         </>
       </CardWrapper>
 
