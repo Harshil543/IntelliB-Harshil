@@ -21,11 +21,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         if (pathname === '/login/') {
           router.replace('/');
         }
-      } else {
-        if (pathname !== '/login/') {
-          router.replace('/login/');
-        }
       }
+      // else {
+      //   if (pathname !== '/login/') {
+      //     router.replace('/login/');
+      //   }
+      // }
     };
 
     getToken();
