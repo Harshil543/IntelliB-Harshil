@@ -111,9 +111,18 @@ export const lineChartDataQuarterly = {
   ]
 };
 
+export const montlyOptions = {
+  PREVIOUS_MONTH: 'previous-month',
+  CURRENT_MONTH: 'current-month',
+  QUARTERLY: 'quarterly',
+  HALF_YEARLY: 'half-yearly',
+  YEARLY: 'yearly'
+};
+
 export const filterOptions = [
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'half-yearly', label: 'Half Yearly' },
-  { value: 'yearly', label: 'Yearly' }
+  { value: montlyOptions.PREVIOUS_MONTH, label: 'Previous Month' },
+  { value: montlyOptions.CURRENT_MONTH, label: 'Current Month' },
+  { value: montlyOptions.QUARTERLY, label: 'Quarterly' },
+  { value: montlyOptions.HALF_YEARLY, label: 'Half Yearly' },
+  { value: montlyOptions.YEARLY, label: 'Yearly' }
 ];

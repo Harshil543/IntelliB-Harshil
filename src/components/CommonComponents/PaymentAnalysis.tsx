@@ -15,7 +15,7 @@ import verticleSeprator from '@assets/images/verticleSeprator.png';
 import Select from 'react-select';
 import { getDashboardData } from '@/services/dashboard.service';
 import { useQuery } from '@tanstack/react-query';
-import { filterOptions } from '@/constants/data.constants';
+import { filterOptions, montlyOptions } from '@/constants/data.constants';
 
 ChartJS.register(Title, Tooltip, Legend, ArcElement);
 
@@ -71,15 +71,25 @@ const PaymentAnalysis = () => {
     };
 
     switch (filter) {
-      case 'monthly':
+      case montlyOptions.PREVIOUS_MONTH:
+        startDate.setMonth(now.getMonth());
+        startDate.setDate(-29); // Set to the 1st day of that month
+        startDate.setHours(0, 0, 0, 0); // Start of the day
+
+        // Set end date to the last day of the previous month
+        endDate = getLastDayOfMonth(now.getMonth(), now.getFullYear()); // Get the last day of the previous month
+        endDate.setHours(23, 59, 59, 999); // End of the day
+        break;
+      case montlyOptions.CURRENT_MONTH:
         startDate.setDate(2);
         startDate.setHours(0, 0, 0, 0);
 
         endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
         endDate.setHours(23, 59, 59, 999);
+
         break;
 
-      case 'quarterly':
+      case montlyOptions.QUARTERLY:
         // Start date: 1st of the month, 3 months ago
         startDate.setMonth(now.getMonth() - 2);
         startDate.setDate(2);
@@ -89,7 +99,7 @@ const PaymentAnalysis = () => {
         endDate.setHours(23, 59, 59, 999);
         break;
 
-      case 'half-yearly':
+      case montlyOptions.HALF_YEARLY:
         // Start date: 1st of the month, 6 months ago
         startDate.setMonth(now.getMonth() - 5);
         startDate.setDate(2);
@@ -99,7 +109,7 @@ const PaymentAnalysis = () => {
         endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
         endDate.setHours(23, 59, 59, 999);
         break;
-      case 'yearly':
+      case montlyOptions.YEARLY:
         // Start date: 1st of the month, 6 months ago
         startDate.setMonth(now.getMonth() - 11);
         startDate.setDate(2);
@@ -192,7 +202,8 @@ const PaymentAnalysis = () => {
             <div className="h-5 w-5 animate-spin rounded-full border-t-4 border-primary"></div>
           </div>
         ) : hh === true || NaN ? (
-          <div>No data available for the selected filter.</div>
+          // <div>No data available for the selected filter.</div>
+          <div className="h-48 w-48 rounded-full bg-blue-50"></div>
         ) : (
           <PieChart data={chartData} />
         )}

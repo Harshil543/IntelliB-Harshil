@@ -17,7 +17,7 @@ import { getDashboardLineChartData } from '@/services/dashboard.service';
 import checked from '@iconify/icons-mdi/check-circle';
 import { Icon } from '@iconify/react';
 import Select from 'react-select';
-import { filterOptions } from '@/constants/data.constants';
+import { filterOptions, montlyOptions } from '@/constants/data.constants';
 
 // Register Chart.js components
 ChartJS.register(
@@ -50,7 +50,9 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
 
 // IncomeExpenseAnalysis Component
 const IncomeExpenseAnalysis = () => {
-  const [selectedFilter, setSelectedFilter] = useState('monthly');
+  const [selectedFilter, setSelectedFilter] = useState(
+    montlyOptions.PREVIOUS_MONTH
+  );
   const [chartData, setChartData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -71,15 +73,25 @@ const IncomeExpenseAnalysis = () => {
       };
 
       switch (filter) {
-        case 'monthly':
+        case montlyOptions.PREVIOUS_MONTH:
+          startDate.setMonth(now.getMonth());
+          startDate.setDate(-29); // Set to the 1st day of that month
+          startDate.setHours(0, 0, 0, 0); // Start of the day
+
+          // Set end date to the last day of the previous month
+          endDate = getLastDayOfMonth(now.getMonth(), now.getFullYear()); // Get the last day of the previous month
+          endDate.setHours(23, 59, 59, 999); // End of the day
+          break;
+        case montlyOptions.CURRENT_MONTH:
           startDate.setDate(2);
           startDate.setHours(0, 0, 0, 0);
 
           endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
           endDate.setHours(23, 59, 59, 999);
+
           break;
 
-        case 'quarterly':
+        case montlyOptions.QUARTERLY:
           // Start date: 1st of the month, 3 months ago
           startDate.setMonth(now.getMonth() - 2);
           startDate.setDate(2);
@@ -89,7 +101,7 @@ const IncomeExpenseAnalysis = () => {
           endDate.setHours(23, 59, 59, 999);
           break;
 
-        case 'half-yearly':
+        case montlyOptions.HALF_YEARLY:
           // Start date: 1st of the month, 6 months ago
           startDate.setMonth(now.getMonth() - 5);
           startDate.setDate(2);
@@ -99,7 +111,7 @@ const IncomeExpenseAnalysis = () => {
           endDate = getLastDayOfMonth(now.getMonth() + 1, now.getFullYear());
           endDate.setHours(23, 59, 59, 999);
           break;
-        case 'yearly':
+        case montlyOptions.YEARLY:
           // Start date: 1st of the month, 6 months ago
           startDate.setMonth(now.getMonth() - 11);
           startDate.setDate(2);

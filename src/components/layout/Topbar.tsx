@@ -15,7 +15,7 @@ interface TopbarProps {
 const Topbar: React.FC<TopbarProps> = ({ data }) => {
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
         {/* Notification Icon */}
         <button className="relative rounded-full">
           <Icon icon="jam:bell" className="h-6 w-6" />
@@ -24,17 +24,21 @@ const Topbar: React.FC<TopbarProps> = ({ data }) => {
 
         {/* Avatar */}
         <Link href={'/profile'}>
-          <Avatar>
-            <AvatarImage
-              src={
-                data?.data?.profilePicture
-                  ? data?.data?.profilePicture
-                  : 'https://picsum.photos/40'
-              }
-              alt="User Name"
-              className="rounded-full"
-            />
-          </Avatar>
+          {data?.data?.profilePicture ? (
+            <Avatar>
+              <AvatarImage
+                src={
+                  data?.data?.profilePicture
+                    ? data?.data?.profilePicture
+                    : 'https://picsum.photos/40'
+                }
+                alt="User Name"
+                className="rounded-full"
+              />
+            </Avatar>
+          ) : (
+            <Icon icon="mdi:user-circle" className="h-10 w-10 rounded-full" />
+          )}
         </Link>
       </div>
     </div>

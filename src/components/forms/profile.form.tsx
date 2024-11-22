@@ -614,11 +614,15 @@ export default function ProfileForm() {
             </form.Field>
 
             <form.Field name="company.gstNumber">
-              {(field) => <TextInput label="GST Number" field={field} />}
+              {(field) => (
+                <TextInput label="GST Number" required={true} field={field} />
+              )}
             </form.Field>
 
             <form.Field name="company.cinNumber">
-              {(field) => <TextInput label="CIN Number" field={field} />}
+              {(field) => (
+                <TextInput label="CIN Number" required={false} field={field} />
+              )}
             </form.Field>
 
             <form.Field name="company.propertyName">

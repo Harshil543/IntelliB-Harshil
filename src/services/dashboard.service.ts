@@ -1,6 +1,7 @@
 import apiBillingClient from '@/config/api.billing.config';
 import apiClient from '@/config/api.config';
 import { BASE_URLS } from '@/constants/api.constants';
+import { montlyOptions } from '@/constants/data.constants';
 
 export const getDashboardData = async ({
   startDate,
@@ -48,8 +49,15 @@ export const getDashboardLineChartData = async (
   filterCategory: string
 ) => {
   try {
+    const categeoryValue = [
+      montlyOptions.PREVIOUS_MONTH,
+      montlyOptions.CURRENT_MONTH
+    ].includes(filterCategory)
+      ? 'monthly'
+      : filterCategory;
+
     const response = await apiBillingClient.get(
-      `${BASE_URLS?.dasboardbillanalysis}?startDate=${dateRange && dateRange.startDate}&endDate=${dateRange && dateRange.endDate}&filterCategory=${filterCategory}`
+      `${BASE_URLS?.dasboardbillanalysis}?startDate=${dateRange && dateRange.startDate}&endDate=${dateRange && dateRange.endDate}&filterCategory=${categeoryValue}`
     );
 
     return response?.data?.data;
