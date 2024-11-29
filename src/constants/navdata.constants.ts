@@ -2,16 +2,16 @@ import { NavItem } from '@/types';
 
 export const navItems: { [key: string]: NavItem[] } = {
   super_admin: [
-    {
-      title: 'Dashboard',
-      href: '/',
-      icon: 'view-dashboard',
-      label: 'Dashboard',
-      children: undefined
-    },
+    // {
+    //   title: 'Dashboard',
+    //   href: '/',
+    //   icon: 'view-dashboard',
+    //   label: 'Dashboard',
+    //   children: undefined
+    // },
     {
       title: 'Company',
-      href: '/company/',
+      href: '/',
       icon: 'company',
       label: 'company',
       children: undefined

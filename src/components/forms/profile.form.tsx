@@ -257,20 +257,20 @@ export default function ProfileForm() {
       countryCode: data?.data?.countryCode,
       designation: data?.data?.designation,
       company: {
-        companyName: data?.data?.company?.companyName,
-        email: data?.data?.company?.email,
-        mobileNumber: data?.data?.company?.mobileNumber,
-        addressLine1: data?.data?.company?.addressLine1,
-        addressLine2: data?.data?.company?.addressLine2,
-        city: data?.data?.company?.city,
-        state: data?.data?.company?.state,
-        country: data?.data?.company?.country,
-        countryCode: data?.data?.company?.countryCode,
-        pincode: data?.data?.company?.pincode,
-        websiteUrl: data?.data?.company?.websiteUrl,
-        gstNumber: data?.data?.company?.gstNumber,
-        cinNumber: data?.data?.company?.cinNumber,
-        propertyName: data?.data?.company?.propertyName
+        companyName: data?.data?.company && data?.data?.company?.companyName,
+        email: data?.data?.company && data?.data?.company?.email,
+        mobileNumber: data?.data?.company && data?.data?.company?.mobileNumber,
+        addressLine1: data?.data?.company && data?.data?.company?.addressLine1,
+        addressLine2: data?.data?.company && data?.data?.company?.addressLine2,
+        city: data?.data?.company && data?.data?.company?.city,
+        state: data?.data?.company && data?.data?.company?.state,
+        country: data?.data?.company && data?.data?.company?.country,
+        countryCode: data?.data?.company && data?.data?.company?.countryCode,
+        pincode: data?.data?.company && data?.data?.company?.pincode,
+        websiteUrl: data?.data?.company && data?.data?.company?.websiteUrl,
+        gstNumber: data?.data?.company && data?.data?.company?.gstNumber,
+        cinNumber: data?.data?.company && data?.data?.company?.cinNumber,
+        propertyName: data?.data?.company && data?.data?.company?.propertyName
       }
     },
     onSubmit: async (values: any) => {
@@ -318,7 +318,7 @@ export default function ProfileForm() {
   }, []);
 
   useEffect(() => {
-    if (data?.data) {
+    if (data?.data && data?.data?.company) {
       const countryOption = countries.find(
         (country) => country.label === data?.data.company.country
       );
