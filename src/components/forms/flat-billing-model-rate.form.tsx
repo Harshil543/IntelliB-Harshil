@@ -77,7 +77,11 @@ export const FlatRateBillingModel = ({
       value: FlatRateBillingFormValue;
       formApi: FormApi<FlatRateBillingFormValue, undefined>;
     }) => {
-      await mutation.mutateAsync(value);
+      if (value.billingModeItems[0].rate < 0) {
+        toast.error('Please enter a valid positive number');
+      } else {
+        await mutation.mutateAsync(value);
+      }
     }
   });
 
@@ -99,6 +103,11 @@ export const FlatRateBillingModel = ({
                 placeholder="0.00"
                 type="number"
                 field={field}
+                onChange={(value: any) => {
+                  const isPositiveInteger = /^\d+$/.test(value);
+                  if (!isPositiveInteger)
+                    toast.error('Please enter a valid positive number');
+                }}
               />
             )}
           </form.Field>

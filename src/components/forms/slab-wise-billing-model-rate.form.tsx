@@ -124,8 +124,8 @@ export const SlabWiseRateBillingModel = ({
 
   const handleRemoveSlab = (index: number, id: number | null) => {
     if (id) {
-      setSlabToDelete(id); // Set the slab to delete and show modal
-      setShowModal(true); // Show the confirmation modal
+      setSlabToDelete(id);
+      setShowModal(true);
     } else {
       setSlabs((prevSlabs) => {
         const updatedSlabs = [...prevSlabs];
@@ -224,13 +224,20 @@ export const SlabWiseRateBillingModel = ({
                     value={slab.rate === 0 ? '' : slab.rate}
                     required
                     onChange={(e) => {
-                      const newRate =
-                        e.target.value === '' ? 0 : parseFloat(e.target.value);
-                      setSlabs((prevSlabs) => {
-                        const updatedSlabs = [...prevSlabs];
-                        updatedSlabs[index].rate = newRate;
-                        return updatedSlabs;
-                      });
+                      const isPositiveInteger = /^\d+$/.test(e.target.value);
+                      if (isPositiveInteger || e.target.value === '') {
+                        const newRate =
+                          e.target.value === ''
+                            ? 0
+                            : parseFloat(e.target.value);
+                        setSlabs((prevSlabs) => {
+                          const updatedSlabs = [...prevSlabs];
+                          updatedSlabs[index].rate = newRate;
+                          return updatedSlabs;
+                        });
+                      } else {
+                        toast.error('Please enter a valid positive number');
+                      }
                     }}
                     className="m-1 h-10 rounded-lg border border-border p-2 text-sm"
                   />
@@ -274,25 +281,6 @@ export const SlabWiseRateBillingModel = ({
 
       {/* Delete Confirmation Modal */}
       {showModal && (
-        // <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-        //   <div className="rounded-lg bg-white p-5 shadow-lg">
-        //     <h3 className="mb-4 text-xl font-semibold">
-        //       Are you sure you want to delete this slab?
-        //     </h3>
-        //     <div className="flex justify-end space-x-4">
-        //       <Button
-        //         onClick={() => {
-        //           removeMutation.mutate(slabToDelete!);
-        //         }}
-        //       >
-        //         Yes
-        //       </Button>
-        //       <Button onClick={() => setShowModal(false)} variant="outline">
-        //         No
-        //       </Button>
-        //     </div>
-        //   </div>
-        // </div>
         <Dialog open={showModal} onOpenChange={() => setShowModal(false)}>
           <DialogContent className="h-52 sm:max-w-md">
             <DialogHeader className="pt-10">

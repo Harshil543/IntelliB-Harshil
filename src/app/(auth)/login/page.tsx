@@ -5,8 +5,8 @@ import Image from 'next/image';
 import logo from '@assets/images/logo.png';
 import AuthWrapper from '@/components/layout/AuthWrapper';
 import { LoginForm } from '@/components/forms/login.form';
-import Link from 'next/link';
-import { Checkbox } from '@/components/ui/checkbox';
+// import Link from 'next/link';
+// import { Checkbox } from '@/components/ui/checkbox';
 
 const Login = () => {
   return (
@@ -22,7 +22,8 @@ const Login = () => {
           </div>
           <LoginForm />
 
-          <div className="my-3 flex items-center justify-between align-middle text-xs">
+          {/* Future code  */}
+          {/* <div className="my-3 flex items-center justify-between align-middle text-xs">
             <div className="flex justify-center align-middle">
               <Checkbox />
               &nbsp;&nbsp;I agree to all the&nbsp;
@@ -39,7 +40,7 @@ const Login = () => {
                 Forgot password?
               </p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </AuthWrapper>

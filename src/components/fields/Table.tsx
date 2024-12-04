@@ -272,7 +272,6 @@ export function DataTable<T>({
       if (acc && acc[key] !== undefined) {
         return acc[key];
       }
-      console.log('value-=>', value);
 
       return undefined; // Return undefined if key doesn't exist
     }, obj);
