@@ -40,3 +40,17 @@ export const createOtherCharges = async ({ payload }: any) => {
     throw new Error(message);
   }
 };
+
+export const updateOtherCharges = async ({ payload }: any) => {
+  try {
+    const response = await apiBillingClient.put(
+      `${BASE_URLS.otherCharges}`,
+      payload
+    );
+
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};

@@ -167,7 +167,7 @@ const DashboardContent = () => {
       title: 'No of Tenants',
       count:
         dashboardData?.tenantData?.length > 0
-          ? dashboardData?.tenantData?.length
+          ? dashboardData?.tenantData[0]?.count
           : 0,
       icon: usersIcon
     },

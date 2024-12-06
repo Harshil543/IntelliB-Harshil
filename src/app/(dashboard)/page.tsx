@@ -9,6 +9,7 @@ import DashboardContent from '@/components/CommonComponents/DashboardContentCard
 import ComapnyPage from './company/page';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '@/services/user.service';
+import Loader from '@/components/CommonComponents/Loader';
 
 export default function Dashbord() {
   const { data, isLoading } = useQuery({
@@ -17,7 +18,7 @@ export default function Dashbord() {
   });
 
   return isLoading ? (
-    'loading....'
+    <Loader />
   ) : (
     <ScrollArea className="h-full">
       {data.data.role === 'super_admin' ? (

@@ -1,30 +1,15 @@
 'use client';
 import Loader from '@/components/CommonComponents/Loader';
-import TextInput from '@/components/fields/TextInput';
 import CardWrapper from '@/components/layout/CardWrapper';
 import { Button } from '@/components/ui/button';
 // import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  createOtherCharges,
-  getOtherCharges
-} from '@/services/other-charges.service';
-import { useForm } from '@tanstack/react-form';
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient
-} from '@tanstack/react-query';
-import React, { useState } from 'react';
-import toast from 'react-hot-toast';
+import { getOtherCharges } from '@/services/other-charges.service';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 export default function OtherChargesForm() {
-  const queryClient = useQueryClient();
-
-  const [billingModel, setBillingModel] = useState('FIXED');
-  const [showForm, setShowForm] = useState(false);
-
+  const router = useRouter();
   // const [page, setPage] = useState(1);
   // const [searchQuery, setSearchQuery] = useState<string>('');
   // const [limit, setLimit] = useState<number>(10);
@@ -60,50 +45,27 @@ export default function OtherChargesForm() {
   //   setPage(1);
   // };
 
-  const mutation = useMutation({
-    mutationFn: async (data: any) => {
-      // Update this to pass the full data object as the payload
-      const payload = {
-        name: data?.value?.name,
-        chargeType: billingModel,
-        value: data?.value?.value,
-        applicableOn: data?.value?.applicableOn,
-        isActive: data?.value?.isActive
-      };
-
-      return await createOtherCharges({ payload });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['other-charges'] });
-      toast.success(`${'Added'} successfully`);
-      setShowForm(false);
-    },
-    onError: (error: Error) => {
-      toast.error(`Error: ${(error as Error).message}`);
-    }
-  });
-
-  const form = useForm({
-    defaultValues: {
-      value: 0,
-      name: '',
-      chargeType: '',
-      applicableOn: 'ALL',
-      isActive: true
-    },
-    onSubmit: async (values) => {
-      await mutation.mutateAsync(values);
-    }
-  });
-
   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div>
-      <div className="mb-4 flex justify-end">
-        <Button onClick={() => setShowForm(true)}>Add Other Charges</Button>
+      <div className="mb-4 flex justify-end gap-2">
+        <Button
+          onClick={() =>
+            router.push('/settings/other-charges/register-other-charges')
+          }
+        >
+          Add Other Charges
+        </Button>
+        <Button
+          onClick={() =>
+            router.push('/settings/other-charges/update-other-charges')
+          }
+        >
+          Update Other Charges
+        </Button>
       </div>
 
       <CardWrapper>
@@ -115,26 +77,30 @@ export default function OtherChargesForm() {
             onChange={handleSearchChange}
           /> */}
 
-          <div className="my-10 grid w-full grid-cols-3 items-center gap-4">
-            {data?.items?.map((item: any, i: number) => {
-              const formattedLabel =
-                item.name.length <= 3
-                  ? item.name.toUpperCase()
-                  : item.name.charAt(0).toUpperCase() +
-                    item.name.slice(1).toLowerCase();
+          {data?.items?.length > 0 ? (
+            <div className="my-10 grid w-full grid-cols-3 items-center gap-4">
+              {data?.items?.map((item: any, i: number) => {
+                const formattedLabel =
+                  item.name.length <= 3
+                    ? item.name.toUpperCase()
+                    : item.name.charAt(0).toUpperCase() +
+                      item.name.slice(1).toLowerCase();
 
-              return (
-                <div key={i}>
-                  <Label htmlFor={item.name}>{formattedLabel}</Label>
+                return (
+                  <div key={i}>
+                    <Label htmlFor={item.name}>{formattedLabel}</Label>
 
-                  <div className="h-10 rounded-lg border border-border p-2 text-sm">
-                    {item.chargeType === 'FIXED' && '₹'} {item.value}
-                    {item.chargeType === 'PERCENTAGE' && '%'}
+                    <div className="h-10 rounded-lg border border-border p-2 text-sm">
+                      {item.chargeType === 'FIXED' && '₹'} {item.value}
+                      {item.chargeType === 'PERCENTAGE' && '%'}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          ) : (
+            <p className="text-center"> No results</p>
+          )}
           {/* <div className="flex w-full items-end justify-end space-x-2">
             <Button
               variant="outline"
@@ -168,95 +134,6 @@ export default function OtherChargesForm() {
           </div> */}
         </>
       </CardWrapper>
-
-      {showForm && (
-        <CardWrapper>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
-          >
-            <div className="grid w-full grid-cols-3 items-center gap-0">
-              <Label htmlFor="chargesName">Charges Name</Label>
-              <form.Field name="name">
-                {(field) => (
-                  <TextInput field={field} placeholder="Charges name" />
-                )}
-              </form.Field>
-            </div>
-
-            <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
-              <Label>Choose Billing Model</Label>
-              <div className="flex space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="chargeType"
-                    value="FIXED"
-                    checked={billingModel === 'FIXED'}
-                    onChange={() => setBillingModel('FIXED')}
-                  />
-                  <span>Fixed Amount</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="chargeType"
-                    value="PERCENTAGE"
-                    checked={billingModel === 'PERCENTAGE'}
-                    onChange={() => setBillingModel('PERCENTAGE')}
-                  />
-                  <span>Percentage</span>
-                </label>
-              </div>
-            </div>
-
-            <div className="mt-4 grid w-full grid-cols-3 items-center gap-0">
-              <Label htmlFor="amountPercentage">Amount/Percentage</Label>
-              <form.Field name="value">
-                {(field) => (
-                  <TextInput
-                    type="number"
-                    field={field}
-                    placeholder="Amount/Percentage"
-                  />
-                )}
-              </form.Field>
-            </div>
-
-            <div className="col-span-full mt-10 flex space-x-4">
-              <Button
-                type="button"
-                className="text-dark hover:text-dark w-fit bg-secondary hover:bg-opacity-80"
-                onClick={() => setShowForm(false)}
-              >
-                Cancel
-              </Button>
-              <form.Subscribe
-                selector={(state) => [state.canSubmit, state.isSubmitting]}
-              >
-                {([canSubmit]) => (
-                  <Button
-                    type="submit"
-                    disabled={!canSubmit || mutation.isPending}
-                  >
-                    {mutation.isPending ? 'Submitting...' : 'Submit'}
-                  </Button>
-                )}
-              </form.Subscribe>
-            </div>
-
-            {mutation.isError && (
-              <div className="col-span-full text-red-500">
-                {mutation.error instanceof Error
-                  ? mutation.error.message
-                  : 'An error occurred during submission.'}
-              </div>
-            )}
-          </form>
-        </CardWrapper>
-      )}
     </div>
   );
 }
