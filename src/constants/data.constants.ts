@@ -119,6 +119,14 @@ export const montlyOptions = {
   YEARLY: 'yearly'
 };
 
+export const billingCycleOptions = {
+  PREVIOUS_MONTH: 'previous-month',
+  CURRENT_MONTH: 'current-month',
+  QUARTERLY: 'quarterly',
+  HALF_YEARLY: 'half-yearly',
+  YEARLY: 'yearly'
+};
+
 export const filterOptions = [
   { value: montlyOptions.PREVIOUS_MONTH, label: 'Previous Month' },
   { value: montlyOptions.CURRENT_MONTH, label: 'Current Month' },

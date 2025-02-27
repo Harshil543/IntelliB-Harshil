@@ -184,5 +184,42 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   label: 'tenant-user',
     //   children: undefined
     // }
+  ],
+  tenant_user: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'view-dashboard',
+      label: 'dashboard',
+      children: undefined
+    },
+    {
+      title: 'Bills',
+      href: '/tenant-bills/',
+      icon: 'receipt-text',
+      label: 'bills',
+      children: undefined
+    },
+    {
+      title: 'Payments',
+      href: '/tenant-payments/',
+      icon: 'credit-card',
+      label: 'payments',
+      children: undefined
+    },
+    {
+      title: 'Usage Reports',
+      href: '/tenant-usage-reports/',
+      icon: 'chart-bar',
+      label: 'usage-reports',
+      children: undefined
+    },
+    {
+      title: 'Settings',
+      href: '/tenant-settings/',
+      icon: 'settings',
+      label: 'settings',
+      children: undefined
+    }
   ]
 };

@@ -28,6 +28,9 @@ export default function Sidebar({ className, data }: SidebarProps) {
         return navItems?.super_admin;
       case 'system_admin':
         return navItems?.system_admin;
+      // /system_admin;
+      case 'tenant-user':
+        return navItems?.tenant_user;
       default:
         return [];
     }
