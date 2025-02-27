@@ -32,13 +32,13 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'property-co-admin',
       children: undefined
     },
-    // {
-    //   title: 'Property User',
-    //   href: '/property-user/',
-    //   icon: 'profile',
-    //   label: 'property-user',
-    //   children: undefined
-    // },
+    {
+      title: 'Property User',
+      href: '/property-user/',
+      icon: 'user-group',
+      label: 'property-user',
+      children: undefined
+    },
     // {
     //   title: 'Invoice',
     //   href: '/invoice/',

@@ -11,7 +11,7 @@ export default function PropertyCoAdminPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const { isLoading, isError, data } = useQuery({
-    queryKey: ['property-co-admin', page, searchQuery],
+    queryKey: ['property-user', page, searchQuery],
     queryFn: () => getPropertyUser(page, searchQuery),
     placeholderData: keepPreviousData
   });
