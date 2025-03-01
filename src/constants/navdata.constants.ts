@@ -185,7 +185,7 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   children: undefined
     // }
   ],
-  tenant_user: [
+  tenant_admin: [
     {
       title: 'Dashboard',
       href: '/',
@@ -194,31 +194,24 @@ export const navItems: { [key: string]: NavItem[] } = {
       children: undefined
     },
     {
-      title: 'Bills',
-      href: '/tenant-bills/',
-      icon: 'receipt-text',
-      label: 'bills',
+      title: 'Invoice',
+      href: '/invoice/',
+      icon: 'invoice',
+      label: 'invoice',
       children: undefined
     },
     {
-      title: 'Payments',
-      href: '/tenant-payments/',
-      icon: 'credit-card',
-      label: 'payments',
-      children: undefined
-    },
-    {
-      title: 'Usage Reports',
-      href: '/tenant-usage-reports/',
+      title: 'Audit Trail',
+      href: '/audit-trails/',
       icon: 'chart-bar',
       label: 'usage-reports',
       children: undefined
     },
     {
-      title: 'Settings',
-      href: '/tenant-settings/',
-      icon: 'settings',
-      label: 'settings',
+      title: 'User',
+      href: '/users/',
+      icon: 'user',
+      label: 'user',
       children: undefined
     }
   ]

@@ -36,7 +36,7 @@ export function DashboardNav({
     }));
   };
 
-  if (!items.length) {
+  if (!items?.length) {
     return null;
   }
 

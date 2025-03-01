@@ -1,5 +1,6 @@
-import UserGridCard from '@/app/tenant/component/userGridCard';
+// import UserGridCard from '@/app/tenant/component/userGridCard';
 import React from 'react';
+import UserGridCard from './userGridCard';
 
 export default function GridView() {
   const data = [
@@ -40,7 +41,7 @@ export default function GridView() {
     }
   ];
   return (
-    <div className="custom-scrollbar mt-[22px] grid h-[calc(100vh-236px)] grid-cols-1 gap-[10px] overflow-y-auto pr-[10px] sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div className="custom-scrollbar mt-[22px] grid h-[calc(100vh-300px)] grid-cols-1 gap-[10px] overflow-y-auto pr-[10px] sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {data.map((item, i) => (
         <div key={i}>
           <UserGridCard {...item} />

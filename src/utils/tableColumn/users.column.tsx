@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table';
+import PropertyUserActionsCell from '../cellsAction/property.user.action.cell';
 
 interface InvoiceData {
   id: number;
@@ -12,22 +13,22 @@ interface InvoiceData {
   paymentStatus: string;
 }
 
-const auditTrailsColumn: ColumnDef<InvoiceData>[] = [
+const userColumn: ColumnDef<InvoiceData>[] = [
   {
     id: 'serialNumber',
     header: 'Sr No',
     cell: ({ row }) => <div className="lowercase">{row.index + 1}</div>
   },
   {
-    accessorKey: 'id',
-    header: 'Id',
+    accessorKey: 'Name',
+    header: 'Name',
     cell: ({ row }) => (
       <div className="lowercase">{row.original.id ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'date_time',
-    header: 'Date & time',
+    accessorKey: 'Contact Number',
+    header: 'Contact Number',
     cell: ({ row }) => (
       <div className="capitalize">
         {row.original.company.companyName ?? 'N/A'}
@@ -35,8 +36,8 @@ const auditTrailsColumn: ColumnDef<InvoiceData>[] = [
     )
   },
   {
-    accessorKey: 'user_name',
-    header: 'User Name',
+    accessorKey: 'Email',
+    header: 'Email',
     cell: ({ row }) => (
       <div className="capitalize">
         {row.original.company.companyName ?? 'N/A'}
@@ -44,19 +45,34 @@ const auditTrailsColumn: ColumnDef<InvoiceData>[] = [
     )
   },
   {
-    accessorKey: 'role',
+    accessorKey: 'Designation',
+    header: 'Designation',
+    cell: ({ row }) => (
+      <div className="lowercase">{row.original.invoiceNumber ?? 'N/A'}</div>
+    )
+  },
+  {
+    accessorKey: 'Role',
     header: 'Role',
     cell: ({ row }) => (
       <div className="lowercase">{row.original.invoiceNumber ?? 'N/A'}</div>
     )
   },
   {
-    accessorKey: 'action_type',
-    header: 'Action Type',
-    cell: ({ row }) => (
-      <div className="lowercase">{row.original.invoiceNumber ?? 'N/A'}</div>
-    )
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const propertyUserId = row.original.id as number;
+      const currentStatus = row.original.status as string;
+
+      return (
+        <PropertyUserActionsCell
+          propertyUserId={propertyUserId}
+          currentStatus={currentStatus}
+        />
+      );
+    }
   }
 ];
 
-export default auditTrailsColumn;
+export default userColumn;

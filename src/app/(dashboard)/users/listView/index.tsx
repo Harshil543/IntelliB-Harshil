@@ -1,46 +1,56 @@
-import UserListItems from '@/app/tenant/component/userListItems';
-import UserListItemsHeader from '@/app/tenant/component/userListItemsHeader';
-import React from 'react';
+// Invoice.tsx
+'use client';
 
-export default function ListView() {
-  const data = [
-    {
-      name: 'User 1',
-      email: 'jake@cornerstore.com',
-      contactNumber: '1234567890',
-      designation: 'Store Manager',
-      role: 'Process bill'
-    },
-    {
-      name: 'User 1',
-      email: 'jake@cornerstore.com',
-      contactNumber: '1234567890',
-      designation: 'Store Manager',
-      role: 'Process bill'
-    },
-    {
-      name: 'User 1',
-      email: 'jake@cornerstore.com',
-      contactNumber: '1234567890',
-      designation: 'Store Manager',
-      role: 'Process bill'
-    },
-    {
-      name: 'User 1',
-      email: 'jake@cornerstore.com',
-      contactNumber: '1234567890',
-      designation: 'Store Manager',
-      role: 'Process bill'
-    }
-  ];
+import Loader from '@/components/CommonComponents/Loader';
+import { DataTable } from '@/components/fields/Table';
+import { getInvoice } from '@/services/invoice.service';
+import userColumn from '@/utils/tableColumn/users.column';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import React, { useState } from 'react';
+
+const ListView = () => {
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [limit, setLimit] = useState<number>(10);
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['audit-trails', page, searchQuery, limit],
+    queryFn: () => getInvoice(page, searchQuery, limit),
+    placeholderData: keepPreviousData
+  });
+
+  const handlePrevious = () => {
+    setPage((prev) => prev - 1);
+  };
+  const handleNext = () => {
+    setPage((prev) => prev + 1);
+  };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+  const handleLimitChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLimit(Number(e.target.value));
+    setPage(1);
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <div className="mt-[22px] grid gap-[5px]">
-      <UserListItemsHeader />
-      {data.map((item, i) => (
-        <div key={i}>
-          <UserListItems index={i} {...item} />
-        </div>
-      ))}
-    </div>
+    <DataTable
+      columns={userColumn}
+      path=""
+      data={isError ? [] : data?.items}
+      handleNext={handleNext}
+      handlePrevious={handlePrevious}
+      onSearch={handleSearch}
+      handleLimitChange={handleLimitChange}
+      limit={limit}
+      searchKey="By Name"
+      addButton={<></>}
+    />
   );
-}
+};
+
+export default ListView;

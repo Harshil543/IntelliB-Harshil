@@ -4,7 +4,7 @@
 import Loader from '@/components/CommonComponents/Loader';
 import { DataTable } from '@/components/fields/Table';
 import { getInvoice } from '@/services/invoice.service';
-import invoiceColumn from '@/utils/tableColumn/invoice.column';
+import auditTrailsColumn from '@/utils/tableColumn/audit-trails.column';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 
@@ -39,7 +39,7 @@ const TenantBills = () => {
 
   return (
     <DataTable
-      columns={invoiceColumn}
+      columns={auditTrailsColumn}
       path=""
       data={isError ? [] : data?.items}
       handleNext={handleNext}
@@ -47,7 +47,7 @@ const TenantBills = () => {
       onSearch={handleSearch}
       handleLimitChange={handleLimitChange}
       limit={limit}
-      searchKey="By Invoice Number"
+      searchKey="By Name"
       addButton={<></>}
     />
   );
