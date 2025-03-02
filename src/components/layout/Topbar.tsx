@@ -2,6 +2,7 @@ import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
 import { Icon } from '@iconify/react';
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 // Define the type for the data prop
 interface TopbarProps {
@@ -13,11 +14,17 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ data }) => {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center space-x-2">
         {/* Notification Icon */}
-        <button className="relative rounded-full">
+        <button
+          className="relative rounded-full"
+          onClick={() => {
+            router.push('/reminder');
+          }}
+        >
           <Icon icon="jam:bell" className="h-6 w-6" />
           <span className="absolute right-0 top-0 block h-2.5 w-2.5 rounded-full bg-red-500"></span>
         </button>

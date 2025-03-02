@@ -214,5 +214,93 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'user',
       children: undefined
     }
+  ],
+  property_admin: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'view-dashboard-outline',
+      label: 'dashboard',
+      children: undefined
+    },
+    {
+      title: 'Leasable Unit',
+      href: '/leasable-unit/',
+      icon: 'alpha-l-circle-outline',
+      label: 'leasable-unit',
+      children: undefined
+    },
+    {
+      title: 'Tenant',
+      href: '/tenant/',
+      icon: 'users-group-outline',
+      label: 'tenant',
+      children: undefined
+    },
+    {
+      title: 'Billing Model',
+      href: '/billing-model/',
+      icon: 'receipt-text-plus',
+      label: 'billing-model'
+    },
+    {
+      title: 'Invoice',
+      href: '/invoice/',
+      icon: 'invoice',
+      label: 'invoice'
+    },
+    {
+      title: 'Meter Readings',
+      href: '/meter-reading/',
+      icon: 'speedometer',
+      label: 'meter-reading',
+      children: undefined
+    },
+    // {
+    //   title: 'Reports & Analytics',
+    //   href: '#',
+    //   icon: 'chart-bar',
+    //   label: 'reports-analytics',
+    //   children: [
+    //     {
+    //       title: 'Billing Reports',
+    //       href: '/reports/billing/',
+    //       icon: 'file-chart-outline',
+    //       label: 'billing-reports'
+    //     },
+    //     {
+    //       title: 'Payment Reports',
+    //       href: '/reports/payments/',
+    //       icon: 'file-chart-outline',
+    //       label: 'payment-reports'
+    //     },
+    //     {
+    //       title: 'Usage Reports',
+    //       href: '/reports/usage/',
+    //       icon: 'chart-line',
+    //       label: 'usage-reports'
+    //     }
+    //   ]
+    // },
+    {
+      title: 'Settings',
+      href: '#',
+      icon: 'settings',
+      label: 'settings',
+      children: [
+        {
+          title: 'Billing Configuration',
+          href: '/settings/billing-configuration/',
+          icon: 'tune',
+          label: 'billing-configuration'
+        },
+        {
+          title: 'Other Charges',
+          href: '/settings/other-charges/',
+          icon: 'currency-usd-circle',
+          label: 'other-charges'
+        }
+      ]
+    }
   ]
 };

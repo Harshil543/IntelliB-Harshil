@@ -27,10 +27,12 @@ export default function Sidebar({ className, data }: SidebarProps) {
       case 'super_admin':
         return navItems?.super_admin;
       case 'system_admin':
-        return navItems?.system_admin;
+        return navItems?.property_admin;
       // /system_admin;
       case 'tenant-admin':
         return navItems?.tenant_admin;
+      case 'property-admin':
+        return navItems?.property_admin;
       default:
         return [];
     }
