@@ -40,17 +40,9 @@ const PropertyUserActionsCell: React.FC<PropertyUserActionsCellProps> = ({
     router.push(`/property-user/update-property-user/${id}`);
   };
 
-  const handleStatus = async (id: number, status: string) => {
-    const payload = {
-      payload: {
-        id,
-        status: status === 'Active' ? 'Inactive' : 'Active'
-      },
-      id
-    };
-
+  const handleStatus = async (id: number) => {
     try {
-      statusMutation.mutate(payload as any, {
+      statusMutation.mutate(id as any, {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['property-user'] });
           toast.success(`Status updated successfully`);
@@ -79,11 +71,11 @@ const PropertyUserActionsCell: React.FC<PropertyUserActionsCellProps> = ({
         <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
           Update
         </DropdownMenuItem>
-
+        <DropdownMenuItem onClick={() => handleUpdate(propertyUserId)}>
+          Delete
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => handleStatus(propertyUserId, currentStatus)}
-        >
+        <DropdownMenuItem onClick={() => handleStatus(propertyUserId)}>
           {currentStatus === 'Active' ? 'De-Activate' : 'Activate'}
         </DropdownMenuItem>
       </DropdownMenuContent>

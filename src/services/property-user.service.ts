@@ -81,11 +81,10 @@ export const updatePropertyUser = async ({
   }
 };
 
-export const statusPropertyUser = async (
-  payload: PropertyUserPayload
-): Promise<void> => {
+export const statusPropertyUser = async (id: number): Promise<void> => {
   try {
-    console.log('property user status', payload);
+    const response = await apiClient.patch(`${BASE_URLS?.propertyUser}/${id}`);
+    return response?.data?.data;
   } catch (error: any) {
     const message = error.response?.data?.message;
     throw new Error(message);
