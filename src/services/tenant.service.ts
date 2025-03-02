@@ -86,3 +86,29 @@ export const statusTenant = async (id: number) => {
     throw new Error(message);
   }
 };
+
+export const downloadTemplate = async () => {
+  try {
+    const response = await apiClient.get(`${BASE_URLS.tenant}/template`, {
+      responseType: 'blob'
+    });
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
+
+export const importData = async (data: any) => {
+  try {
+    const response = await apiClient.post(`${BASE_URLS.tenant}/upload`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response;
+  } catch (error: any) {
+    const message = error.response?.data?.message;
+    throw new Error(message);
+  }
+};
