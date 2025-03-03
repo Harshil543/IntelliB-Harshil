@@ -127,7 +127,6 @@ export const navItems: { [key: string]: NavItem[] } = {
       label: 'tenant',
       children: undefined
     },
-
     {
       title: 'Billing Model',
       href: '/billing-model/',
@@ -184,36 +183,6 @@ export const navItems: { [key: string]: NavItem[] } = {
     //   label: 'tenant-user',
     //   children: undefined
     // }
-  ],
-  tenant_admin: [
-    {
-      title: 'Dashboard',
-      href: '/',
-      icon: 'view-dashboard',
-      label: 'dashboard',
-      children: undefined
-    },
-    {
-      title: 'Invoice',
-      href: '/invoice/',
-      icon: 'invoice',
-      label: 'invoice',
-      children: undefined
-    },
-    {
-      title: 'Audit Trail',
-      href: '/audit-trails/',
-      icon: 'chart-bar',
-      label: 'usage-reports',
-      children: undefined
-    },
-    {
-      title: 'User',
-      href: '/users/',
-      icon: 'user',
-      label: 'user',
-      children: undefined
-    }
   ],
   property_admin: [
     {
@@ -301,6 +270,50 @@ export const navItems: { [key: string]: NavItem[] } = {
           label: 'other-charges'
         }
       ]
+    }
+  ],
+  tenant_admin: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'view-dashboard',
+      label: 'dashboard',
+      children: undefined
+    },
+    {
+      title: 'Leasable Unit',
+      href: '/leasable-unit/',
+      icon: 'home-city-outline',
+      label: 'my-units',
+      children: undefined
+    },
+    {
+      title: 'Invoice',
+      href: '/invoice/',
+      icon: 'invoice',
+      label: 'invoice',
+      children: undefined
+    },
+    {
+      title: 'Audit Trail',
+      href: '/audit-trails/',
+      icon: 'chart-bar',
+      label: 'usage-reports',
+      children: undefined
+    },
+    {
+      title: 'Meter Readings',
+      href: '/meter-reading/',
+      icon: 'speedometer',
+      label: 'meter-reading',
+      children: undefined
+    },
+    {
+      title: 'User',
+      href: '/users/',
+      icon: 'user',
+      label: 'user',
+      children: undefined
     }
   ]
 };
