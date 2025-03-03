@@ -15,6 +15,7 @@ export const loginUser = async (payload: {
       response?.data?.code === 201 ||
       response?.data?.message === 'Resource created successfully'
     ) {
+      debugger;
       storage?.setToken(response?.data?.data?.token);
     }
 

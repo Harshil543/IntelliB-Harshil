@@ -18,7 +18,7 @@ const handleUnauthorized = () => {
   }
 
   redirectTimeout = setTimeout(() => {
-    window.location.href = '/login';
+    // window.location.href = '/login';
   }, 500);
 };
 

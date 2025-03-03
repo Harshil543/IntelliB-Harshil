@@ -272,6 +272,66 @@ export const navItems: { [key: string]: NavItem[] } = {
       ]
     }
   ],
+  property_user: [
+    {
+      title: 'Dashboard',
+      href: '/',
+      icon: 'view-dashboard-outline',
+      label: 'dashboard',
+      children: undefined
+    },
+    {
+      title: 'Invoice',
+      href: '/invoice/',
+      icon: 'invoice',
+      label: 'invoice'
+    },
+    {
+      title: 'Billing Cycle',
+      href: '/billing-cycle/',
+      icon: 'clock-outline',
+      label: 'billing-cycle'
+    },
+    {
+      title: 'Meter Readings',
+      href: '/meter-reading/',
+      icon: 'speedometer',
+      label: 'meter-reading',
+      children: undefined
+    }
+    // {
+    //   title: 'Payments',
+    //   href: '/payments/',
+    //   icon: 'cash-multiple',
+    //   label: 'payments'
+    // }
+    // {
+    //   title: 'Reports & Analytics',
+    //   href: '#',
+    //   icon: 'chart-bar',
+    //   label: 'reports-analytics',
+    //   children: [
+    //     {
+    //       title: 'Billing Reports',
+    //       href: '/reports/billing/',
+    //       icon: 'file-chart-outline',
+    //       label: 'billing-reports'
+    //     },
+    //     {
+    //       title: 'Payment Reports',
+    //       href: '/reports/payments/',
+    //       icon: 'file-chart-outline',
+    //       label: 'payment-reports'
+    //     },
+    //     {
+    //       title: 'Usage Reports',
+    //       href: '/reports/usage/',
+    //       icon: 'chart-line',
+    //       label: 'usage-reports'
+    //     }
+    //   ]
+    // }
+  ],
   tenant_admin: [
     {
       title: 'Dashboard',
