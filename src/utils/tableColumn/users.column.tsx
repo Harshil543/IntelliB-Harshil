@@ -11,6 +11,7 @@ interface InvoiceData {
   dueDate: Date;
   totalAmount: number;
   paymentStatus: string;
+  status: string;
 }
 
 const userColumn: ColumnDef<InvoiceData>[] = [
