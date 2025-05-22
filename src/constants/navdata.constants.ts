@@ -148,27 +148,27 @@ export const navItems: { [key: string]: NavItem[] } = {
       icon: 'invoice',
       label: 'invoice',
       children: undefined
-    },
-    {
-      title: 'Billing Settings',
-      href: '#',
-      icon: 'settings',
-      label: 'settings',
-      children: [
-        {
-          title: 'Billing Configuration',
-          href: '/settings/billing-configuration/',
-          icon: 'profile',
-          label: 'billing-configuration'
-        },
-        {
-          title: 'Other Charges',
-          href: '/settings/other-charges/',
-          icon: 'profile',
-          label: 'other-charges'
-        }
-      ]
     }
+    // {
+    //   title: 'Billing Settings',
+    //   href: '#',
+    //   icon: 'settings',
+    //   label: 'settings',
+    //   children: [
+    //     {
+    //       title: 'Billing Configuration',
+    //       href: '/settings/billing-configuration/',
+    //       icon: 'profile',
+    //       label: 'billing-configuration'
+    //     },
+    //     {
+    //       title: 'Other Charges',
+    //       href: '/settings/other-charges/',
+    //       icon: 'profile',
+    //       label: 'other-charges'
+    //     }
+    //   ]
+    // }
 
     // {
     //   title: 'Tenant Co-Admin',
