@@ -3,7 +3,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const apiBillingClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BILLING_SERVICE_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
     'Content-Type': 'application/json'
   }
